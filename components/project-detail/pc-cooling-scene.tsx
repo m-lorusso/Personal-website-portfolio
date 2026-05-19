@@ -5,10 +5,10 @@ import * as THREE from "three"
 
 type PCCoolingMode = "stock" | "ducted"
 
-type PCFlowCurve = {
+type FlowCurve = {
   curve: THREE.CatmullRomCurve3
   color: number
-  particleCount: number
+  count: number
   speed: number
   size: number
 }
@@ -20,12 +20,16 @@ export default function PCCoolingScene({ mode }: { mode: PCCoolingMode }) {
     const mount = mountRef.current
     if (!mount) return
 
+    // ===== Scene & camera =====
     const scene = new THREE.Scene()
-    scene.fog = new THREE.Fog(0x05060a, 13, 24)
+    scene.fog = new THREE.Fog(0x05080f, 14, 26)
 
-    const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100)
-    camera.position.set(1.6, 0.6, 11.4)
-    camera.lookAt(-0.4, 0.1, 0)
+    // Pure side view of the case, zoomed out slightly so the intake/exhaust
+    // particles are visible OUTSIDE the case (green entering on the right,
+    // red leaving on the left/top).
+    const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100)
+    camera.position.set(0, 0.4, 13.6)
+    camera.lookAt(0, 0.1, 0)
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" })
     renderer.outputColorSpace = THREE.SRGBColorSpace
@@ -36,278 +40,359 @@ export default function PCCoolingScene({ mode }: { mode: PCCoolingMode }) {
     renderer.domElement.style.display = "block"
     mount.appendChild(renderer.domElement)
 
-    // Lights
-    scene.add(new THREE.HemisphereLight(0x6e8cb8, 0x111827, 1.7))
-    const key = new THREE.DirectionalLight(0xffffff, 1.5)
-    key.position.set(4, 6, 6)
+    // ===== Lights =====
+    scene.add(new THREE.HemisphereLight(0x7a96c4, 0x0b101a, 1.6))
+    const key = new THREE.DirectionalLight(0xffffff, 1.1)
+    key.position.set(4, 6, 7)
     scene.add(key)
-    const rim = new THREE.DirectionalLight(0x60a5fa, 0.85)
+    const rim = new THREE.DirectionalLight(0x60a5fa, 0.8)
     rim.position.set(-4, 2, 4)
     scene.add(rim)
+    const fill = new THREE.PointLight(0x67e8f9, 0.7, 18)
+    fill.position.set(0, 0.5, 4)
+    scene.add(fill)
 
-    // Case dimensions — taller mid-tower like the actual build
-    const W = 5.6 // front-to-back (intake at +X, rear at -X)
-    const H = 6.6 // top-to-bottom
-    const D = 2.8 // closed-side at -Z, camera-facing open side at +Z
+    // ===== Case dimensions =====
+    // +X = front (intake), -X = rear (exhaust)
+    // +Y = top (AIO),     -Y = bottom (PSU)
+    // +Z = side opening (camera side), -Z = motherboard tray
+    const W = 5.4
+    const H = 6.2
+    const D = 2.6
 
-    // Case wireframe outline
+    // Case wireframe
     const caseGeo = new THREE.BoxGeometry(W, H, D)
-    const caseLines = new THREE.LineSegments(
-      new THREE.EdgesGeometry(caseGeo),
-      new THREE.LineBasicMaterial({ color: 0x475569, transparent: true, opacity: 0.55 }),
+    scene.add(
+      new THREE.LineSegments(
+        new THREE.EdgesGeometry(caseGeo),
+        new THREE.LineBasicMaterial({ color: 0x475569, transparent: true, opacity: 0.55 }),
+      ),
     )
-    scene.add(caseLines)
     caseGeo.dispose()
 
-    // Rear wall
-    const backWall = new THREE.Mesh(
-      new THREE.PlaneGeometry(D, H * 0.96),
-      new THREE.MeshStandardMaterial({ color: 0x0e131c, roughness: 0.75, metalness: 0.2, side: THREE.DoubleSide }),
+    // Motherboard tray (back wall)
+    const tray = new THREE.Mesh(
+      new THREE.PlaneGeometry(W * 0.96, H * 0.96),
+      new THREE.MeshStandardMaterial({ color: 0x080d16, roughness: 0.85, side: THREE.DoubleSide }),
     )
-    backWall.position.set(-W / 2, 0, 0)
-    backWall.rotation.y = Math.PI / 2
-    scene.add(backWall)
+    tray.position.set(0, 0, -D / 2 + 0.01)
+    scene.add(tray)
 
     // Bottom panel
-    const bottomPanel = new THREE.Mesh(
-      new THREE.PlaneGeometry(W * 0.96, D),
-      new THREE.MeshStandardMaterial({ color: 0x080b12, roughness: 0.85, side: THREE.DoubleSide }),
+    const bottom = new THREE.Mesh(
+      new THREE.PlaneGeometry(W * 0.96, D * 0.96),
+      new THREE.MeshStandardMaterial({ color: 0x04070c, roughness: 0.9, side: THREE.DoubleSide }),
     )
-    bottomPanel.position.set(0, -H / 2, 0)
-    bottomPanel.rotation.x = -Math.PI / 2
-    scene.add(bottomPanel)
+    bottom.position.set(0, -H / 2 + 0.005, 0)
+    bottom.rotation.x = -Math.PI / 2
+    scene.add(bottom)
 
-    // Top panel (slightly translucent — radiator sits below it)
+    // Top panel (translucent so AIO fans glow through)
     const topPanel = new THREE.Mesh(
-      new THREE.PlaneGeometry(W * 0.96, D),
+      new THREE.PlaneGeometry(W * 0.96, D * 0.96),
       new THREE.MeshStandardMaterial({
-        color: 0x1f2937,
-        roughness: 0.85,
+        color: 0x1e2937,
+        roughness: 0.8,
         transparent: true,
-        opacity: 0.16,
+        opacity: 0.18,
         side: THREE.DoubleSide,
       }),
     )
-    topPanel.position.set(0, H / 2, 0)
+    topPanel.position.set(0, H / 2 - 0.005, 0)
     topPanel.rotation.x = -Math.PI / 2
     scene.add(topPanel)
 
-    // Closed side wall (motherboard tray) — slight tint, semi-transparent so we still see depth
-    const sideWall = new THREE.Mesh(
-      new THREE.PlaneGeometry(W * 0.96, H * 0.96),
-      new THREE.MeshStandardMaterial({
-        color: 0x121826,
-        roughness: 0.85,
-        transparent: true,
-        opacity: 0.5,
+    // ===== Fan factory =====
+    // A fan is a thin cylinder body + LED ring + spoke disc + hub.
+    // axis: "x" for front/rear fans (rotating around X), "y" for top/GPU fans.
+    function buildFan(opts: {
+      x: number
+      y: number
+      z: number
+      r: number
+      axis: "x" | "y"
+      ledColor: number
+      glow?: number
+    }) {
+      const group = new THREE.Group()
+      const { r, ledColor, axis } = opts
+      const glowIntensity = opts.glow ?? 0.9
+
+      // Outer LED ring (the glowing blue halo from the photo)
+      const ring = new THREE.Mesh(
+        new THREE.TorusGeometry(r, r * 0.07, 12, 48),
+        new THREE.MeshStandardMaterial({
+          color: ledColor,
+          emissive: ledColor,
+          emissiveIntensity: glowIntensity,
+          metalness: 0.2,
+          roughness: 0.4,
+        }),
+      )
+      group.add(ring)
+
+      // Frame / shroud (darker, slightly larger than blades)
+      const frame = new THREE.Mesh(
+        new THREE.TorusGeometry(r * 0.97, r * 0.05, 8, 32),
+        new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.5, roughness: 0.6 }),
+      )
+      group.add(frame)
+
+      // Translucent inner disc (so we see "through" the fan slightly)
+      const disc = new THREE.Mesh(
+        new THREE.CircleGeometry(r * 0.92, 32),
+        new THREE.MeshStandardMaterial({
+          color: 0x0a1220,
+          transparent: true,
+          opacity: 0.55,
+          side: THREE.DoubleSide,
+          roughness: 0.7,
+        }),
+      )
+      group.add(disc)
+
+      // Blades (7 thin curved bars)
+      const bladeMat = new THREE.MeshStandardMaterial({
+        color: 0x334155,
+        metalness: 0.4,
+        roughness: 0.5,
         side: THREE.DoubleSide,
-      }),
-    )
-    sideWall.position.set(0, 0, -D / 2)
-    scene.add(sideWall)
+      })
+      const bladeGroup = new THREE.Group()
+      const bladeCount = 7
+      for (let i = 0; i < bladeCount; i++) {
+        const blade = new THREE.Mesh(new THREE.PlaneGeometry(r * 0.78, r * 0.22), bladeMat)
+        const a = (i / bladeCount) * Math.PI * 2
+        blade.position.set(Math.cos(a) * r * 0.42, Math.sin(a) * r * 0.42, 0)
+        blade.rotation.z = a + 0.45
+        bladeGroup.add(blade)
+      }
+      // Animation tag — spun in the render loop
+      ;(bladeGroup as unknown as { userData: { spin?: number } }).userData.spin = 0.8 + Math.random() * 0.4
+      group.add(bladeGroup)
+      ;(group as unknown as { userData: { bladeGroup?: THREE.Group } }).userData.bladeGroup = bladeGroup
 
-    // ---- Top: AIO radiator + 3 radiator fans ----
-    const radiatorMat = new THREE.MeshStandardMaterial({ color: 0x0c1018, metalness: 0.5, roughness: 0.6 })
-    const radiator = new THREE.Mesh(new THREE.BoxGeometry(W * 0.78, 0.32, D * 0.9), radiatorMat)
-    radiator.position.set(0.05, H / 2 - 0.32, 0)
-    scene.add(radiator)
-    // Radiator fin lines on visible (front) side
-    const finLineMat = new THREE.LineBasicMaterial({ color: 0x334155, transparent: true, opacity: 0.6 })
-    const radHalfW = (W * 0.78) / 2
+      // Center hub
+      const hub = new THREE.Mesh(
+        new THREE.CircleGeometry(r * 0.2, 24),
+        new THREE.MeshStandardMaterial({
+          color: 0x1e3a8a,
+          emissive: 0x60a5fa,
+          emissiveIntensity: 0.5,
+          metalness: 0.6,
+          roughness: 0.4,
+        }),
+      )
+      group.add(hub)
+
+      // Orient: by default the fan circle lies in XY-plane, axis pointing along Z.
+      if (axis === "x") {
+        // Rotate so the fan faces +X direction (axis along X)
+        group.rotation.y = Math.PI / 2
+      } else if (axis === "y") {
+        // Rotate so the fan faces +Y direction (axis along Y)
+        group.rotation.x = -Math.PI / 2
+      }
+
+      group.position.set(opts.x, opts.y, opts.z)
+      return group
+    }
+
+    const fanRotators: { group: THREE.Group; speed: number }[] = []
+
+    // ===== Top AIO radiator + 3 fans =====
+    const aioBody = new THREE.Mesh(
+      new THREE.BoxGeometry(W * 0.85, 0.32, D * 0.88),
+      new THREE.MeshStandardMaterial({ color: 0x0c1018, metalness: 0.4, roughness: 0.65 }),
+    )
+    aioBody.position.set(0, H / 2 - 0.4, 0)
+    scene.add(aioBody)
+
+    // Radiator fin lines on visible front edge
+    const finLineMat = new THREE.LineBasicMaterial({ color: 0x334155, transparent: true, opacity: 0.55 })
     const finVerts: number[] = []
-    for (let i = 0; i < 28; i++) {
-      const x = -radHalfW + (i / 27) * (W * 0.78)
-      finVerts.push(x + 0.05, H / 2 - 0.32 - 0.16, D * 0.45 + 0.001, x + 0.05, H / 2 - 0.32 + 0.16, D * 0.45 + 0.001)
+    for (let i = 0; i < 32; i++) {
+      const x = -W * 0.42 + (i / 31) * (W * 0.84)
+      finVerts.push(x, H / 2 - 0.55, D * 0.44, x, H / 2 - 0.25, D * 0.44)
     }
-    const finsGeo = new THREE.BufferGeometry()
-    finsGeo.setAttribute("position", new THREE.Float32BufferAttribute(finVerts, 3))
-    scene.add(new THREE.LineSegments(finsGeo, finLineMat))
+    const finGeo = new THREE.BufferGeometry()
+    finGeo.setAttribute("position", new THREE.Float32BufferAttribute(finVerts, 3))
+    scene.add(new THREE.LineSegments(finGeo, finLineMat))
 
-    // 3 radiator fans on bottom of radiator (pulling up through it)
-    const fanRingGeo = new THREE.RingGeometry(0.18, 0.78, 28)
-    const fanIntakeMat = new THREE.MeshStandardMaterial({
-      color: 0x38bdf8,
-      transparent: true,
-      opacity: 0.55,
-      side: THREE.DoubleSide,
-      roughness: 0.4,
-      emissive: 0x0ea5e9,
-      emissiveIntensity: 0.3,
-    })
-    const fanRimMat = new THREE.MeshStandardMaterial({
-      color: 0x4b5563,
-      transparent: true,
-      opacity: 0.7,
-      side: THREE.DoubleSide,
-      roughness: 0.5,
-    })
-    const radFanXs = [-1.6, 0.05, 1.6]
-    for (const x of radFanXs) {
-      const radFan = new THREE.Mesh(fanRingGeo, fanIntakeMat)
-      radFan.rotation.x = -Math.PI / 2
-      radFan.position.set(x, H / 2 - 0.5, 0)
-      scene.add(radFan)
+    const topFanXs = [-1.1, 1.1]
+    for (const x of topFanXs) {
+      const f = buildFan({ x, y: H / 2 - 0.8, z: 0, r: 0.9, axis: "y", ledColor: 0x67e8f9, glow: 1.3 })
+      scene.add(f)
+      const blades = (f as unknown as { userData: { bladeGroup?: THREE.Group } }).userData.bladeGroup
+      if (blades) fanRotators.push({ group: blades, speed: 4 + Math.random() * 1.5 })
     }
 
-    // ---- Front: 3 intake fans ----
-    const intakeYs = [1.45, 0.0, -1.45]
+    // ===== Front intake fans (3 large, face-on along +X) =====
+    // Top intake sits a little lower than mid-tower symmetric to give the
+    // top-intake airflow more vertical room between it and the AIO fans.
+    const intakeYs = [1.55, 0, -1.85]
     for (const y of intakeYs) {
-      const fan = new THREE.Mesh(fanRingGeo, fanIntakeMat)
-      fan.position.set(W / 2 - 0.04, y, 0)
-      fan.rotation.y = Math.PI / 2
-      scene.add(fan)
+      const f = buildFan({ x: W / 2 - 0.08, y, z: 0, r: 0.9, axis: "x", ledColor: 0x67e8f9, glow: 1.3 })
+      scene.add(f)
+      const blades = (f as unknown as { userData: { bladeGroup?: THREE.Group } }).userData.bladeGroup
+      if (blades) fanRotators.push({ group: blades, speed: 4 + Math.random() * 1.5 })
     }
 
-    // ---- Back: rear exhaust fan ----
-    const backFan = new THREE.Mesh(fanRingGeo, fanRimMat)
-    backFan.position.set(-W / 2 + 0.04, 1.4, 0)
-    backFan.rotation.y = Math.PI / 2
-    scene.add(backFan)
+    // ===== Rear exhaust fan (matches the cyan-LED look of the other case fans) =====
+    {
+      const f = buildFan({ x: -W / 2 + 0.08, y: 1.8, z: 0, r: 0.7, axis: "x", ledColor: 0x67e8f9, glow: 1.3 })
+      scene.add(f)
+      const blades = (f as unknown as { userData: { bladeGroup?: THREE.Group } }).userData.bladeGroup
+      if (blades) fanRotators.push({ group: blades, speed: -3.5 })
+    }
 
-    // ---- Motherboard plane (with subtle PCB texture via colored panels) ----
-    const moboW = 3.6
-    const moboH = 3.4
+    // ===== Motherboard PCB + components =====
     const mobo = new THREE.Mesh(
-      new THREE.PlaneGeometry(moboW, moboH),
-      new THREE.MeshStandardMaterial({ color: 0x0b1220, roughness: 0.7, metalness: 0.2, side: THREE.DoubleSide }),
+      new THREE.PlaneGeometry(3.8, 3.4),
+      new THREE.MeshStandardMaterial({ color: 0x0a1424, roughness: 0.75, metalness: 0.15, side: THREE.DoubleSide }),
     )
-    mobo.position.set(-0.7, 0.55, -D / 2 + 0.05)
+    mobo.position.set(-0.5, 0.5, -D / 2 + 0.04)
     scene.add(mobo)
-    // Mobo trace hint (a few faint horizontal lines)
-    const traceMat = new THREE.LineBasicMaterial({ color: 0x1e3a8a, transparent: true, opacity: 0.45 })
+    // PCB trace hints
+    const traceMat = new THREE.LineBasicMaterial({ color: 0x1e3a8a, transparent: true, opacity: 0.4 })
     const traceVerts: number[] = []
-    for (let i = 0; i < 6; i++) {
-      const ty = 0.55 - moboH / 2 + 0.3 + (i / 5) * (moboH - 0.6)
-      traceVerts.push(-0.7 - moboW / 2 + 0.2, ty, -D / 2 + 0.06, -0.7 + moboW / 2 - 0.2, ty, -D / 2 + 0.06)
+    for (let i = 0; i < 7; i++) {
+      const ty = -1.1 + (i / 6) * 2.4
+      traceVerts.push(-2.3, ty, -D / 2 + 0.05, 1.3, ty, -D / 2 + 0.05)
     }
     const traceGeo = new THREE.BufferGeometry()
     traceGeo.setAttribute("position", new THREE.Float32BufferAttribute(traceVerts, 3))
     scene.add(new THREE.LineSegments(traceGeo, traceMat))
 
-    // ---- CPU AIO pump block (visible on motherboard) ----
-    const cpuBlock = new THREE.Mesh(
-      new THREE.BoxGeometry(0.7, 0.7, 0.35),
+    // CPU AIO block (Corsair-style square pump in the middle of the mobo)
+    const cpu = new THREE.Mesh(
+      new THREE.BoxGeometry(0.75, 0.75, 0.32),
       new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.65, roughness: 0.4 }),
     )
-    cpuBlock.position.set(-0.6, 1.3, -D / 2 + 0.28)
-    scene.add(cpuBlock)
-    // CPU block glowing logo
+    cpu.position.set(-0.5, 1.25, -D / 2 + 0.18)
+    scene.add(cpu)
     const cpuLogo = new THREE.Mesh(
-      new THREE.PlaneGeometry(0.45, 0.45),
+      new THREE.PlaneGeometry(0.52, 0.52),
       new THREE.MeshBasicMaterial({ color: 0x67e8f9, transparent: true, opacity: 0.85 }),
     )
-    cpuLogo.position.set(-0.6, 1.3, -D / 2 + 0.46)
+    cpuLogo.position.set(-0.5, 1.25, -D / 2 + 0.345)
     scene.add(cpuLogo)
 
-    // ---- RAM sticks (4 thin vertical bars beside CPU) ----
+    // RAM sticks
     const ramMat = new THREE.MeshStandardMaterial({ color: 0x111827, metalness: 0.6, roughness: 0.4 })
-    const ramHeatspreaderMat = new THREE.MeshStandardMaterial({
+    const ramTopMat = new THREE.MeshStandardMaterial({
       color: 0x67e8f9,
       emissive: 0x0891b2,
-      emissiveIntensity: 0.4,
+      emissiveIntensity: 0.5,
     })
     for (let i = 0; i < 4; i++) {
-      const ram = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.05, 0.16), ramMat)
-      ram.position.set(0.55 + i * 0.18, 1.18, -D / 2 + 0.18)
+      const ram = new THREE.Mesh(new THREE.BoxGeometry(0.09, 1.15, 0.16), ramMat)
+      ram.position.set(0.6 + i * 0.2, 1.18, -D / 2 + 0.18)
       scene.add(ram)
-      const ramTop = new THREE.Mesh(new THREE.BoxGeometry(0.085, 0.06, 0.17), ramHeatspreaderMat)
-      ramTop.position.set(0.55 + i * 0.18, 1.7, -D / 2 + 0.18)
-      scene.add(ramTop)
+      const top = new THREE.Mesh(new THREE.BoxGeometry(0.095, 0.06, 0.17), ramTopMat)
+      top.position.set(0.6 + i * 0.2, 1.78, -D / 2 + 0.18)
+      scene.add(top)
     }
 
-    // ---- AIO tubes (2 cylinders from radiator down to CPU block) ----
-    const tubeCurveA = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(-0.45, H / 2 - 0.5, -D / 2 + 0.45),
-      new THREE.Vector3(-0.45, H / 2 - 1.4, -D / 2 + 0.45),
-      new THREE.Vector3(-0.5, H / 2 - 1.85, -D / 2 + 0.5),
-      new THREE.Vector3(-0.55, 1.55, -D / 2 + 0.45),
+    // AIO tubes — two soft cylinders from radiator down to CPU pump
+    const tubeMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.3, roughness: 0.6 })
+    const tubeA = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(-0.35, H / 2 - 0.6, -D / 2 + 0.4),
+      new THREE.Vector3(-0.35, 2.1, -D / 2 + 0.4),
+      new THREE.Vector3(-0.45, 1.65, -D / 2 + 0.4),
     ])
-    const tubeCurveB = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(-0.15, H / 2 - 0.5, -D / 2 + 0.45),
-      new THREE.Vector3(-0.15, H / 2 - 1.5, -D / 2 + 0.45),
-      new THREE.Vector3(-0.3, H / 2 - 1.95, -D / 2 + 0.5),
-      new THREE.Vector3(-0.45, 1.55, -D / 2 + 0.45),
+    const tubeB = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(-0.1, H / 2 - 0.6, -D / 2 + 0.4),
+      new THREE.Vector3(-0.1, 2.1, -D / 2 + 0.4),
+      new THREE.Vector3(-0.35, 1.6, -D / 2 + 0.4),
     ])
-    const tubeMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.6, metalness: 0.2 })
-    for (const tubeCurve of [tubeCurveA, tubeCurveB]) {
-      const tubeGeo = new THREE.TubeGeometry(tubeCurve, 24, 0.08, 8, false)
-      const tubeMesh = new THREE.Mesh(tubeGeo, tubeMat)
-      scene.add(tubeMesh)
+    for (const c of [tubeA, tubeB]) {
+      scene.add(new THREE.Mesh(new THREE.TubeGeometry(c, 24, 0.08, 8, false), tubeMat))
     }
 
-    // ---- GPU body (horizontal, hangs off mobo PCIe slot) ----
-    const gpuW = 3.6
-    const gpuH = 0.7
+    // ===== GPU (horizontal, in front of motherboard) =====
+    const gpuW = 3.8
+    const gpuH = 0.65
     const gpuD = 1.4
     const gpu = new THREE.Mesh(
       new THREE.BoxGeometry(gpuW, gpuH, gpuD),
       new THREE.MeshStandardMaterial({ color: 0x111827, metalness: 0.55, roughness: 0.5 }),
     )
-    gpu.position.set(-0.85, -0.55, 0.15)
+    gpu.position.set(-0.75, -0.5, 0.15)
     scene.add(gpu)
 
-    // GPU brand stripe (subtle)
+    // GPU front-face stripe (the visible "GEFORCE RTX" edge)
     const stripe = new THREE.Mesh(
-      new THREE.BoxGeometry(gpuW * 0.82, 0.05, gpuD + 0.012),
-      new THREE.MeshStandardMaterial({ color: 0x334155, emissive: 0x0e7490, emissiveIntensity: 0.35 }),
+      new THREE.BoxGeometry(gpuW * 0.92, 0.06, gpuD + 0.012),
+      new THREE.MeshStandardMaterial({ color: 0x0e7490, emissive: 0x0891b2, emissiveIntensity: 0.4 }),
     )
-    stripe.position.set(-0.85, -0.18, 0.15)
+    stripe.position.set(-0.75, -0.18, 0.15)
     scene.add(stripe)
 
-    // GPU bottom intake fans
-    const gpuFanGeo = new THREE.RingGeometry(0.07, 0.34, 20)
-    const gpuFanMat = new THREE.MeshStandardMaterial({ color: 0x4b5563, side: THREE.DoubleSide, roughness: 0.5 })
-    for (const xOff of [-1.05, 0, 1.05]) {
-      const gpuFan = new THREE.Mesh(gpuFanGeo, gpuFanMat)
-      gpuFan.rotation.x = Math.PI / 2
-      gpuFan.position.set(-0.85 + xOff, -0.91, 0.15)
-      scene.add(gpuFan)
+    // GPU bottom intake fans (face -Y, taking air in from below)
+    for (const xOff of [-1.1, 0, 1.1]) {
+      const f = buildFan({
+        x: -0.75 + xOff,
+        y: -0.5 - gpuH / 2 - 0.03,
+        z: 0.15,
+        r: 0.36,
+        axis: "y",
+        ledColor: 0x334155,
+        glow: 0.05,
+      })
+      scene.add(f)
+      const blades = (f as unknown as { userData: { bladeGroup?: THREE.Group } }).userData.bladeGroup
+      if (blades) fanRotators.push({ group: blades, speed: 6 })
     }
 
-    // PCIe rear bracket on -X side
+    // PCIe rear bracket
     const bracket = new THREE.Mesh(
-      new THREE.BoxGeometry(0.12, gpuH * 1.5, gpuD * 0.95),
-      new THREE.MeshStandardMaterial({ color: 0x6b7280, roughness: 0.4, metalness: 0.7 }),
+      new THREE.BoxGeometry(0.12, gpuH * 1.6, gpuD * 0.96),
+      new THREE.MeshStandardMaterial({ color: 0x6b7280, metalness: 0.7, roughness: 0.4 }),
     )
-    bracket.position.set(-W / 2 + 0.08, -0.42, 0.15)
+    bracket.position.set(-W / 2 + 0.08, -0.4, 0.15)
     scene.add(bracket)
 
-    // ---- PSU shroud (large box across the bottom) ----
-    const psuShroudH = 1.15
-    const psuShroud = new THREE.Mesh(
-      new THREE.BoxGeometry(W * 0.96, psuShroudH, D * 0.95),
-      new THREE.MeshStandardMaterial({ color: 0x05080d, roughness: 0.85, metalness: 0.15 }),
+    // ===== PSU shroud =====
+    const psuH = 1.15
+    const psu = new THREE.Mesh(
+      new THREE.BoxGeometry(W * 0.96, psuH, D * 0.95),
+      new THREE.MeshStandardMaterial({ color: 0x05080d, roughness: 0.88, metalness: 0.15 }),
     )
-    psuShroud.position.set(0, -H / 2 + psuShroudH / 2, 0)
-    scene.add(psuShroud)
-    // Subtle highlight strip on top edge of PSU
-    const psuStripe = new THREE.Mesh(
-      new THREE.BoxGeometry(W * 0.96, 0.03, D * 0.95),
-      new THREE.MeshStandardMaterial({ color: 0x1f2937 }),
-    )
-    psuStripe.position.set(0, -H / 2 + psuShroudH + 0.015, 0)
-    scene.add(psuStripe)
+    psu.position.set(0, -H / 2 + psuH / 2, 0)
+    scene.add(psu)
 
-    // ---- Duct (ducted mode only) — solid scoop matching the close-up photo ----
+    // ===== Duct (ducted mode only) =====
+    // Profile matches the CAD side view: long flat body with an open slot on top,
+    // smooth flared/funnel intake mouth on the right (flares up and down beyond
+    // the body), and a rounded bottom-left corner.
     if (mode === "ducted") {
-      // Side-profile traced from the close-up: tall front face that catches the bottom
-      // intake fan and the lower half of the middle fan, gentle quadratic curve over
-      // the top that meets the GPU underside at the rear.
-      const frontX = W / 2 - 0.12
-      const psuTopY = -2.15
-      const frontTopY = 0.0
-      const backX = -2.05
-      const backTopY = -0.95
-      const ctrlX = 0.5
-      const ctrlY = frontTopY - 0.55
+      const frontX = 2.3                  // mouth front face (closer to intake fans, with small clearance)
+      const flareStartX = frontX - 0.9    // where body transitions into mouth flare
+      const backX = -2.0                  // back of body (left edge)
+      const bodyTopY = -0.95              // top of body (GPU sits above with clearance)
+      const bodyBotY = -1.78              // bottom of body (slightly elevated above PSU)
+      const mouthTopY = 0.35              // top of flared mouth (tall — catches lower 2 fans)
+      const mouthBotY = -1.95             // bottom of flared mouth (sits on PSU floor)
+      const roundR = 0.4                  // rounded corner radius (bottom-left)
       const ductDepth = D - 0.4
 
       const ductShape = new THREE.Shape()
-      ductShape.moveTo(frontX, psuTopY)
-      ductShape.lineTo(frontX, frontTopY)
-      ductShape.quadraticCurveTo(ctrlX, ctrlY, backX, backTopY)
-      ductShape.lineTo(backX, psuTopY)
-      ductShape.lineTo(frontX, psuTopY)
+      // 1. Top-left corner of body
+      ductShape.moveTo(backX, bodyTopY)
+      // 2. Body top going right
+      ductShape.lineTo(flareStartX, bodyTopY)
+      // 3. Smooth upper flare from body top → mouth top
+      ductShape.quadraticCurveTo(frontX, bodyTopY, frontX, mouthTopY)
+      // 4. Right edge — the flat mouth face
+      ductShape.lineTo(frontX, mouthBotY)
+      // 5. Smooth lower flare from mouth bottom → body bottom
+      ductShape.quadraticCurveTo(frontX, bodyBotY, flareStartX, bodyBotY)
+      // 6. Body bottom going left
+      ductShape.lineTo(backX + roundR, bodyBotY)
+      // 7. Rounded bottom-left corner
+      ductShape.quadraticCurveTo(backX, bodyBotY, backX, bodyBotY + roundR)
+      // 8. Left edge going up to close (implicit lineTo start)
 
       const ductGeom = new THREE.ExtrudeGeometry(ductShape, {
         depth: ductDepth,
@@ -315,316 +400,399 @@ export default function PCCoolingScene({ mode }: { mode: PCCoolingMode }) {
         bevelThickness: 0.025,
         bevelSize: 0.025,
         bevelSegments: 2,
-        curveSegments: 36,
+        curveSegments: 48,
       })
       ductGeom.translate(0, 0, -ductDepth / 2)
 
-      // Matte 3D-printed PLA finish — solid black, slightly translucent so airflow shows through
       const duct = new THREE.Mesh(
         ductGeom,
         new THREE.MeshStandardMaterial({
-          color: 0x080a0e,
-          roughness: 0.96,
-          metalness: 0.04,
+          color: 0xfbbf24,            // warm amber — contrasts with the cyan/blue case interior
+          emissive: 0xfbbf24,
+          emissiveIntensity: 0.08,
+          roughness: 0.6,
+          metalness: 0.1,
           transparent: true,
-          opacity: 0.82,
+          opacity: 0.22,
           side: THREE.DoubleSide,
+          depthWrite: false,
         }),
       )
       scene.add(duct)
 
-      // Subtle layer-line stripes on the visible side (3D-printed look)
-      const layerLineMat = new THREE.LineBasicMaterial({ color: 0x1f2937, transparent: true, opacity: 0.55 })
-      const layerVerts: number[] = []
-      const layerCount = 12
-      for (let i = 1; i < layerCount; i++) {
-        const ly = psuTopY + (i / layerCount) * (frontTopY - psuTopY)
-        layerVerts.push(frontX - 0.001, ly, ductDepth / 2 + 0.001, backX + 0.5, ly, ductDepth / 2 + 0.001)
-      }
-      const layerGeo = new THREE.BufferGeometry()
-      layerGeo.setAttribute("position", new THREE.Float32BufferAttribute(layerVerts, 3))
-      scene.add(new THREE.LineSegments(layerGeo, layerLineMat))
-
-      // Cyan silhouette accent so the duct still pops against the dark scene
-      const ductEdgesMesh = new THREE.LineSegments(
-        new THREE.EdgesGeometry(ductGeom),
-        new THREE.LineBasicMaterial({ color: 0x67e8f9, transparent: true, opacity: 0.85 }),
+      // Crisp amber outline so the see-through shape pops against the dark interior
+      scene.add(
+        new THREE.LineSegments(
+          new THREE.EdgesGeometry(ductGeom),
+          new THREE.LineBasicMaterial({ color: 0xfbbf24, transparent: true, opacity: 0.95 }),
+        ),
       )
-      scene.add(ductEdgesMesh)
 
-      // Glowing intake mouth on the front face — covers bottom + lower middle fan
-      const intakeMouth = new THREE.Mesh(
-        new THREE.PlaneGeometry(ductDepth * 0.86, frontTopY - psuTopY - 0.08),
+      // ----- Open slot on top of the body (the dark inset rectangle from the CAD) -----
+      // GPU fans sit above this slot and pull air upward through it.
+      const slotPadFront = 0.12  // inset from flareStartX
+      const slotPadBack = 0.18   // inset from backX
+      const slotXStart = backX + slotPadBack
+      const slotXEnd = flareStartX - slotPadFront
+      const slotW = slotXEnd - slotXStart
+      const slotDepth = ductDepth * 0.65
+
+      // Recessed dark "well" inside the slot (shows there's an opening, not a solid top)
+      const slotFloor = new THREE.Mesh(
+        new THREE.PlaneGeometry(slotW, slotDepth),
+        new THREE.MeshBasicMaterial({ color: 0x05080d, side: THREE.DoubleSide }),
+      )
+      slotFloor.rotation.x = -Math.PI / 2
+      slotFloor.position.set((slotXStart + slotXEnd) / 2, bodyTopY - 0.04, 0)
+      scene.add(slotFloor)
+
+      // Subtle cyan glow filling the slot — visually links it to the airflow exit
+      const slotGlow = new THREE.Mesh(
+        new THREE.PlaneGeometry(slotW * 0.96, slotDepth * 0.92),
         new THREE.MeshBasicMaterial({
           color: 0x67e8f9,
           transparent: true,
-          opacity: 0.18,
+          opacity: 0.16,
           side: THREE.DoubleSide,
         }),
       )
-      intakeMouth.rotation.y = -Math.PI / 2
-      intakeMouth.position.set(frontX - 0.001, (frontTopY + psuTopY) / 2, 0)
-      scene.add(intakeMouth)
+      slotGlow.rotation.x = -Math.PI / 2
+      slotGlow.position.set((slotXStart + slotXEnd) / 2, bodyTopY + 0.005, 0)
+      scene.add(slotGlow)
 
-      // Outlet glows on the curved top above each GPU bottom intake fan.
-      // Solve the quadratic-bezier for x to find the corresponding y on the curve.
-      const yOnTopAt = (xTarget: number) => {
-        let lo = 0
-        let hi = 1
-        for (let i = 0; i < 20; i++) {
-          const m = (lo + hi) / 2
-          const xm = (1 - m) * (1 - m) * frontX + 2 * (1 - m) * m * ctrlX + m * m * backX
-          if (xm > xTarget) lo = m
-          else hi = m
-        }
-        const t = (lo + hi) / 2
-        return (1 - t) * (1 - t) * frontTopY + 2 * (1 - t) * t * ctrlY + t * t * backTopY
+      // Thin dark "lip" stroke around the slot so its edge reads cleanly from the side
+      const lipMat = new THREE.LineBasicMaterial({ color: 0x0a0d14, transparent: true, opacity: 0.85 })
+      const lipVerts = [
+        slotXStart, bodyTopY + 0.001, -slotDepth / 2,
+        slotXEnd, bodyTopY + 0.001, -slotDepth / 2,
+        slotXEnd, bodyTopY + 0.001, slotDepth / 2,
+        slotXStart, bodyTopY + 0.001, slotDepth / 2,
+        slotXStart, bodyTopY + 0.001, -slotDepth / 2,
+      ]
+      const lipGeo = new THREE.BufferGeometry()
+      lipGeo.setAttribute("position", new THREE.Float32BufferAttribute(lipVerts, 3))
+      scene.add(new THREE.Line(lipGeo, lipMat))
+
+      // Subtle 3D-print layer lines on the visible side of the body
+      const layerMat = new THREE.LineBasicMaterial({ color: 0x6b7280, transparent: true, opacity: 0.35 })
+      const layerVerts: number[] = []
+      for (let i = 1; i < 6; i++) {
+        const ly = bodyBotY + (i / 6) * (bodyTopY - bodyBotY)
+        layerVerts.push(backX + 0.08, ly, ductDepth / 2 + 0.002, flareStartX - 0.05, ly, ductDepth / 2 + 0.002)
       }
-      for (const fanX of [-1.05, 0, 1.05]) {
-        const outletX = -0.85 + fanX
-        const outletY = yOnTopAt(outletX) - 0.04
-        const outlet = new THREE.Mesh(
-          new THREE.CircleGeometry(0.32, 24),
-          new THREE.MeshBasicMaterial({
-            color: 0x67e8f9,
-            transparent: true,
-            opacity: 0.34,
-            side: THREE.DoubleSide,
-          }),
-        )
-        outlet.rotation.x = -Math.PI / 2
-        outlet.position.set(outletX, outletY, 0.15)
-        scene.add(outlet)
-      }
+      const layerGeo = new THREE.BufferGeometry()
+      layerGeo.setAttribute("position", new THREE.Float32BufferAttribute(layerVerts, 3))
+      scene.add(new THREE.LineSegments(layerGeo, layerMat))
     }
 
-    // Curves
-    const flowCurves: PCFlowCurve[] = []
-    const heatCurves: PCFlowCurve[] = []
+    // ===== Airflow curves =====
+    const flowCurves: FlowCurve[] = []
+    const heatCurves: FlowCurve[] = []
 
+    // All flow curves run in the z=0.5 plane (slightly in front of the duct/GPU)
+    // so the airflow reads as a clean 2D streamline in the side view.
+    const FZ = 0.5
     if (mode === "ducted") {
+      // All paths start OUTSIDE the case on the right (green intake) and end
+      // OUTSIDE the case on the left/top (red exhaust). The particle color
+      // transitions green → cyan → red along the path automatically.
       flowCurves.push(
-        // Bottom intake → along the duct floor → emerges at GPU back fan → up through GPU
+        // Bottom intake → mouth → body floor → slot → up through GPU-left → exit LEFT horizontally → outside
         {
           curve: new THREE.CatmullRomCurve3([
-            new THREE.Vector3(2.85, -1.45, 0),
-            new THREE.Vector3(2.2, -1.6, 0),
-            new THREE.Vector3(1.0, -1.75, 0),
-            new THREE.Vector3(-0.5, -1.6, 0),
-            new THREE.Vector3(-1.4, -1.3, 0.05),
-            new THREE.Vector3(-1.7, -1.05, 0.15),
-            new THREE.Vector3(-1.9, -0.7, 0.15),
-            new THREE.Vector3(-1.9, -0.3, 0.15),
-            new THREE.Vector3(-2.4, -0.4, 0),
-            new THREE.Vector3(-2.85, -0.4, 0),
+            new THREE.Vector3(3.6, -1.85, FZ),
+            new THREE.Vector3(2.6, -1.85, FZ),
+            new THREE.Vector3(2.4, -1.85, FZ),
+            new THREE.Vector3(2.0, -1.85, FZ),
+            new THREE.Vector3(1.0, -1.7, FZ),
+            new THREE.Vector3(0.0, -1.5, FZ),
+            new THREE.Vector3(-1.0, -1.3, FZ),
+            new THREE.Vector3(-1.55, -1.1, FZ),
+            new THREE.Vector3(-1.7, -1.0, FZ),
+            new THREE.Vector3(-1.7, -0.85, FZ),
+            new THREE.Vector3(-1.7, -0.4, FZ),
+            new THREE.Vector3(-1.7, -0.05, FZ),
+            new THREE.Vector3(-2.0, -0.05, FZ),
+            new THREE.Vector3(-2.7, -0.05, FZ),
+            new THREE.Vector3(-3.7, -0.05, FZ),
           ]),
-          color: 0x67e8f9,
-          particleCount: 60,
-          speed: 0.14,
+          color: 0xffffff,
+          count: 52,
+          speed: 0.11,
+          size: 0.075,
+        },
+        // Middle intake → mouth → duct → up through GPU-center → exit LEFT horizontally → outside
+        {
+          curve: new THREE.CatmullRomCurve3([
+            new THREE.Vector3(3.6, 0, FZ),
+            new THREE.Vector3(2.6, 0, FZ),
+            new THREE.Vector3(2.4, -0.1, FZ),
+            new THREE.Vector3(2.15, -0.35, FZ),
+            new THREE.Vector3(1.6, -0.8, FZ),
+            new THREE.Vector3(0.7, -1.1, FZ),
+            new THREE.Vector3(-0.2, -1.15, FZ),
+            new THREE.Vector3(-0.75, -1.0, FZ),
+            new THREE.Vector3(-0.75, -0.85, FZ),
+            new THREE.Vector3(-0.75, -0.4, FZ),
+            new THREE.Vector3(-0.75, 0.1, FZ),
+            new THREE.Vector3(-1.4, 0.1, FZ),
+            new THREE.Vector3(-2.4, 0.1, FZ),
+            new THREE.Vector3(-3.7, 0.1, FZ),
+          ]),
+          color: 0xffffff,
+          count: 48,
+          speed: 0.105,
+          size: 0.075,
+        },
+        // Mid-low stream → into duct → up through GPU-right → exit LEFT horizontally → outside
+        {
+          curve: new THREE.CatmullRomCurve3([
+            new THREE.Vector3(3.6, -0.9, FZ),
+            new THREE.Vector3(2.6, -0.9, FZ),
+            new THREE.Vector3(2.35, -1.0, FZ),
+            new THREE.Vector3(1.9, -1.15, FZ),
+            new THREE.Vector3(1.1, -1.25, FZ),
+            new THREE.Vector3(0.3, -1.15, FZ),
+            new THREE.Vector3(0.25, -0.95, FZ),
+            new THREE.Vector3(0.3, -0.5, FZ),
+            new THREE.Vector3(0.3, 0.25, FZ),
+            new THREE.Vector3(-0.5, 0.25, FZ),
+            new THREE.Vector3(-1.5, 0.25, FZ),
+            new THREE.Vector3(-2.6, 0.25, FZ),
+            new THREE.Vector3(-3.7, 0.25, FZ),
+          ]),
+          color: 0xffffff,
+          count: 44,
+          speed: 0.1,
           size: 0.07,
         },
-        // Lower-middle intake (caught by the upper part of the duct mouth) → curves
-        // along the duct's inner top → exits through the GPU center fan upward
+        // Top intake → curves up to the RIGHT top AIO fan → exits top
         {
           curve: new THREE.CatmullRomCurve3([
-            new THREE.Vector3(2.85, -0.25, 0),
-            new THREE.Vector3(2.3, -0.35, 0),
-            new THREE.Vector3(1.5, -0.55, 0),
-            new THREE.Vector3(0.5, -0.8, 0),
-            new THREE.Vector3(-0.4, -0.95, 0.1),
-            new THREE.Vector3(-0.85, -1.0, 0.15),
-            new THREE.Vector3(-0.85, -0.55, 0.15),
-            new THREE.Vector3(-0.85, 0.1, 0.15),
-            new THREE.Vector3(-0.85, 1.0, 0),
-            new THREE.Vector3(0.05, 2.95, 0),
+            new THREE.Vector3(3.6, 1.55, FZ),
+            new THREE.Vector3(2.6, 1.55, FZ),
+            new THREE.Vector3(2.0, 1.75, FZ),
+            new THREE.Vector3(1.5, 2.0, FZ),
+            new THREE.Vector3(1.1, 2.3, FZ),
+            new THREE.Vector3(1.1, 2.5, FZ),
+            new THREE.Vector3(1.1, 3.2, FZ),
+            new THREE.Vector3(1.1, 3.8, FZ),
           ]),
-          color: 0x67e8f9,
-          particleCount: 50,
-          speed: 0.12,
+          color: 0xffffff,
+          count: 24,
+          speed: 0.1,
           size: 0.065,
         },
-        // Bottom intake (depth variant) → along the duct → emerges at GPU front fan
+        // Top intake → flows right-to-left → exits up through the LEFT top AIO fan
         {
           curve: new THREE.CatmullRomCurve3([
-            new THREE.Vector3(2.85, -1.45, -0.4),
-            new THREE.Vector3(2.1, -1.65, -0.35),
-            new THREE.Vector3(1.3, -1.55, -0.2),
-            new THREE.Vector3(0.5, -1.2, -0.05),
-            new THREE.Vector3(0.1, -0.95, 0.1),
-            new THREE.Vector3(-0.05, -0.95, 0.15),
-            new THREE.Vector3(-0.05, -0.6, 0.15),
-            new THREE.Vector3(-0.4, -0.3, 0.15),
-            new THREE.Vector3(-1.4, -0.4, 0),
-            new THREE.Vector3(-2.85, -0.4, 0),
+            new THREE.Vector3(3.6, 1.55, FZ),
+            new THREE.Vector3(2.6, 1.55, FZ),
+            new THREE.Vector3(1.6, 1.7, FZ),
+            new THREE.Vector3(0.3, 1.9, FZ),
+            new THREE.Vector3(-0.6, 2.05, FZ),
+            new THREE.Vector3(-1.1, 2.3, FZ),
+            new THREE.Vector3(-1.1, 2.5, FZ),
+            new THREE.Vector3(-1.1, 3.2, FZ),
+            new THREE.Vector3(-1.1, 3.8, FZ),
           ]),
-          color: 0xbae6fd,
-          particleCount: 35,
-          speed: 0.115,
-          size: 0.055,
+          color: 0xffffff,
+          count: 24,
+          speed: 0.1,
+          size: 0.065,
         },
-        // Top intake → straight up to top radiator (above the duct, unaffected)
+        // Top intake → flows right-to-left across the case → exits LEFT through the rear exhaust fan
         {
           curve: new THREE.CatmullRomCurve3([
-            new THREE.Vector3(2.85, 1.45, 0),
-            new THREE.Vector3(1.6, 1.7, 0.2),
-            new THREE.Vector3(0.6, 2.05, -0.1),
-            new THREE.Vector3(0.05, 2.4, 0),
-            new THREE.Vector3(0.05, 2.95, 0),
+            new THREE.Vector3(3.6, 1.55, FZ),
+            new THREE.Vector3(2.6, 1.55, FZ),
+            new THREE.Vector3(1.6, 1.6, FZ),
+            new THREE.Vector3(0.3, 1.7, FZ),
+            new THREE.Vector3(-1.0, 1.75, FZ),
+            new THREE.Vector3(-2.0, 1.8, FZ),
+            new THREE.Vector3(-2.62, 1.8, FZ),
+            new THREE.Vector3(-3.7, 1.8, FZ),
           ]),
-          color: 0x67e8f9,
-          particleCount: 24,
-          speed: 0.11,
-          size: 0.06,
-        },
-        // Upper-middle intake (above the duct mouth) → straight up to middle radiator fan
-        {
-          curve: new THREE.CatmullRomCurve3([
-            new THREE.Vector3(2.85, 0.55, 0),
-            new THREE.Vector3(2.0, 0.95, 0),
-            new THREE.Vector3(1.0, 1.45, 0),
-            new THREE.Vector3(0.6, 2.0, 0),
-            new THREE.Vector3(0.4, 2.4, 0),
-            new THREE.Vector3(0.05, 2.95, 0),
-          ]),
-          color: 0xbae6fd,
-          particleCount: 22,
-          speed: 0.10,
-          size: 0.055,
+          color: 0xffffff,
+          count: 24,
+          speed: 0.1,
+          size: 0.065,
         },
       )
     } else {
-      // Stock mode: air disperses, doesn't reach GPU effectively
+      // Stock: air enters but mostly disperses. Heat pools around GPU.
       flowCurves.push(
-        // Top intake → top radiator
+        // Top intake → curves up to the RIGHT top AIO fan → exits top
         {
           curve: new THREE.CatmullRomCurve3([
-            new THREE.Vector3(2.85, 1.45, 0),
-            new THREE.Vector3(1.5, 1.6, 0.2),
-            new THREE.Vector3(0.5, 1.95, -0.1),
-            new THREE.Vector3(0.05, 2.4, 0),
-            new THREE.Vector3(0.05, 2.95, 0),
+            new THREE.Vector3(3.6, 1.55, FZ),
+            new THREE.Vector3(2.6, 1.55, FZ),
+            new THREE.Vector3(2.0, 1.75, FZ),
+            new THREE.Vector3(1.5, 2.0, FZ),
+            new THREE.Vector3(1.1, 2.3, FZ),
+            new THREE.Vector3(1.1, 2.5, FZ),
+            new THREE.Vector3(1.1, 3.2, FZ),
+            new THREE.Vector3(1.1, 3.8, FZ),
           ]),
-          color: 0x67e8f9,
-          particleCount: 28,
-          speed: 0.10,
-          size: 0.06,
+          color: 0xffffff,
+          count: 24,
+          speed: 0.1,
+          size: 0.065,
         },
-        // Middle intake → drifts and partially exhausts up
+        // Top intake → flows right-to-left → exits up through the LEFT top AIO fan
         {
           curve: new THREE.CatmullRomCurve3([
-            new THREE.Vector3(2.85, 0, 0),
-            new THREE.Vector3(1.8, 0.35, 0.3),
-            new THREE.Vector3(0.6, 0.0, -0.2),
-            new THREE.Vector3(-0.6, 0.4, 0),
-            new THREE.Vector3(-1.6, 0.95, 0),
-            new THREE.Vector3(-1.6, 2.0, 0),
-            new THREE.Vector3(-1.6, 2.95, 0),
+            new THREE.Vector3(3.6, 1.55, FZ),
+            new THREE.Vector3(2.6, 1.55, FZ),
+            new THREE.Vector3(1.6, 1.7, FZ),
+            new THREE.Vector3(0.3, 1.9, FZ),
+            new THREE.Vector3(-0.6, 2.05, FZ),
+            new THREE.Vector3(-1.1, 2.3, FZ),
+            new THREE.Vector3(-1.1, 2.5, FZ),
+            new THREE.Vector3(-1.1, 3.2, FZ),
+            new THREE.Vector3(-1.1, 3.8, FZ),
           ]),
-          color: 0x67e8f9,
-          particleCount: 30,
-          speed: 0.09,
-          size: 0.06,
+          color: 0xffffff,
+          count: 24,
+          speed: 0.1,
+          size: 0.065,
         },
-        // Bottom intake → mostly disperses around PSU shroud, bypasses GPU
+        // Top intake → flows right-to-left across the case → exits LEFT through the rear exhaust fan
         {
           curve: new THREE.CatmullRomCurve3([
-            new THREE.Vector3(2.85, -1.45, 0),
-            new THREE.Vector3(1.6, -1.3, -0.3),
-            new THREE.Vector3(0.4, -1.65, 0.4),
-            new THREE.Vector3(-0.8, -1.45, 0),
-            new THREE.Vector3(-2.0, -1.6, 0),
-            new THREE.Vector3(-2.85, -1.4, 0),
+            new THREE.Vector3(3.6, 1.55, FZ),
+            new THREE.Vector3(2.6, 1.55, FZ),
+            new THREE.Vector3(1.6, 1.6, FZ),
+            new THREE.Vector3(0.3, 1.7, FZ),
+            new THREE.Vector3(-1.0, 1.75, FZ),
+            new THREE.Vector3(-2.0, 1.8, FZ),
+            new THREE.Vector3(-2.62, 1.8, FZ),
+            new THREE.Vector3(-3.7, 1.8, FZ),
           ]),
-          color: 0xbae6fd,
-          particleCount: 30,
+          color: 0xffffff,
+          count: 24,
+          speed: 0.1,
+          size: 0.065,
+        },
+        // Middle intake → drifts, partly upward, bypasses GPU → exits top-left → outside
+        {
+          curve: new THREE.CatmullRomCurve3([
+            new THREE.Vector3(3.6, 0, FZ),
+            new THREE.Vector3(2.6, 0, FZ),
+            new THREE.Vector3(1.6, 0.3, FZ),
+            new THREE.Vector3(0.5, 0.55, FZ),
+            new THREE.Vector3(-0.7, 0.85, FZ),
+            new THREE.Vector3(-1.1, 1.5, FZ),
+            new THREE.Vector3(-1.1, 2.5, FZ),
+            new THREE.Vector3(-1.1, 3.2, FZ),
+            new THREE.Vector3(-1.1, 3.8, FZ),
+          ]),
+          color: 0xffffff,
+          count: 40,
           speed: 0.085,
-          size: 0.055,
+          size: 0.06,
         },
-        // Bottom intake (depth variant) — drifts upward weakly toward GPU but loses momentum
+        // Bottom intake → drifts along PSU shroud → exits rear horizontally → outside
         {
           curve: new THREE.CatmullRomCurve3([
-            new THREE.Vector3(2.85, -1.45, 0.4),
-            new THREE.Vector3(1.0, -1.0, 0.2),
-            new THREE.Vector3(-0.4, -0.6, 0),
-            new THREE.Vector3(-1.2, -0.3, -0.2),
-            new THREE.Vector3(-2.0, -0.4, 0),
-            new THREE.Vector3(-2.85, -0.6, 0),
+            new THREE.Vector3(3.6, -1.85, FZ),
+            new THREE.Vector3(2.6, -1.85, FZ),
+            new THREE.Vector3(1.5, -1.75, FZ),
+            new THREE.Vector3(0.3, -1.85, FZ),
+            new THREE.Vector3(-1.0, -1.75, FZ),
+            new THREE.Vector3(-2.0, -1.85, FZ),
+            new THREE.Vector3(-2.7, -1.65, FZ),
+            new THREE.Vector3(-3.7, -1.55, FZ),
           ]),
-          color: 0xbae6fd,
-          particleCount: 22,
+          color: 0xffffff,
+          count: 40,
           speed: 0.075,
-          size: 0.05,
+          size: 0.055,
         },
       )
 
-      // Hot air pooling above GPU
+      // Red heat pooling around GPU
       heatCurves.push(
         {
           curve: new THREE.CatmullRomCurve3(
             [
-              new THREE.Vector3(-2.0, -0.15, 0.15),
-              new THREE.Vector3(-1.5, 0.45, 0.5),
-              new THREE.Vector3(-0.6, 0.95, -0.3),
-              new THREE.Vector3(-0.85, 1.4, 0),
-              new THREE.Vector3(-1.5, 1.7, 0.25),
-              new THREE.Vector3(-1.2, 0.55, -0.1),
-              new THREE.Vector3(-2.0, -0.15, 0.15),
+              new THREE.Vector3(-2.0, -0.18, FZ),
+              new THREE.Vector3(-1.5, 0.45, FZ),
+              new THREE.Vector3(-0.5, 0.95, FZ),
+              new THREE.Vector3(-0.85, 1.3, FZ),
+              new THREE.Vector3(-1.6, 1.6, FZ),
+              new THREE.Vector3(-1.2, 0.5, FZ),
+              new THREE.Vector3(-2.0, -0.18, FZ),
             ],
             true,
           ),
           color: 0xf87171,
-          particleCount: 16,
-          speed: 0.06,
-          size: 0.075,
+          count: 24,
+          speed: 0.05,
+          size: 0.08,
         },
         {
           curve: new THREE.CatmullRomCurve3(
             [
-              new THREE.Vector3(0.0, -0.18, 0.15),
-              new THREE.Vector3(0.3, 0.55, -0.3),
-              new THREE.Vector3(-0.2, 1.05, 0.35),
-              new THREE.Vector3(-0.6, 1.6, 0),
-              new THREE.Vector3(0.1, 0.95, 0.15),
-              new THREE.Vector3(0.0, -0.18, 0.15),
+              new THREE.Vector3(0.2, -0.18, FZ),
+              new THREE.Vector3(0.5, 0.55, FZ),
+              new THREE.Vector3(-0.1, 1.0, FZ),
+              new THREE.Vector3(-0.5, 1.5, FZ),
+              new THREE.Vector3(0.3, 0.9, FZ),
+              new THREE.Vector3(0.2, -0.18, FZ),
             ],
             true,
           ),
           color: 0xf87171,
-          particleCount: 14,
+          count: 20,
           speed: 0.055,
-          size: 0.075,
+          size: 0.08,
         },
       )
     }
 
-    // Particle systems via instanced spheres
+    // ===== Particle systems via InstancedMesh =====
     type ParticleSystem = {
       mesh: THREE.InstancedMesh
       curve: THREE.CatmullRomCurve3
       count: number
       speed: number
       offsets: number[]
+      gradient: boolean
     }
 
-    const buildSystem = (flow: PCFlowCurve): ParticleSystem => {
-      const sphereGeo = new THREE.SphereGeometry(flow.size, 8, 8)
-      const sphereMat = new THREE.MeshBasicMaterial({
-        color: flow.color,
+    const buildSystem = (flow: FlowCurve, gradient: boolean): ParticleSystem => {
+      const sphere = new THREE.SphereGeometry(flow.size, 10, 10)
+      // Flow systems use white base so the per-instance gradient color shows
+      // through. Heat systems keep the curve's solid color.
+      const mat = new THREE.MeshBasicMaterial({
+        color: gradient ? 0xffffff : flow.color,
         transparent: true,
-        opacity: 0.9,
+        opacity: 0.95,
       })
-      const mesh = new THREE.InstancedMesh(sphereGeo, sphereMat, flow.particleCount)
+      const mesh = new THREE.InstancedMesh(sphere, mat, flow.count)
       mesh.frustumCulled = false
+      if (gradient) {
+        // Initialize all instance colors to white so they're not invisible on frame 0
+        const initColor = new THREE.Color(0xffffff)
+        for (let i = 0; i < flow.count; i++) mesh.setColorAt(i, initColor)
+      }
       const offsets: number[] = []
-      for (let i = 0; i < flow.particleCount; i++) offsets.push(i / flow.particleCount)
+      for (let i = 0; i < flow.count; i++) offsets.push(i / flow.count)
       scene.add(mesh)
-      return { mesh, curve: flow.curve, count: flow.particleCount, speed: flow.speed, offsets }
+      return { mesh, curve: flow.curve, count: flow.count, speed: flow.speed, offsets, gradient }
     }
 
-    const flowSystems = flowCurves.map(buildSystem)
-    const heatSystems = heatCurves.map(buildSystem)
+    const flowSystems = flowCurves.map((c) => buildSystem(c, true))
+    const heatSystems = heatCurves.map((c) => buildSystem(c, false))
 
-    // Resize
+    // Gradient endpoints used for the green → cyan → red transition
+    const greenColor = new THREE.Color(0x4ade80)
+    const cyanColor = new THREE.Color(0x67e8f9)
+    const redColor = new THREE.Color(0xf87171)
+    const tmpColor = new THREE.Color()
+
+    // ===== Resize =====
     const resize = () => {
       const w = Math.max(mount.clientWidth, 320)
       const h = Math.max(mount.clientHeight, 240)
@@ -632,15 +800,17 @@ export default function PCCoolingScene({ mode }: { mode: PCCoolingMode }) {
       camera.aspect = w / h
       camera.updateProjectionMatrix()
     }
-    const resizeObs = new ResizeObserver(resize)
-    resizeObs.observe(mount)
+    const obs = new ResizeObserver(resize)
+    obs.observe(mount)
     resize()
 
+    // ===== Animation loop =====
     const dummy = new THREE.Object3D()
+    const tmpPoint = new THREE.Vector3()
     let frameId = 0
     const startTime = performance.now()
+    let lastTime = startTime
 
-    const tmpPoint = new THREE.Vector3()
     const updateSystem = (sys: ParticleSystem, time: number) => {
       for (let i = 0; i < sys.count; i++) {
         const raw = (time * sys.speed + sys.offsets[i]) % 1
@@ -651,22 +821,43 @@ export default function PCCoolingScene({ mode }: { mode: PCCoolingMode }) {
         dummy.scale.setScalar(0.55 + fade * 0.7)
         dummy.updateMatrix()
         sys.mesh.setMatrixAt(i, dummy.matrix)
+
+        if (sys.gradient) {
+          // Green outside the case (intake) → cyan inside (LED/fan zone) → red leaving
+          if (t < 0.5) {
+            tmpColor.copy(greenColor).lerp(cyanColor, t * 2)
+          } else {
+            tmpColor.copy(cyanColor).lerp(redColor, (t - 0.5) * 2)
+          }
+          sys.mesh.setColorAt(i, tmpColor)
+        }
       }
       sys.mesh.instanceMatrix.needsUpdate = true
+      if (sys.gradient && sys.mesh.instanceColor) {
+        sys.mesh.instanceColor.needsUpdate = true
+      }
     }
 
     const render = (now: number) => {
       const t = (now - startTime) / 1000
-      for (const sys of flowSystems) updateSystem(sys, t)
-      for (const sys of heatSystems) updateSystem(sys, t)
+      const dt = (now - lastTime) / 1000
+      lastTime = now
+
+      // Spin fan blades
+      for (const r of fanRotators) {
+        r.group.rotation.z += r.speed * dt
+      }
+
+      for (const s of flowSystems) updateSystem(s, t)
+      for (const s of heatSystems) updateSystem(s, t)
       renderer.render(scene, camera)
-      frameId = window.requestAnimationFrame(render)
+      frameId = requestAnimationFrame(render)
     }
-    frameId = window.requestAnimationFrame(render)
+    frameId = requestAnimationFrame(render)
 
     return () => {
-      window.cancelAnimationFrame(frameId)
-      resizeObs.disconnect()
+      cancelAnimationFrame(frameId)
+      obs.disconnect()
 
       const visited = new Set<THREE.Material | THREE.BufferGeometry>()
       scene.traverse((obj) => {
@@ -699,9 +890,13 @@ export default function PCCoolingScene({ mode }: { mode: PCCoolingMode }) {
     <div
       ref={mountRef}
       className="relative w-full overflow-hidden rounded-lg"
-      style={{ aspectRatio: "4 / 3", minHeight: 280, background: "linear-gradient(180deg, #050810 0%, #0b1220 100%)" }}
-      aria-label={`${mode === "ducted" ? "Ducted" : "Stock"} airflow simulation: case interior with intake fans and GPU`}
+      style={{
+        aspectRatio: "4 / 3",
+        minHeight: 280,
+        background: "linear-gradient(180deg, #050810 0%, #0b1220 100%)",
+      }}
       role="img"
+      aria-label={`${mode === "ducted" ? "Ducted" : "Stock"} airflow simulation: 3D side view of PC case with intake fans, GPU, and AIO radiator`}
     />
   )
 }
