@@ -23,7 +23,7 @@ export default function Hero() {
             <div className="absolute inset-0 border-4 border-primary translate-x-4 translate-y-4 rounded-full"></div>
             <div className="relative w-full h-full overflow-hidden rounded-full border-4 border-white shadow-2xl">
               <Image
-                src="/images/michael-profile.jpg"
+                src="/images/personal/profile.jpg"
                 alt="Michael Lo Russo"
                 fill
                 className="object-cover"

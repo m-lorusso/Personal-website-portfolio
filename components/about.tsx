@@ -109,7 +109,7 @@ export default function About() {
               >
                 <div className="relative h-full w-full overflow-hidden rounded-lg border-4 border-white shadow-xl">
                   <Image
-                    src="/images/michael-melbourne.jpg"
+                    src="/images/personal/melbourne.jpg"
                     alt="Michael Lo Russo at Melbourne waterfront sunset"
                     fill
                     className="object-cover"
@@ -143,7 +143,7 @@ export default function About() {
               >
                 <div className="relative h-full w-full overflow-hidden rounded-lg border-4 border-white shadow-xl">
                   <Image
-                    src="/images/michael-samsung.png"
+                    src="/images/personal/samsung.png"
                     alt="Michael Lo Russo at Samsung Office"
                     fill
                     className="object-cover"
@@ -170,7 +170,7 @@ export default function About() {
               >
                 <div className="relative h-full w-full overflow-hidden rounded-lg border-4 border-white shadow-xl">
                   <Image
-                    src="/images/michael-samsung-store.jpeg"
+                    src="/images/personal/samsung-store.jpg"
                     alt="Michael Lo Russo at Samsung Store"
                     fill
                     className="object-cover"
@@ -235,7 +235,7 @@ export default function About() {
                 title="MATLAB"
               >
                 <img
-                  src="/images/matlab-logo.png"
+                  src="/images/logos/matlab.png"
                   alt="MATLAB"
                   width={40}
                   height={40}
@@ -251,7 +251,7 @@ export default function About() {
                 title="SolidWorks"
               >
                 <img
-                  src="/images/solidworks-logo.png"
+                  src="/images/logos/solidworks.png"
                   alt="SolidWorks"
                   width={40}
                   height={40}
@@ -267,7 +267,7 @@ export default function About() {
                 title="Fusion 360"
               >
                 <img
-                  src="/images/fusion360-logo.png"
+                  src="/images/logos/fusion360.png"
                   alt="Fusion 360"
                   width={40}
                   height={40}
@@ -283,7 +283,7 @@ export default function About() {
                 title="Bambu Lab"
               >
                 <img
-                  src="/images/bambu-lab-logo.png"
+                  src="/images/logos/bambu-lab.png"
                   alt="Bambu Lab"
                   width={40}
                   height={40}

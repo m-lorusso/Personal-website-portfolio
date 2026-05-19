@@ -29,7 +29,7 @@ const technicalProjects: ProjectCard[] = [
     title: "Micromouse Maze Navigation Robot",
     description:
       "Autonomous maze-solving robot navigating a 3.6 × 2.4 m arena in under 90 seconds. Integrated LiDAR, IMU, and wheel encoders with BFS path planning and PID control. Top-3 competition finish.",
-    image: "/images/micromouse-robot.jpeg",
+    image: "/images/micromouse/robot.jpg",
     tags: ["C/C++", "LiDAR", "IMU", "Path Planning", "Embedded Systems"],
     githubUrl: "https://github.com/z5360700/micromouse-from2024",
   },
@@ -38,7 +38,7 @@ const technicalProjects: ProjectCard[] = [
     title: "5-Motor Robotic Rubik's Cube Solver",
     description:
       "Solo-built rig that solves any scrambled 3×3 end-to-end. ESP32 drives 5× NEMA 17 steppers through TMC2209 drivers, fed by a Kociemba two-phase solver and a browser-based colour-input UI.",
-    image: "/images/RubikCubeFrontImage.png",
+    image: "/images/rubiks/cube-front.png",
     tags: ["ESP32", "C++/Arduino", "Python", "Kociemba", "TMC2209", "Fusion 360"],
     githubUrl: "#",
     youtubeUrl: "https://www.youtube.com/watch?v=OC9h20jK2XQ",
@@ -48,7 +48,7 @@ const technicalProjects: ProjectCard[] = [
     title: "Custom Cooling Funnels for PC Hardware",
     description:
       "Designed and 3D-printed ducted airflow funnels across 3 design iterations. Achieved 7°C reduction in GPU temperatures under full load.",
-    image: "/images/pc-cooling-installed.jpeg",
+    image: "/images/cooling/installed.jpg",
     tags: ["Fusion 360", "3D Printing", "PLA", "Thermal Engineering"],
     githubUrl: "#",
   },
@@ -57,7 +57,7 @@ const technicalProjects: ProjectCard[] = [
     title: "UR5e Robotic Writing System",
     description:
       "Programmed a UR5e industrial robot for autonomous handwriting, pick-and-place, and orientation adjustment using MATLAB and the RTDE interface. Developed trajectory planning for smooth pen lifts and legible output.",
-    image: "/images/ur5e-main-setup.jpeg",
+    image: "/images/ur5e/main-setup.jpg",
     tags: ["MATLAB", "RTDE", "UR5e", "Robotics", "Coordinate Transforms"],
     githubUrl: "#",
   },
@@ -66,7 +66,7 @@ const technicalProjects: ProjectCard[] = [
     title: "Cat Door Monitoring System",
     description:
       "ESP32 break-beam monitor for a pet door. Detects movement, filters false triggers, and sends timestamped Telegram alerts.",
-    image: "/images/cat-door-v2-system.png",
+    image: "/images/cat-door/v2-system.png",
     tags: ["ESP32", "IoT", "Embedded C", "Telegram API", "Sensors"],
     githubUrl: "#",
   },
@@ -91,7 +91,7 @@ const handsOnProjects: ProjectCard[] = [
     title: "Residential Construction & Renovation",
     description:
       "Full residential build completed alongside engineering degree. Structural framing, roofing, plumbing, and electrical from foundation to finish. Managing real deadlines, tradespeople, and physical work while keeping up with coursework built resilience no classroom could.",
-    image: "/images/construction-after.jpg",
+    image: "/images/construction/after.jpg",
     tags: ["Construction Management", "Structural", "Electrical", "Plumbing"],
     githubUrl: "#",
   },
@@ -100,7 +100,7 @@ const handsOnProjects: ProjectCard[] = [
     title: "Custom Watch Build",
     description:
       "Sourced and hand-assembled individual components around Seiko NH35 movement. Precision assembly requiring dust-free environment, component compatibility verification, and steady hands for hand-setting.",
-    image: "/images/WatchCoverImage.png",
+    image: "/images/watch/cover.png",
     imagePosition: "top",
     tags: ["Horology", "Precision Assembly", "Mechanical Engineering", "Component Sourcing"],
     githubUrl: "#",

@@ -65,28 +65,28 @@ const rubiksPipelineSteps = [
     stage: "Input",
     title: "Paint the cube state",
     description: "The browser checks colour counts before solving.",
-    image: "/images/rubiks-ui-filled.png",
+    image: "/images/rubiks/ui-filled.png",
   },
   {
     icon: Cpu,
     stage: "Solve",
     title: "Kociemba plans the solve",
     description: "Python computes a near-optimal plan of roughly 20 moves in under 1 second.",
-    image: "/images/rubiks-ui-solved.png",
+    image: "/images/rubiks/ui-solved.png",
   },
   {
     icon: Cable,
     stage: "Stream",
     title: "Serial talks to ESP32",
     description: "The plan expands to roughly 55 physical motor commands for the 5-axis rig.",
-    image: "/images/5motordiagramimage.jpg",
+    image: "/images/rubiks/motor-diagram.jpg",
   },
   {
     icon: Wrench,
     stage: "Actuate",
     title: "The chassis does the work",
     description: "Five steppers turn the gripped faces.",
-    image: "/images/final5motorcubedesign.jpg",
+    image: "/images/rubiks/final-design.jpg",
   },
 ]
 
@@ -236,52 +236,52 @@ const rubiksMoveTraceUPrime = [
 
 const rubiksBuildPhotos = [
   {
-    src: "/images/final5motorcubedesign.jpg",
+    src: "/images/rubiks/final-design.jpg",
     label: "Final 5-motor cube grip",
     span: "col-span-12 md:col-span-7",
     aspect: "aspect-[4/3]",
   },
   {
-    src: "/images/5motordiagramimage.jpg",
+    src: "/images/rubiks/motor-diagram.jpg",
     label: "Final 4-motor circuit",
     caption: "Circuit layout used for the completed 4-motor prototype.",
     span: "col-span-12 md:col-span-5",
     aspect: "aspect-[4/3]",
   },
   {
-    src: "/images/5motordesign.jpg",
+    src: "/images/rubiks/motor-design.jpg",
     label: "Early 5-motor CAD",
     span: "col-span-12 md:col-span-5",
     aspect: "aspect-[4/3]",
   },
   {
-    src: "/images/5motordesignfinal.jpg",
+    src: "/images/rubiks/motor-design-final.jpg",
     label: "Scrapped 4-motor chassis",
     caption: "This direction was abandoned because four motors could not solve every possible cube state.",
     span: "col-span-12 md:col-span-7",
     aspect: "aspect-[4/3]",
   },
   {
-    src: "/images/singlemotorwithbracket.jpg",
+    src: "/images/rubiks/single-motor-bracket.jpg",
     label: "Motor and bracket detail",
     span: "col-span-6 md:col-span-4",
     aspect: "aspect-[4/3]",
   },
   {
-    src: "/images/motorwithadapterissue.jpg",
+    src: "/images/rubiks/motor-with-adapter.jpg",
     label: "Adapter issue",
     caption: "The tolerances were too tight, so heat and other removal methods were needed to free the plastic.",
     span: "col-span-6 md:col-span-4",
     aspect: "aspect-[4/3]",
   },
   {
-    src: "/images/5motordesign.2.jpg",
+    src: "/images/rubiks/motor-design-2.jpg",
     label: "Fitment iteration",
     span: "col-span-12 md:col-span-4",
     aspect: "aspect-[4/3]",
   },
   {
-    src: "/images/4motorbreadboardwiring.jpg",
+    src: "/images/rubiks/breadboard-wiring.jpg",
     label: "4-motor stepper driver wiring",
     caption: "Driver wiring for the earlier 4-motor design only.",
     span: "col-span-12",
@@ -933,7 +933,7 @@ function ProjectDetailClient() {
                     <div className="relative overflow-hidden rounded-lg border border-white/10 bg-black/35">
                       <div className="relative aspect-[4/3]">
                         <Image
-                          src="/images/micromouse-testing-lab.jpeg"
+                          src="/images/micromouse/testing-lab.jpg"
                           alt="Micromouse robot testing inside maze"
                           fill
                           className="object-cover opacity-80"
@@ -970,10 +970,10 @@ function ProjectDetailClient() {
                     <button
                       type="button"
                       className="group relative min-h-[260px] overflow-hidden rounded-lg border border-white/10 bg-white/[0.04] text-left"
-                      onClick={() => openLightbox(["/images/micromouse-robot.jpeg"], 0, "Micromouse robot")}
+                      onClick={() => openLightbox(["/images/micromouse/robot.jpg"], 0, "Micromouse robot")}
                     >
                       <Image
-                        src="/images/micromouse-robot.jpeg"
+                        src="/images/micromouse/robot.jpg"
                         alt="Micromouse robot close-up"
                         fill
                         className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
@@ -1043,10 +1043,10 @@ function ProjectDetailClient() {
                 <button
                   type="button"
                   className="group relative aspect-[16/10] w-full overflow-hidden rounded-lg border border-border/70 bg-background/60"
-                  onClick={() => openLightbox(["/images/micromouse-algorithm.jpeg"], 0, "Micromouse path planning output")}
+                  onClick={() => openLightbox(["/images/micromouse/algorithm.jpg"], 0, "Micromouse path planning output")}
                 >
                   <Image
-                    src="/images/micromouse-algorithm.jpeg"
+                    src="/images/micromouse/algorithm.jpg"
                     alt="Micromouse path planning visualisation"
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
@@ -1065,19 +1065,19 @@ function ProjectDetailClient() {
               {[
                 {
                   title: "Prototype wiring",
-                  image: "/images/micromouse-prototype.jpeg",
+                  image: "/images/micromouse/prototype.jpg",
                   alt: "Micromouse prototype wiring",
                   text: "Early layout validation before final assembly.",
                 },
                 {
                   title: "Final hardware",
-                  image: "/images/micromouse-closeup.jpeg",
+                  image: "/images/micromouse/closeup.jpg",
                   alt: "Micromouse assembled hardware close-up",
                   text: "Sensors, power, and motor wiring packed into the chassis.",
                 },
                 {
                   title: "Competition maze",
-                  image: "/images/micromouse-testing-lab.jpeg",
+                  image: "/images/micromouse/testing-lab.jpg",
                   alt: "Micromouse testing maze",
                   text: "Real testing in the maze exposed drift and tuning issues.",
                 },
@@ -1164,10 +1164,10 @@ function ProjectDetailClient() {
                   <button
                     type="button"
                     className="group relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-border/70 bg-background/70"
-                    onClick={() => openLightbox(["/images/pc-cooling-installed.jpeg"], 0, "Cooling funnel installed")}
+                    onClick={() => openLightbox(["/images/cooling/installed.jpg"], 0, "Cooling funnel installed")}
                   >
                     <Image
-                      src="/images/pc-cooling-installed.jpeg"
+                      src="/images/cooling/installed.jpg"
                       alt="Custom cooling funnel installed in PC case"
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
@@ -1300,8 +1300,8 @@ function ProjectDetailClient() {
                   </p>
                 </div>
                 <EnhancedBeforeAfterSlider
-                  beforeImage="/images/pc-without-ducting.jpeg"
-                  afterImage="/images/pc-cooling-installed.jpeg"
+                  beforeImage="/images/cooling/without-ducting.jpg"
+                  afterImage="/images/cooling/installed.jpg"
                   beforeAlt="PC without cooling ducting"
                   afterAlt="PC with custom cooling ducting installed"
                 />
@@ -1408,7 +1408,7 @@ function ProjectDetailClient() {
                   {
                     title: "Baseline",
                     subtitle: "Without ducting",
-                    image: "/images/gpu-test-without-ducting.png",
+                    image: "/images/cooling/gpu-test-without.png",
                     alt: "GPU temperature test without ducting",
                     state: "Hotter GPU load temperature",
                     tone: "border-red-400/35 bg-red-500/10 text-red-300",
@@ -1418,7 +1418,7 @@ function ProjectDetailClient() {
                   {
                     title: "Ducted airflow",
                     subtitle: "With cooling funnel",
-                    image: "/images/gpu-test-with-ducting.png",
+                    image: "/images/cooling/gpu-test-with.png",
                     alt: "GPU temperature test with ducting",
                     state: "7°C lower GPU temperature",
                     tone: "border-emerald-400/35 bg-emerald-500/10 text-emerald-300",
@@ -1554,10 +1554,10 @@ function ProjectDetailClient() {
                 <button
                   type="button"
                   className="group relative min-h-[360px] overflow-hidden text-left md:min-h-[480px]"
-                  onClick={() => openLightbox(["/images/cat-door-v1.jpeg"], 0, "Cat door monitor installed")}
+                  onClick={() => openLightbox(["/images/cat-door/v1.jpg"], 0, "Cat door monitor installed")}
                 >
                   <Image
-                    src="/images/cat-door-v1.jpeg"
+                    src="/images/cat-door/v1.jpg"
                     alt="Cat door monitor installed on security door"
                     fill
                     className="object-cover opacity-80 transition-transform duration-700 group-hover:scale-[1.03]"
@@ -1664,11 +1664,11 @@ function ProjectDetailClient() {
               <button
                 type="button"
                 className="group grid grid-cols-1 overflow-hidden rounded-xl border bg-muted/10 text-left md:grid-cols-[0.78fr_1fr]"
-                onClick={() => openLightbox(["/images/cat-door-telegram-notifications.png"], 0, "Telegram alert log")}
+                onClick={() => openLightbox(["/images/cat-door/telegram-notifications.png"], 0, "Telegram alert log")}
               >
                 <div className="relative min-h-[260px] bg-black/5 dark:bg-white/[0.03]">
                   <Image
-                    src="/images/cat-door-telegram-notifications.png"
+                    src="/images/cat-door/telegram-notifications.png"
                     alt="Telegram notification log"
                     fill
                     className="object-contain transition-transform duration-500 group-hover:scale-[1.02]"
@@ -1690,17 +1690,17 @@ function ProjectDetailClient() {
                 {[
                   {
                     title: "CAD housing",
-                    image: "/images/cat-door-cad-design.jpeg",
+                    image: "/images/cat-door/cad-design.jpg",
                     alt: "Cat door CAD housing design",
                   },
                   {
                     title: "Printed frame",
-                    image: "/images/cat-door-3d-printed.png",
+                    image: "/images/cat-door/3d-printed.png",
                     alt: "3D printed cat door monitor housing",
                   },
                   {
                     title: "Bench validation",
-                    image: "/images/cat-door-v2-system.png",
+                    image: "/images/cat-door/v2-system.png",
                     alt: "ESP32 break beam bench test",
                   },
                 ].map((item) => (
@@ -2308,11 +2308,11 @@ function ProjectDetailClient() {
                 <button
                   type="button"
                   className="group relative block w-full overflow-hidden rounded-2xl border border-white/10 bg-[linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] p-2.5 shadow-2xl shadow-black/40 sm:p-3"
-                  onClick={() => openLightbox(["/images/GrandSeikoImage.png"], 0, project.title)}
+                  onClick={() => openLightbox(["/images/watch/grand-seiko.png"], 0, project.title)}
                 >
                   <div aria-hidden className="absolute inset-0 bg-[radial-gradient(circle_at_50%_34%,rgba(245,158,11,0.18),transparent_32%)] opacity-70" />
                   <Image
-                    src="/images/GrandSeikoImage.png"
+                    src="/images/watch/grand-seiko.png"
                     alt={project.title}
                     width={980}
                     height={980}
