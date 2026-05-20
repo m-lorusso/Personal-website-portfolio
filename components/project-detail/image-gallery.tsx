@@ -16,6 +16,7 @@ interface ImageGalleryProps {
   showNavigation?: boolean
   maxImages?: number
   showViewAll?: boolean
+  unboxed?: boolean
 }
 
 export function ImageGallery({
@@ -31,14 +32,25 @@ export function ImageGallery({
   showNavigation = false,
   maxImages,
   showViewAll = false,
+  unboxed = false,
 }: ImageGalleryProps) {
   const displayImages = maxImages ? images.slice(0, maxImages) : images
 
   return (
-    <div className="bg-muted/10 rounded-lg p-6 border">
-      <div className="text-center mb-6">
-        <h2 className="text-xl font-bold">{title}</h2>
-        {subtitle && <p className="text-xs text-foreground/50 mt-1">{subtitle}</p>}
+    <div className={unboxed ? "" : "bg-muted/10 rounded-lg p-6 border"}>
+      <div className={unboxed ? "mb-5 flex items-baseline gap-3" : "text-center mb-6"}>
+        {unboxed ? (
+          <>
+            <h2 className="text-xs font-semibold uppercase tracking-[0.22em] text-foreground/55">{title}</h2>
+            <span aria-hidden className="h-px flex-1 bg-border/60" />
+            {subtitle && <p className="hidden text-xs text-foreground/45 sm:block">{subtitle}</p>}
+          </>
+        ) : (
+          <>
+            <h2 className="text-xl font-bold">{title}</h2>
+            {subtitle && <p className="text-xs text-foreground/50 mt-1">{subtitle}</p>}
+          </>
+        )}
       </div>
       {/* </CHANGE> */}
       <div className={`grid ${columns} gap-3`}>

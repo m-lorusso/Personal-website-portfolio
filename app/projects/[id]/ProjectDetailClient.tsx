@@ -829,89 +829,63 @@ function ProjectDetailClient() {
 
         {/* Construction project layout */}
         {project.id === 1 ? (
-          <div className="space-y-8">
-            {/* HERO — title + description + tags on the left, quick stats on the right */}
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-              <div className="lg:col-span-3 bg-muted/20 rounded-lg p-8 border flex flex-col justify-center">
-                <h1 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
-                  {project.title}
-                </h1>
-                <p className="text-base text-foreground/70 mb-5 leading-relaxed">
-                  {project.description}
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {project.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="bg-primary/10 text-primary px-2.5 py-1 rounded-full text-xs font-medium"
-                    >
-                      {tag}
+          <div className="space-y-14">
+            {/* HERO: open, no card chrome */}
+            <section className="py-6 text-center md:py-10">
+              <h1 className="mx-auto max-w-3xl text-4xl font-bold leading-tight md:text-6xl">
+                {project.title}
+              </h1>
+              <p className="mx-auto mt-5 max-w-xl text-base text-foreground/65 md:text-lg">
+                Foundation to finish, built alongside engineering.
+              </p>
+
+            </section>
+
+            {/* Goal / Challenge / Learnt: simple, personable, no metric filler */}
+            <section className="grid grid-cols-1 gap-10 border-y border-border/60 py-10 md:grid-cols-3 md:gap-12 md:divide-x md:divide-border/60 md:py-12">
+              {[
+                {
+                  icon: Ruler,
+                  kicker: "Goal",
+                  title: "Build a whole house.",
+                  body: "Frame, roof, electrical, plumbing, kitchen, bath, the finishes. The full thing, not just one trade.",
+                  accent: "text-sky-400",
+                },
+                {
+                  icon: AlertTriangle,
+                  kicker: "Challenge",
+                  title: "Do it while studying.",
+                  body: "Full days on site, nights on coursework. Trades and weather didn't wait, and neither did exams.",
+                  accent: "text-amber-400",
+                },
+                {
+                  icon: CheckCircle2,
+                  kicker: "Learnt",
+                  title: "How a build actually goes.",
+                  body: "How to keep pushing when something goes wrong, and how good it feels to step back and see the whole house finished.",
+                  accent: "text-emerald-400",
+                },
+              ].map(({ icon: Icon, kicker, title, body, accent }) => (
+                <div key={kicker} className="px-1 md:px-6">
+                  <div className="mb-4 flex items-center gap-3">
+                    <Icon className={`h-5 w-5 ${accent}`} />
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-foreground/55">
+                      {kicker}
                     </span>
-                  ))}
+                  </div>
+                  <h3 className="text-xl font-semibold leading-tight md:text-[1.4rem]">{title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-foreground/70">{body}</p>
                 </div>
-              </div>
+              ))}
+            </section>
 
-              <div className="lg:col-span-2 grid grid-cols-2 gap-3">
-                {[
-                  { label: "Scope", value: "Foundation to Finish" },
-                  { label: "Trades", value: "Framing · Roofing · Electrical · Plumbing" },
-                  { label: "Context", value: "Built alongside Engineering degree" },
-                  { label: "Standards", value: "Code-compliant throughout" },
-                ].map(({ label, value }) => (
-                  <div
-                    key={label}
-                    className="bg-muted/10 rounded-lg p-4 border flex flex-col justify-center"
-                  >
-                    <div className="text-[10px] uppercase tracking-widest text-foreground/50 mb-1">
-                      {label}
-                    </div>
-                    <div className="text-sm font-semibold text-foreground/90 leading-snug">
-                      {value}
-                    </div>
-                  </div>
-                ))}
+            {/* Before / After: heading + slider, no surrounding box */}
+            <section className="space-y-6">
+              <div className="text-center">
+                <div className="text-[10px] uppercase tracking-[0.24em] text-foreground/45">Transformation</div>
+                <h2 className="mt-2 text-2xl font-bold md:text-3xl">Before and after</h2>
               </div>
-            </div>
-
-            {/* SCOPE OF WORK — visual icon pills replacing text-heavy "Key Features" */}
-            <div className="bg-muted/10 rounded-lg p-6 border">
-              <div className="text-center mb-6">
-                <h2 className="text-xl font-bold">Scope of Work</h2>
-                <p className="text-xs text-foreground/50 mt-1">
-                  The trades and systems I worked across
-                </p>
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {[
-                  { icon: Ruler, label: "Planning", sub: "Assessment & layout" },
-                  { icon: HardHat, label: "Framing", sub: "Timber structure" },
-                  { icon: Home, label: "Roofing", sub: "Weatherproof shell" },
-                  { icon: Zap, label: "Electrical", sub: "Wiring & lighting" },
-                  { icon: Droplets, label: "Plumbing", sub: "Supply & drainage" },
-                  { icon: Layers, label: "Insulation & Drywall", sub: "Thermal & interior" },
-                  { icon: Hammer, label: "Kitchen & Bath", sub: "Fixtures & cabinetry" },
-                  { icon: PaintRoller, label: "Finishing", sub: "Paint, flooring, trim" },
-                ].map(({ icon: Icon, label, sub }) => (
-                  <div
-                    key={label}
-                    className="bg-background/40 hover:bg-background/60 transition-colors rounded-lg p-3 border border-border/60 flex items-center gap-3"
-                  >
-                    <div className="flex-shrink-0 w-9 h-9 rounded-md bg-primary/15 text-primary flex items-center justify-center">
-                      <Icon size={18} />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-sm font-semibold truncate">{label}</div>
-                      <div className="text-[11px] text-foreground/50 truncate">{sub}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Before/After Slider */}
-            <div className="bg-muted/10 rounded-lg p-6 border">
-              <h2 className="text-xl font-bold text-center mb-6">Transformation</h2>
-              <div className="max-w-5xl mx-auto">
+              <div className="mx-auto max-w-5xl">
                 <EnhancedBeforeAfterSlider
                   beforeImage={project.beforeImage || "/placeholder.svg"}
                   afterImage={project.image}
@@ -919,14 +893,13 @@ function ProjectDetailClient() {
                   afterAlt="After renovation"
                 />
               </div>
-            </div>
+            </section>
 
             {/* Photo Galleries */}
-            <div className="space-y-8">
+            <div className="space-y-12">
               {project.exteriorGallery && (
                 <ImageGallery
-                  title="Exterior Construction"
-                  subtitle="Framing, roofing and exterior finishing"
+                  title="Exterior"
                   images={project.exteriorGallery}
                   selectedIndex={exteriorIndex}
                   onImageClick={openSlideshow}
@@ -935,13 +908,13 @@ function ProjectDetailClient() {
                   columns="grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
                   imageHeight="h-40"
                   showNavigation
+                  unboxed
                 />
               )}
 
               {project.interiorGallery && (
                 <ImageGallery
-                  title="Interior Work"
-                  subtitle="Insulation, drywall, electrical and plumbing rough-in"
+                  title="Interior"
                   images={project.interiorGallery}
                   selectedIndex={interiorIndex}
                   onImageClick={openSlideshow}
@@ -950,13 +923,13 @@ function ProjectDetailClient() {
                   columns="grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
                   imageHeight="h-40"
                   showNavigation
+                  unboxed
                 />
               )}
 
               {project.finishedProductGallery && (
                 <ImageGallery
-                  title="Finished Product"
-                  subtitle="Completed kitchen, bathrooms and living spaces"
+                  title="Finished"
                   images={project.finishedProductGallery}
                   selectedIndex={finishedIndex}
                   onImageClick={openSlideshow}
@@ -965,23 +938,22 @@ function ProjectDetailClient() {
                   columns="grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
                   imageHeight="h-40"
                   showNavigation
+                  unboxed
                 />
               )}
 
               {project.miscellaneousGallery && (
                 <ImageGallery
-                  title="Additional Photos"
-                  subtitle="Behind-the-scenes work and process shots"
+                  title="Process"
                   images={project.miscellaneousGallery}
                   selectedIndex={additionalIndex}
                   onImageClick={openSlideshow}
                   onNavigate={navigateAdditional}
                   altPrefix="Additional photos"
-                  columns="grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-                  imageHeight="h-40"
+                  columns="grid-cols-3 md:grid-cols-4 lg:grid-cols-6"
+                  imageHeight="h-32"
                   showNavigation
-                  maxImages={8}
-                  showViewAll
+                  unboxed
                 />
               )}
             </div>
@@ -994,41 +966,6 @@ function ProjectDetailClient() {
               onClose={closeSlideshow}
               altPrefix={slideshowAltPrefix}
             />
-
-            {/* Technologies + Challenges side-by-side (replaces bottom tabs) */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <div className="bg-muted/10 rounded-lg p-6 border">
-                <h2 className="text-lg font-bold mb-4">Technologies & Skills</h2>
-                <div className="space-y-4">
-                  {Object.entries(project.technologies).map(([category, items]) => (
-                    <div key={category}>
-                      <h3 className="text-[10px] uppercase tracking-widest text-foreground/50 mb-2">
-                        {category.replace(/([A-Z])/g, " $1").trim()}
-                      </h3>
-                      <div className="flex flex-wrap gap-1.5">
-                        {items.map((item) => (
-                          <span
-                            key={item}
-                            className="bg-background/60 border border-border/60 text-foreground/80 text-xs px-2.5 py-1 rounded-md"
-                          >
-                            {item}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="bg-muted/10 rounded-lg p-6 border">
-                <h2 className="text-lg font-bold mb-4">Challenges</h2>
-                <div className="relative border-l-2 border-primary/40 pl-4">
-                  <p className="text-foreground/80 leading-relaxed whitespace-pre-line text-sm">
-                    {project.challenges}
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         ) : project.id === 2 ? (
           /* Micromouse project layout */
