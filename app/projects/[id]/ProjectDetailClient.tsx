@@ -24,6 +24,7 @@ import {
   PaintRoller,
   Layers,
   Lock,
+  Maximize2,
   RotateCcw,
   Ruler,
   Timer,
@@ -452,6 +453,153 @@ function WatchWaveDrift({
   )
 }
 
+// ─── Project 6 (Custom Watch Build) helpers ──────────────────────────────
+type BuildStepData = {
+  icon: React.ComponentType<{ className?: string }>
+  kicker: string
+  title: string
+  body: string
+}
+
+const watchBuildSteps: BuildStepData[] = [
+  { icon: Layers, kicker: "01", title: "Source", body: "Case, dial, hands, crystal, crown, bracelet — each verified against the NH35 footprint before it ships." },
+  { icon: Wrench, kicker: "02", title: "Seat", body: "Movement into case. Dial onto movement. Both under loupe, dust blower close, room sealed." },
+  { icon: Hammer, kicker: "03", title: "Press", body: "Hour, minute, second hands pressed individually. Aligned and clear through every full rotation." },
+  { icon: CheckCircle2, kicker: "04", title: "Verify", body: "Crystal seated, case back pressed, crown installed. Then it earns the wrist for 24 hours." },
+]
+
+const watchTickerTerms = [
+  "Caliber NH35A", "21,600 vph", "24 jewels", "41.0 mm case", "Sapphire crystal",
+  "Hand-pressed indices", "Dust-free assembly", "Hi-beat regulation", "Hacking seconds",
+  "Bidirectional rotor", "Glass press", "Movement holder", "Loupe + Rodico",
+]
+
+function WatchSubdial({
+  className = "",
+  labelTop = "21.6K",
+  labelBottom = "VPH",
+}: {
+  className?: string
+  labelTop?: string
+  labelBottom?: string
+}) {
+  return (
+    <div className={`relative ${className}`} aria-hidden>
+      <svg viewBox="0 0 100 100" className="h-full w-full">
+        <circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" strokeOpacity="0.35" strokeWidth="0.8" />
+        <circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" strokeOpacity="0.18" strokeWidth="0.5" />
+        {Array.from({ length: 60 }).map((_, i) => {
+          const angle = (i / 60) * Math.PI * 2 - Math.PI / 2
+          const isMajor = i % 5 === 0
+          const inner = isMajor ? 38 : 42
+          const outer = 46
+          const x1 = 50 + Math.cos(angle) * inner
+          const y1 = 50 + Math.sin(angle) * inner
+          const x2 = 50 + Math.cos(angle) * outer
+          const y2 = 50 + Math.sin(angle) * outer
+          return (
+            <line
+              key={i}
+              x1={x1} y1={y1} x2={x2} y2={y2}
+              stroke="currentColor"
+              strokeOpacity={isMajor ? 0.85 : 0.35}
+              strokeWidth={isMajor ? 1 : 0.5}
+              strokeLinecap="round"
+            />
+          )
+        })}
+        <text x="50" y="28" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="5" letterSpacing="0.5" fill="currentColor" opacity="0.55">{labelTop}</text>
+        <text x="50" y="80" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="4" letterSpacing="0.5" fill="currentColor" opacity="0.45">{labelBottom}</text>
+        <g className="watch-subdial-hand">
+          <line x1="50" y1="50" x2="50" y2="12" stroke="rgb(245 158 11)" strokeOpacity="0.85" strokeWidth="1.1" strokeLinecap="round" />
+          <line x1="50" y1="50" x2="50" y2="56" stroke="rgb(245 158 11)" strokeOpacity="0.6" strokeWidth="1.1" strokeLinecap="round" />
+        </g>
+        <circle cx="50" cy="50" r="1.6" fill="rgb(245 158 11)" />
+      </svg>
+    </div>
+  )
+}
+
+function BezelHalo({ className = "" }: { className?: string }) {
+  return (
+    <div className={`pointer-events-none ${className}`} aria-hidden>
+      <svg viewBox="0 0 200 200" className="h-full w-full">
+        <circle cx="100" cy="100" r="92" fill="none" stroke="rgba(245,158,11,0.22)" strokeWidth="0.5" />
+        <circle cx="100" cy="100" r="84" fill="none" stroke="rgba(245,158,11,0.10)" strokeWidth="0.5" />
+        {Array.from({ length: 60 }).map((_, i) => {
+          const angle = (i / 60) * 360
+          const isMajor = i % 5 === 0
+          return (
+            <g key={i} transform={`rotate(${angle} 100 100)`}>
+              <line
+                x1="100"
+                y1={isMajor ? 4 : 6}
+                x2="100"
+                y2={isMajor ? 12 : 9}
+                stroke={isMajor ? "rgba(245,158,11,0.55)" : "rgba(245,158,11,0.20)"}
+                strokeWidth={isMajor ? 1 : 0.4}
+                strokeLinecap="round"
+              />
+            </g>
+          )
+        })}
+      </svg>
+    </div>
+  )
+}
+
+function BuildRow({ step }: { step: BuildStepData }) {
+  const Icon = step.icon
+  return (
+    <li className="group relative grid grid-cols-[auto_1fr_auto] items-baseline gap-x-5 border-t border-foreground/15 py-7 transition-colors hover:bg-amber-500/[0.03] md:gap-x-10 md:py-9">
+      <span className="font-serif text-[2.6rem] leading-[0.85] text-amber-600/85 md:text-[3.4rem]">
+        {step.kicker}
+      </span>
+      <div>
+        <div className="flex items-center gap-3">
+          <h3 className="font-serif text-[1.4rem] tracking-tight text-foreground/90 md:text-[1.75rem]">
+            {step.title}
+          </h3>
+          <span aria-hidden className="h-px w-6 bg-amber-500/35 md:w-10" />
+        </div>
+        <p className="mt-1.5 max-w-md text-[13.5px] leading-[1.6] text-foreground/60 md:max-w-lg md:text-[14.5px]">
+          {step.body}
+        </p>
+      </div>
+      <Icon className="hidden h-4 w-4 text-amber-600/60 group-hover:text-amber-500 sm:block" />
+    </li>
+  )
+}
+
+function SectionRule({ numeral, label }: { numeral: string; label: string }) {
+  return (
+    <div className="mx-auto my-16 flex max-w-6xl items-center gap-5 px-4 md:my-20">
+      <span aria-hidden className="h-px flex-1 bg-foreground/15" />
+      <span className="flex items-baseline gap-3 font-mono text-[10px] uppercase tracking-[0.34em] text-foreground/45">
+        <span className="font-serif text-[1.4rem] italic leading-none text-amber-600/80">{numeral}</span>
+        {label}
+      </span>
+      <span aria-hidden className="h-px flex-1 bg-foreground/15" />
+    </div>
+  )
+}
+
+function HorologyMarquee() {
+  const all = [...watchTickerTerms, ...watchTickerTerms]
+  return (
+    <div className="relative overflow-hidden border-y border-foreground/12 bg-foreground/[0.02] py-3" aria-hidden>
+      <div className="flex w-max gap-10 whitespace-nowrap watch-marquee-track">
+        {all.map((term, i) => (
+          <span key={i} className="flex items-center gap-10 font-mono text-[10px] uppercase tracking-[0.32em] text-foreground/45">
+            {term}
+            <span className="block h-1 w-1 rounded-full bg-amber-500/50" aria-hidden />
+          </span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function ProjectDetailClient() {
   const { id } = useParams()
   const [project, setProject] = useState<Project | null>(null)
@@ -555,7 +703,7 @@ function ProjectDetailClient() {
         setRubiksReplayKey((key) => key + 1)
         return currentStep + 1
       })
-    }, 1420)
+    }, 1130)
 
     return () => window.clearTimeout(timer)
   }, [activeMoveSequence.length, isRubiksSequencePlaying, safeRubiksMove])
@@ -2229,166 +2377,241 @@ function ProjectDetailClient() {
             </div>
           </div>
         ) : project.id === 6 ? (
-          /* Custom Watch Build — editorial / craft layout */
-          <div className="relative overflow-hidden pb-20">
-            <div aria-hidden className="pointer-events-none absolute inset-x-[-12%] top-[-7rem] h-[34rem] bg-[radial-gradient(circle_at_52%_18%,rgba(217,119,6,0.14),transparent_30%),radial-gradient(circle_at_76%_46%,rgba(59,130,246,0.1),transparent_26%)]" />
+          /* Custom Watch Build — editorial / craft layout (redesigned) */
+          <div className="relative overflow-hidden pb-20 text-foreground">
+            {/* Ambient backdrop washes */}
+            <div aria-hidden className="pointer-events-none absolute inset-x-[-12%] top-[-7rem] h-[34rem] bg-[radial-gradient(circle_at_52%_18%,rgba(217,119,6,0.13),transparent_30%),radial-gradient(circle_at_76%_46%,rgba(59,130,246,0.07),transparent_26%)]" />
             <WatchWaveDrift
-              idPrefix="watch-page-wave-a"
+              idPrefix="watch-amb-a"
               height={520}
               density={10}
               speed="slow"
-              tone="rgba(156,180,204,0.12)"
-              accentTone="rgba(212,165,87,0.18)"
-              className="absolute inset-x-0 top-24 h-[34rem] opacity-[0.42]"
+              tone="rgba(156,180,204,0.10)"
+              accentTone="rgba(212,165,87,0.16)"
+              className="absolute inset-x-0 top-[34rem] h-[34rem] opacity-[0.40]"
             />
-            <WatchWaveDrift
-              idPrefix="watch-page-wave-b"
-              height={360}
-              density={7}
-              speed="fast"
-              tone="rgba(107,138,168,0.10)"
-              accentTone="rgba(212,165,87,0.14)"
-              className="absolute inset-x-0 top-[48rem] h-[24rem] opacity-[0.34]"
-            />
-            <div className="relative space-y-14 md:space-y-20">
-            {/* HERO */}
-            <section className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#050507] px-5 py-12 text-center text-white shadow-2xl shadow-black/35 sm:px-8 md:px-12 md:py-16">
-              <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(217,119,6,0.1),transparent_38%),linear-gradient(90deg,rgba(255,255,255,0.045)_1px,transparent_1px),linear-gradient(0deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:auto,56px_56px,56px_56px]" />
-              <WatchWaveDrift
-                idPrefix="watch-hero-wave"
-                height={520}
-                density={11}
-                speed="slow"
-                tone="rgba(156,180,204,0.15)"
-                accentTone="rgba(212,165,87,0.32)"
-                className="absolute inset-x-0 top-0 h-full opacity-[0.55]"
-              />
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_54%_48%,rgba(212,165,87,0.08),transparent_48%)]" />
-              <div className="absolute inset-0 block md:inset-y-0 md:left-auto md:right-0 md:w-[46%]">
-                <Image
-                  src={project.image || "/placeholder.svg"}
-                  alt=""
-                  fill
-                  className="object-cover object-top opacity-[0.14] saturate-[1.05] md:opacity-[0.32]"
-                  sizes="46vw"
-                  priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#050507] via-[#050507]/75 to-[#050507]/25 md:via-[#050507]/58 md:to-transparent" />
-              </div>
-              <div className="relative mx-auto w-full max-w-4xl min-w-0">
-              <div className="mb-7 inline-flex max-w-[17rem] rounded-full border border-amber-300/25 bg-amber-300/10 px-4 py-1.5 text-center text-[9px] font-semibold uppercase leading-relaxed tracking-[0.18em] text-amber-100/80 sm:max-w-full sm:text-[10px] sm:tracking-[0.28em]">
-                Reference 001 &nbsp;·&nbsp; Custom build
-              </div>
-              <h1 className="mx-auto max-w-[18rem] break-words font-serif text-3xl font-medium leading-[1.04] tracking-tight sm:max-w-4xl sm:text-5xl md:text-7xl">
-                A mechanical watch,
-                <br className="hidden sm:block" />
-                <span className="italic text-amber-100"> assembled by hand.</span>
-              </h1>
-              <p className="mx-auto mt-7 max-w-[17rem] break-words text-sm leading-relaxed text-white/70 sm:max-w-lg sm:text-base">
-                Sourced and hand-built around a Seiko NH35 movement. Every part was fitted, aligned, cleaned, and tested at wristwatch scale.
-              </p>
-              <div className="mx-auto mt-8 grid w-full max-w-[17rem] grid-cols-1 gap-2 sm:max-w-xl sm:grid-cols-3 sm:gap-3">
-                {[
-                  { label: "Movement", value: "NH35" },
-                  { label: "Beat rate", value: "21,600" },
-                  { label: "Reserve", value: "41 h" },
-                ].map((item) => (
-                  <div key={item.label} className="min-w-0 rounded-lg border border-white/10 bg-white/[0.055] p-3 shadow-inner shadow-white/[0.02] backdrop-blur-sm sm:p-4">
-                    <div className="truncate text-[8px] uppercase tracking-[0.16em] text-white/42 sm:text-[9px] sm:tracking-[0.2em]">{item.label}</div>
-                    <div className="mt-1 text-base font-bold tracking-tight text-white sm:text-lg">{item.value}</div>
-                  </div>
-                ))}
-              </div>
-              </div>
-            </section>
 
-            {/* Frontispiece image */}
-            <section className="relative flex justify-center px-2">
-              <figure className="w-full max-w-4xl text-center">
+            <div className="relative">
+              {/* ============================================================ */}
+              {/* HERO                                                          */}
+              {/* ============================================================ */}
+              <section className="relative overflow-hidden rounded-2xl border border-stone-900/10 bg-stone-50 text-stone-900 shadow-xl shadow-stone-900/[0.05] dark:border-white/10 dark:bg-[#050507] dark:text-white dark:shadow-2xl dark:shadow-black/45">
+                <div aria-hidden className="absolute inset-0 bg-[linear-gradient(115deg,rgba(217,119,6,0.07),transparent_42%),linear-gradient(90deg,rgba(68,64,60,0.045)_1px,transparent_1px),linear-gradient(0deg,rgba(68,64,60,0.03)_1px,transparent_1px)] bg-[size:auto,56px_56px,56px_56px] dark:bg-[linear-gradient(115deg,rgba(217,119,6,0.10),transparent_42%),linear-gradient(90deg,rgba(255,255,255,0.045)_1px,transparent_1px),linear-gradient(0deg,rgba(255,255,255,0.03)_1px,transparent_1px)]" />
+                <WatchWaveDrift
+                  idPrefix="watch-hero-light"
+                  height={520}
+                  density={11}
+                  speed="slow"
+                  tone="rgba(120,100,80,0.16)"
+                  accentTone="rgba(180,130,60,0.28)"
+                  className="absolute inset-x-0 top-0 h-full opacity-[0.6] dark:hidden"
+                />
+                <WatchWaveDrift
+                  idPrefix="watch-hero-dark"
+                  height={520}
+                  density={11}
+                  speed="slow"
+                  tone="rgba(156,180,204,0.15)"
+                  accentTone="rgba(212,165,87,0.30)"
+                  className="absolute inset-x-0 top-0 hidden h-full opacity-[0.55] dark:block"
+                />
+                <div aria-hidden className="absolute inset-0 bg-[radial-gradient(ellipse_at_54%_48%,rgba(217,119,6,0.07),transparent_48%)] dark:bg-[radial-gradient(ellipse_at_54%_48%,rgba(212,165,87,0.08),transparent_48%)]" />
+
+                {/* Watch ghosted on the right (also clickable to expand) */}
                 <button
                   type="button"
-                  className="group relative block w-full overflow-hidden rounded-2xl border border-white/10 bg-[linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] p-2.5 shadow-2xl shadow-black/40 sm:p-3"
-                  onClick={() => openLightbox(["/images/watch/grand-seiko.png"], 0, project.title)}
+                  onClick={() => openLightbox([project.image || "/placeholder.svg"], 0, project.title)}
+                  aria-label="Open cover photo full screen"
+                  className="group absolute inset-y-0 right-0 w-full cursor-zoom-in md:w-[55%] lg:w-[50%]"
                 >
-                  <div aria-hidden className="absolute inset-0 bg-[radial-gradient(circle_at_50%_34%,rgba(245,158,11,0.18),transparent_32%)] opacity-70" />
                   <Image
-                    src="/images/watch/grand-seiko.png"
-                    alt={project.title}
-                    width={980}
-                    height={980}
-                    className="relative block h-[min(780px,92vw)] w-full rounded-xl object-cover transition-transform duration-700 group-hover:scale-[1.018]"
-                    style={{ objectPosition: "center 40%" }}
+                    src={project.image || "/placeholder.svg"}
+                    alt=""
+                    fill
+                    className="object-cover object-top opacity-[0.40] saturate-[0.85] mix-blend-multiply dark:opacity-[0.16] dark:saturate-[1.05] dark:mix-blend-normal md:opacity-[0.55] md:dark:opacity-[0.36]"
+                    sizes="(min-width: 768px) 50vw, 100vw"
                     priority
                   />
-                  <div className="absolute bottom-5 left-5 rounded-lg border border-white/15 bg-black/55 px-3 py-2 text-left text-white shadow-lg shadow-black/30 backdrop-blur-md sm:bottom-6 sm:left-6">
-                    <div className="text-[9px] uppercase tracking-[0.22em] text-white/45">Finished build</div>
-                    <div className="mt-1 text-sm font-bold">Inspect close-up</div>
-                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-stone-50 via-stone-50/72 to-stone-50/22 md:via-stone-50/55 md:to-transparent dark:from-[#050507] dark:via-[#050507]/72 dark:to-[#050507]/22 dark:md:via-[#050507]/55 dark:md:to-transparent" />
+                  <span aria-hidden className="pointer-events-none absolute bottom-4 right-4 inline-flex h-8 w-8 items-center justify-center rounded-full border border-stone-900/20 bg-stone-50/70 text-stone-700 opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100 dark:border-white/30 dark:bg-black/40 dark:text-white/85">
+                    <Maximize2 className="h-3.5 w-3.5" />
+                  </span>
                 </button>
-                <figcaption className="mt-5 font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/40">
-                  Seiko NH35A &nbsp;·&nbsp; 41 h reserve &nbsp;·&nbsp; 21,600 vph
-                </figcaption>
-              </figure>
-            </section>
 
-            {/* Specs ticker — single horizontal line */}
-            <section className="border-y border-border/35 py-5">
-              <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-x-7 gap-y-2 px-4 text-[10px] uppercase tracking-[0.24em] text-foreground/50 sm:text-[11px]">
-                <span>Mechanical automatic</span>
-                <span aria-hidden className="text-foreground/20">·</span>
-                <span>Hand-pressed dial &amp; hands</span>
-                <span aria-hidden className="text-foreground/20">·</span>
-                <span>Sourced parts</span>
-                <span aria-hidden className="text-foreground/20">·</span>
-                <span>Dust-free assembly</span>
-              </div>
-            </section>
-
-            {/* Video — the page's centerpiece */}
-            <section className="grid grid-cols-1 gap-4 md:grid-cols-3">
-              {[
-                {
-                  icon: Layers,
-                  label: "Source",
-                  title: "Compatible parts",
-                  text: "Case, dial, hands, crown, bracelet, crystal, and NH35 movement checked before assembly.",
-                },
-                {
-                  icon: Wrench,
-                  label: "Assemble",
-                  title: "Small-force work",
-                  text: "Hands and dial pressed carefully so nothing scratched, bent, or fouled.",
-                },
-                {
-                  icon: CheckCircle2,
-                  label: "Verify",
-                  title: "Runs cleanly",
-                  text: "Final check for dust, alignment, hand clearance, and reliable wrist operation.",
-                },
-              ].map(({ icon: Icon, label, title, text }) => (
-                <div key={label} className="group rounded-xl border border-border/60 bg-background/45 p-5 shadow-lg shadow-black/[0.03] transition-colors hover:border-amber-500/35 hover:bg-amber-500/[0.045]">
-                  <div className="mb-4 flex items-center justify-between">
-                    <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">{label}</div>
-                    <div className="grid h-9 w-9 place-items-center rounded-full border border-border/70 bg-background/70 text-amber-500 transition-colors group-hover:border-amber-500/40">
-                      <Icon className="h-4 w-4" />
-                    </div>
-                  </div>
-                  <h2 className="font-serif text-2xl font-medium tracking-tight">{title}</h2>
-                  <p className="mt-3 text-sm leading-relaxed text-foreground/62">{text}</p>
+                {/* Animated subdial — top-right of hero */}
+                <div className="absolute right-6 top-6 z-10 hidden h-16 w-16 text-amber-700/85 sm:block md:right-10 md:top-10 md:h-20 md:w-20 dark:text-amber-200/75">
+                  <WatchSubdial labelTop="21.6K" labelBottom="VPH" />
                 </div>
-              ))}
-            </section>
 
-            {project.videoGallery && project.videoGallery[0] && (
-              <section className="grid grid-cols-1 gap-6 rounded-2xl border border-border/60 bg-background/45 p-4 shadow-xl shadow-black/[0.04] md:p-6 lg:grid-cols-[0.34fr_0.66fr] lg:items-center">
-                <div className="p-2 md:p-4">
-                  <div className="text-[10px] uppercase tracking-[0.34em] text-primary">Watch the build</div>
-                  <h2 className="mt-3 font-serif text-3xl font-medium leading-tight md:text-4xl">The careful bit is the whole project.</h2>
-                  <p className="mt-4 max-w-sm text-sm leading-relaxed text-foreground/62">
-                    Dust control, hand setting, alignment, and patience at a scale where every mark shows.
+                <div className="relative mx-auto flex max-w-4xl flex-col items-center px-5 py-16 text-center sm:px-8 md:py-24 lg:py-28">
+                  <div className="mb-7 inline-flex rounded-full border border-amber-700/25 bg-amber-100/85 px-4 py-1.5 text-[10px] font-semibold uppercase leading-relaxed tracking-[0.28em] text-amber-800 dark:border-amber-300/25 dark:bg-amber-300/10 dark:text-amber-100/85">
+                    Custom Build
+                  </div>
+
+                  <h1 className="font-serif text-[2.4rem] font-medium leading-[1.04] tracking-tight sm:text-5xl md:text-[4.5rem] lg:text-[5rem]">
+                    A mechanical watch,
+                    <br />
+                    <span className="italic text-amber-700 dark:text-amber-100">assembled by hand.</span>
+                  </h1>
+
+                  <p className="mt-7 max-w-md text-[14px] leading-[1.7] text-stone-600 sm:text-[15px] dark:text-white/65">
+                    Built by hand around a Seiko NH35.
                   </p>
                 </div>
-                <div className="w-full">
+              </section>
+
+              {/* ============================================================ */}
+              {/* THE BUILD — clean editorial plate                            */}
+              {/* ============================================================ */}
+              <section className="relative mt-10 md:mt-14">
+                <div className="relative overflow-hidden rounded-2xl border border-stone-900/10 bg-stone-50 text-stone-900 shadow-xl shadow-stone-900/[0.05] dark:border-white/10 dark:bg-[#050507] dark:text-white dark:shadow-2xl dark:shadow-black/40">
+                  <div aria-hidden className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_28%,rgba(217,119,6,0.07),transparent_55%)] dark:bg-[radial-gradient(ellipse_at_50%_28%,rgba(245,158,11,0.10),transparent_55%)]" />
+                  <div aria-hidden className="absolute inset-0 bg-[linear-gradient(90deg,rgba(68,64,60,0.04)_1px,transparent_1px),linear-gradient(0deg,rgba(68,64,60,0.03)_1px,transparent_1px)] bg-[size:64px_64px] opacity-60 dark:bg-[linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(0deg,rgba(255,255,255,0.02)_1px,transparent_1px)] dark:opacity-50" />
+                  <WatchWaveDrift
+                    idPrefix="watch-banner-wave-light"
+                    height={420}
+                    density={9}
+                    speed="slow"
+                    tone="rgba(120,100,80,0.12)"
+                    accentTone="rgba(180,130,60,0.20)"
+                    className="absolute inset-x-0 top-0 h-full opacity-[0.5] dark:hidden"
+                  />
+                  <WatchWaveDrift
+                    idPrefix="watch-banner-wave-dark"
+                    height={420}
+                    density={9}
+                    speed="slow"
+                    tone="rgba(156,180,204,0.10)"
+                    accentTone="rgba(212,165,87,0.16)"
+                    className="absolute inset-x-0 top-0 hidden h-full opacity-[0.4] dark:block"
+                  />
+
+                  <div className="relative mx-auto max-w-6xl px-5 py-14 sm:px-8 md:py-20 lg:py-24">
+                    {/* Top register */}
+                    <div className="mb-10 flex items-baseline justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.32em] md:mb-14">
+                      <div className="flex items-center gap-2.5 text-amber-700 dark:text-amber-200/85">
+                        <span aria-hidden className="block h-1 w-1 rounded-full bg-amber-600 dark:bg-amber-300/80" />
+                        The finished build
+                      </div>
+                      <div className="text-stone-500 dark:text-white/40">NH35A — 41 mm</div>
+                    </div>
+
+                    {/* Magazine spread: photo left, type right */}
+                    <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-[1.55fr_1fr] md:gap-12 lg:gap-16">
+                      <button
+                        type="button"
+                        onClick={() => openLightbox(["/images/watch/grand-seiko.png"], 0, project.title)}
+                        aria-label="Open finished build photo full screen"
+                        className="group relative block w-full cursor-zoom-in overflow-hidden rounded-xl"
+                      >
+                        <Image
+                          src="/images/watch/grand-seiko.png"
+                          alt={project.title}
+                          width={1400}
+                          height={1280}
+                          className="h-auto w-full object-contain transition-transform ease-out group-hover:scale-[1.012] [transition-duration:800ms]"
+                          priority
+                        />
+                        {/* Expand affordance */}
+                        <span className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-black/55 via-black/15 to-transparent p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100 sm:p-4">
+                          <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/85">
+                            Tap to expand
+                          </span>
+                          <span className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/40 bg-black/35 text-white backdrop-blur-sm sm:h-8 sm:w-8">
+                            <Maximize2 className="h-3.5 w-3.5" />
+                          </span>
+                        </span>
+                      </button>
+
+                      <div className="relative">
+                        <div className="mb-6 flex items-center gap-3 md:mb-7">
+                          <span aria-hidden className="h-px w-10 bg-amber-700/55 dark:bg-amber-300/55" />
+                          <span className="font-mono text-[10px] uppercase tracking-[0.34em] text-amber-700 dark:text-amber-200/85">
+                            Reference 001
+                          </span>
+                        </div>
+
+                        <h2 className="font-serif text-[2rem] font-medium leading-[1.06] tracking-tight sm:text-[2.6rem] md:text-[3rem] lg:text-[3.5rem]">
+                          Off the bench,
+                          <br />
+                          <span className="italic text-amber-700 dark:text-amber-100/95">onto the wrist.</span>
+                        </h2>
+
+                        <dl className="mt-8 divide-y divide-stone-900/10 border-y border-stone-900/10 text-[13px] dark:divide-white/10 dark:border-white/10">
+                          {[
+                            ["Caliber", "Seiko NH35A"],
+                            ["Beat rate", "21,600 vph"],
+                            ["Reserve", "41 hours"],
+                            ["Diameter", "41.0 mm"],
+                          ].map(([k, v]) => (
+                            <div key={k} className="grid grid-cols-[7rem_1fr] items-baseline gap-4 py-2.5">
+                              <dt className="font-mono text-[10px] uppercase tracking-[0.24em] text-stone-500 dark:text-white/45">{k}</dt>
+                              <dd className="font-serif text-stone-800 dark:text-white/85">{v}</dd>
+                            </div>
+                          ))}
+                        </dl>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* ============================================================ */}
+              {/* CHALLENGES & LEARNINGS                                        */}
+              {/* ============================================================ */}
+              <section className="mx-auto mt-16 max-w-6xl px-4 md:mt-20">
+                <div className="mb-8 flex flex-wrap items-center justify-center gap-x-7 gap-y-2 border-b border-foreground/15 pb-5 font-mono text-[10px] uppercase tracking-[0.32em] text-foreground/45 md:text-[11px] md:tracking-[0.34em]">
+                  <span>Sourcing</span>
+                  <span aria-hidden className="text-foreground/20">·</span>
+                  <span>Hand setting</span>
+                  <span aria-hidden className="text-foreground/20">·</span>
+                  <span>Sealed bench</span>
+                  <span aria-hidden className="text-foreground/20">·</span>
+                  <span>Steady hands</span>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                  {[
+                    { icon: Layers, kicker: "Challenge", title: "Sourcing", body: "Most parts marketed for the NH35 aren't. Each one verified before it shipped." },
+                    { icon: Wrench, kicker: "Challenge", title: "Hand setting", body: "Press too hard, scratch the dial. Press too soft, the hand slips at six." },
+                    { icon: CheckCircle2, kicker: "Learnt", title: "Patience pays", body: "Small tolerances reward slow hands. Rushing always meant starting over." },
+                  ].map(({ icon: Icon, kicker, title, body }) => (
+                    <div key={title} className="group rounded-xl border border-border/60 bg-background/45 p-5 shadow-lg shadow-black/[0.03] transition-colors hover:border-amber-500/35 hover:bg-amber-500/[0.045]">
+                      <div className="mb-4 flex items-center justify-between">
+                        <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">{kicker}</div>
+                        <div className="grid h-9 w-9 place-items-center rounded-full border border-border/70 bg-background/70 text-amber-500 transition-colors group-hover:border-amber-500/40">
+                          <Icon className="h-4 w-4" />
+                        </div>
+                      </div>
+                      <h3 className="font-serif text-2xl font-medium tracking-tight">{title}</h3>
+                      <p className="mt-3 text-sm leading-relaxed text-foreground/62">{body}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* Quiet divider */}
+              <div className="mx-auto my-16 flex max-w-4xl items-center gap-4 px-4 md:my-20">
+                <span aria-hidden className="h-px flex-1 bg-foreground/15" />
+                <span aria-hidden className="block h-1 w-1 rounded-full bg-amber-500/60" />
+                <span aria-hidden className="h-px flex-1 bg-foreground/15" />
+              </div>
+
+              {/* ============================================================ */}
+              {/* VIDEO                                                         */}
+              {/* ============================================================ */}
+              {project.videoGallery && project.videoGallery[0] && (
+                <section className="mx-auto max-w-5xl px-4">
+                  <div className="mb-5 flex items-baseline justify-between gap-4 px-1 font-mono text-[10px] uppercase tracking-[0.30em] text-foreground/45">
+                    <div className="flex items-center gap-2.5">
+                      <span aria-hidden className="relative inline-block h-2 w-2">
+                        <span className="absolute inset-0 rounded-full bg-amber-500/85" />
+                        <span className="absolute inset-0 rounded-full bg-amber-500/85 watch-pulse" />
+                      </span>
+                      Rec
+                    </div>
+                    <div className="text-foreground/35">2:14 · build</div>
+                  </div>
                   <div className="relative aspect-video overflow-hidden rounded-xl border border-white/10 bg-black shadow-2xl shadow-black/35">
                     <iframe
                       src={`https://www.youtube.com/embed/${project.videoGallery[0].id}`}
@@ -2397,29 +2620,20 @@ function ProjectDetailClient() {
                       allowFullScreen
                       className="h-full w-full"
                     />
+                    <span aria-hidden className="absolute left-3 top-3 h-3 w-3 border-l border-t border-amber-200/45" />
+                    <span aria-hidden className="absolute right-3 top-3 h-3 w-3 border-r border-t border-amber-200/45" />
+                    <span aria-hidden className="absolute left-3 bottom-3 h-3 w-3 border-l border-b border-amber-200/45" />
+                    <span aria-hidden className="absolute right-3 bottom-3 h-3 w-3 border-r border-b border-amber-200/45" />
                   </div>
-                </div>
-              </section>
-            )}
+                </section>
+              )}
 
-            {/* Pull quote — amber accent reserved for this page */}
-            <section className="mx-auto max-w-3xl px-2">
-              <div className="rounded-2xl border border-amber-500/20 bg-[linear-gradient(135deg,rgba(217,119,6,0.08),transparent_42%)] p-6 shadow-xl shadow-black/[0.03] md:p-8">
-                <p className="font-serif text-xl italic leading-[1.55] text-foreground/85 md:text-2xl">
-                  A moment of rushing or frustration can mean a scratched dial, a bent hand, or dust trapped under the crystal &mdash; all of which mean taking everything apart and starting over.
-                </p>
+              {/* End mark */}
+              <div className="mx-auto mt-16 flex max-w-xs items-center gap-3 px-4 md:mt-20">
+                <span aria-hidden className="h-px flex-1 bg-foreground/20" />
+                <span className="font-mono text-[10px] uppercase tracking-[0.4em] text-amber-600/70">Fin</span>
+                <span aria-hidden className="h-px flex-1 bg-foreground/20" />
               </div>
-            </section>
-
-            {/* Sign-off */}
-            <section className="pt-2 text-center">
-              <p className="mx-auto max-w-md font-serif text-3xl italic leading-tight text-foreground/80">
-                It runs. Within spec. On the wrist.
-              </p>
-              <p className="mt-4 text-[10px] uppercase tracking-[0.4em] text-foreground/35">
-                That&rsquo;s the whole result.
-              </p>
-            </section>
             </div>
           </div>
         ) : (

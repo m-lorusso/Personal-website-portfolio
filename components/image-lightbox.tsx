@@ -55,27 +55,27 @@ export default function ImageLightbox({
           onClick={onClose}
         >
           <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
+            initial={{ scale: 0.92, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.8, opacity: 0 }}
-            className="relative max-w-4xl max-h-full"
+            exit={{ scale: 0.92, opacity: 0 }}
+            className="relative flex max-h-[96vh] max-w-[96vw] items-center justify-center"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative w-full h-full">
-              <Image
-                src={images[currentIndex] || "/placeholder.svg"}
-                alt={`${altPrefix} ${currentIndex + 1}`}
-                width={800}
-                height={600}
-                className="object-contain max-h-[80vh] w-auto"
-              />
-            </div>
+            <Image
+              src={images[currentIndex] || "/placeholder.svg"}
+              alt={`${altPrefix} ${currentIndex + 1}`}
+              width={2400}
+              height={1800}
+              className="block h-auto max-h-[92vh] w-auto max-w-[94vw] rounded-lg object-contain"
+              priority
+              sizes="94vw"
+            />
 
             {/* Close Button */}
             <Button
               variant="ghost"
               size="icon"
-              className="absolute top-4 right-4 text-white hover:bg-white/20"
+              className="absolute top-4 right-4 text-white hover:bg-white/20 z-10"
               onClick={onClose}
             >
               <X className="w-6 h-6" />
@@ -87,7 +87,7 @@ export default function ImageLightbox({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:bg-white/20"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/20 z-10"
                   onClick={onPrevious}
                 >
                   <ChevronLeft className="w-6 h-6" />
@@ -95,7 +95,7 @@ export default function ImageLightbox({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:bg-white/20"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/20 z-10"
                   onClick={onNext}
                 >
                   <ChevronRight className="w-6 h-6" />

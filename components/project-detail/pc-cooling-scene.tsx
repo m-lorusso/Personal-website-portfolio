@@ -228,9 +228,8 @@ export default function PCCoolingScene({ mode }: { mode: PCCoolingMode }) {
     }
 
     // ===== Front intake fans (3 large, face-on along +X) =====
-    // Top intake sits a little lower than mid-tower symmetric to give the
-    // top-intake airflow more vertical room between it and the AIO fans.
-    const intakeYs = [1.55, 0, -1.85]
+    // Symmetric positions so the top intake doesn't overlap the middle one.
+    const intakeYs = [1.85, 0, -1.85]
     for (const y of intakeYs) {
       const f = buildFan({ x: W / 2 - 0.08, y, z: 0, r: 0.9, axis: "x", ledColor: 0x67e8f9, glow: 1.3 })
       scene.add(f)
@@ -569,8 +568,8 @@ export default function PCCoolingScene({ mode }: { mode: PCCoolingMode }) {
         // Top intake → curves up to the RIGHT top AIO fan → exits top
         {
           curve: new THREE.CatmullRomCurve3([
-            new THREE.Vector3(3.6, 1.55, FZ),
-            new THREE.Vector3(2.6, 1.55, FZ),
+            new THREE.Vector3(3.6, 1.85, FZ),
+            new THREE.Vector3(2.6, 1.85, FZ),
             new THREE.Vector3(2.0, 1.75, FZ),
             new THREE.Vector3(1.5, 2.0, FZ),
             new THREE.Vector3(1.1, 2.3, FZ),
@@ -586,8 +585,8 @@ export default function PCCoolingScene({ mode }: { mode: PCCoolingMode }) {
         // Top intake → flows right-to-left → exits up through the LEFT top AIO fan
         {
           curve: new THREE.CatmullRomCurve3([
-            new THREE.Vector3(3.6, 1.55, FZ),
-            new THREE.Vector3(2.6, 1.55, FZ),
+            new THREE.Vector3(3.6, 1.85, FZ),
+            new THREE.Vector3(2.6, 1.85, FZ),
             new THREE.Vector3(1.6, 1.7, FZ),
             new THREE.Vector3(0.3, 1.9, FZ),
             new THREE.Vector3(-0.6, 2.05, FZ),
@@ -604,8 +603,8 @@ export default function PCCoolingScene({ mode }: { mode: PCCoolingMode }) {
         // Top intake → flows right-to-left across the case → exits LEFT through the rear exhaust fan
         {
           curve: new THREE.CatmullRomCurve3([
-            new THREE.Vector3(3.6, 1.55, FZ),
-            new THREE.Vector3(2.6, 1.55, FZ),
+            new THREE.Vector3(3.6, 1.85, FZ),
+            new THREE.Vector3(2.6, 1.85, FZ),
             new THREE.Vector3(1.6, 1.6, FZ),
             new THREE.Vector3(0.3, 1.7, FZ),
             new THREE.Vector3(-1.0, 1.75, FZ),
@@ -625,8 +624,8 @@ export default function PCCoolingScene({ mode }: { mode: PCCoolingMode }) {
         // Top intake → curves up to the RIGHT top AIO fan → exits top
         {
           curve: new THREE.CatmullRomCurve3([
-            new THREE.Vector3(3.6, 1.55, FZ),
-            new THREE.Vector3(2.6, 1.55, FZ),
+            new THREE.Vector3(3.6, 1.85, FZ),
+            new THREE.Vector3(2.6, 1.85, FZ),
             new THREE.Vector3(2.0, 1.75, FZ),
             new THREE.Vector3(1.5, 2.0, FZ),
             new THREE.Vector3(1.1, 2.3, FZ),
@@ -642,8 +641,8 @@ export default function PCCoolingScene({ mode }: { mode: PCCoolingMode }) {
         // Top intake → flows right-to-left → exits up through the LEFT top AIO fan
         {
           curve: new THREE.CatmullRomCurve3([
-            new THREE.Vector3(3.6, 1.55, FZ),
-            new THREE.Vector3(2.6, 1.55, FZ),
+            new THREE.Vector3(3.6, 1.85, FZ),
+            new THREE.Vector3(2.6, 1.85, FZ),
             new THREE.Vector3(1.6, 1.7, FZ),
             new THREE.Vector3(0.3, 1.9, FZ),
             new THREE.Vector3(-0.6, 2.05, FZ),
@@ -660,8 +659,8 @@ export default function PCCoolingScene({ mode }: { mode: PCCoolingMode }) {
         // Top intake → flows right-to-left across the case → exits LEFT through the rear exhaust fan
         {
           curve: new THREE.CatmullRomCurve3([
-            new THREE.Vector3(3.6, 1.55, FZ),
-            new THREE.Vector3(2.6, 1.55, FZ),
+            new THREE.Vector3(3.6, 1.85, FZ),
+            new THREE.Vector3(2.6, 1.85, FZ),
             new THREE.Vector3(1.6, 1.6, FZ),
             new THREE.Vector3(0.3, 1.7, FZ),
             new THREE.Vector3(-1.0, 1.75, FZ),

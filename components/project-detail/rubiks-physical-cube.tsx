@@ -556,14 +556,14 @@ export default function RubiksPhysicalCube({
       let moveProgress = previewMode === "result" ? 1 : 0
 
       if (previewMode === "animate") {
-        const progress = THREE.MathUtils.clamp((time - startedAt - 160) / 1150, 0, 1)
+        const progress = THREE.MathUtils.clamp((time - startedAt - 125) / 900, 0, 1)
         moveProgress = progress
         angle = turnConfig.angle * easeOutCubic(moveProgress)
       }
 
       movingGroup.rotation[turnConfig.axis] = angle
       setTopHighlightOpacity(highlightTopFace ? THREE.MathUtils.smoothstep(moveProgress, 0.78, 1) : 0)
-      setTargetCueOpacity(previewMode === "start" || isSettledFinalResult ? 1 : 0)
+      setTargetCueOpacity(previewMode === "start" ? 1 : 0)
       renderer.render(scene, camera)
       animationFrame = window.requestAnimationFrame(render)
     }
