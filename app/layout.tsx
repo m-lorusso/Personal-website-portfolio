@@ -15,7 +15,12 @@ const inter = Inter({
   preload: true,
 })
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000")
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Michael Lo Russo - Portfolio",
   description: "Engineering portfolio showcasing projects in mechanical engineering, robotics, and construction.",
   generator: "v0.dev",
@@ -28,13 +33,11 @@ export const metadata: Metadata = {
     title: "Michael Lo Russo - Portfolio",
     description: "Engineering portfolio showcasing projects in mechanical engineering, robotics, and construction.",
     type: "website",
-    images: ["/Favicon - ML.png"],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Michael Lo Russo - Portfolio",
     description: "Engineering portfolio showcasing projects in mechanical engineering, robotics, and construction.",
-    images: ["/Favicon - ML.png"],
   },
 }
 

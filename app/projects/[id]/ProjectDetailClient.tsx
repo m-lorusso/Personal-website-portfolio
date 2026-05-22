@@ -904,7 +904,7 @@ function ProjectDetailClient() {
                   selectedIndex={exteriorIndex}
                   onImageClick={openSlideshow}
                   onNavigate={navigateExterior}
-                  altPrefix="Exterior construction"
+                  altPrefix="Exterior construction photo"
                   columns="grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
                   imageHeight="h-40"
                   showNavigation
@@ -919,7 +919,7 @@ function ProjectDetailClient() {
                   selectedIndex={interiorIndex}
                   onImageClick={openSlideshow}
                   onNavigate={navigateInterior}
-                  altPrefix="Interior work"
+                  altPrefix="Interior renovation photo"
                   columns="grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
                   imageHeight="h-40"
                   showNavigation
@@ -934,7 +934,7 @@ function ProjectDetailClient() {
                   selectedIndex={finishedIndex}
                   onImageClick={openSlideshow}
                   onNavigate={navigateFinished}
-                  altPrefix="Finished product"
+                  altPrefix="Finished home photo"
                   columns="grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
                   imageHeight="h-40"
                   showNavigation
@@ -949,7 +949,7 @@ function ProjectDetailClient() {
                   selectedIndex={additionalIndex}
                   onImageClick={openSlideshow}
                   onNavigate={navigateAdditional}
-                  altPrefix="Additional photos"
+                  altPrefix="Construction process photo"
                   columns="grid-cols-3 md:grid-cols-4 lg:grid-cols-6"
                   imageHeight="h-32"
                   showNavigation
@@ -1603,7 +1603,7 @@ function ProjectDetailClient() {
                 title="Project Photos"
                 images={project.gallery}
                 onImageClick={openLightbox}
-                altPrefix="UR5e project"
+                altPrefix="UR5e robotic writing system photo"
                 columns="grid-cols-1 md:grid-cols-2"
                 imageHeight="h-48 md:h-64"
               />

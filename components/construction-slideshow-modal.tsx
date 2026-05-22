@@ -71,6 +71,7 @@ export default function ConstructionSlideshowModal({
             size="icon"
             className="absolute top-4 right-4 text-white hover:bg-white/20 z-10"
             onClick={onClose}
+            aria-label="Close slideshow"
           >
             <X className="w-6 h-6" />
           </Button>
@@ -159,6 +160,7 @@ export default function ConstructionSlideshowModal({
               size="icon"
               className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/20"
               onClick={(e) => { e.stopPropagation(); goPrev() }}
+              aria-label="Previous image"
             >
               <ChevronLeft className="w-8 h-8" />
             </Button>
@@ -171,6 +173,7 @@ export default function ConstructionSlideshowModal({
               size="icon"
               className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/20"
               onClick={(e) => { e.stopPropagation(); goNext() }}
+              aria-label="Next image"
             >
               <ChevronRight className="w-8 h-8" />
             </Button>

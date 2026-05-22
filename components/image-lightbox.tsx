@@ -22,7 +22,7 @@ export default function ImageLightbox({
   onClose,
   onNext,
   onPrevious,
-  altPrefix = "Image",
+  altPrefix = "Project photo",
 }: ImageLightboxProps) {
   useEffect(() => {
     if (!isOpen) return
@@ -77,6 +77,7 @@ export default function ImageLightbox({
               size="icon"
               className="absolute top-4 right-4 text-white hover:bg-white/20 z-10"
               onClick={onClose}
+              aria-label="Close image viewer"
             >
               <X className="w-6 h-6" />
             </Button>
@@ -89,6 +90,7 @@ export default function ImageLightbox({
                   size="icon"
                   className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/20 z-10"
                   onClick={onPrevious}
+                  aria-label="Previous image"
                 >
                   <ChevronLeft className="w-6 h-6" />
                 </Button>
@@ -97,6 +99,7 @@ export default function ImageLightbox({
                   size="icon"
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/20 z-10"
                   onClick={onNext}
+                  aria-label="Next image"
                 >
                   <ChevronRight className="w-6 h-6" />
                 </Button>

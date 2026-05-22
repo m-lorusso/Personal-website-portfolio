@@ -79,6 +79,7 @@ export default function Navbar() {
               variant="ghost"
               size="icon"
               onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+              aria-label={`Switch to ${resolvedTheme === "dark" ? "light" : "dark"} theme`}
               className="rounded-full hover:bg-primary/10 transition-all duration-300"
             >
               <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -103,6 +104,7 @@ export default function Navbar() {
             variant="ghost"
             size="icon"
             onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+            aria-label={`Switch to ${resolvedTheme === "dark" ? "light" : "dark"} theme`}
             className="rounded-full"
           >
             <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -110,7 +112,15 @@ export default function Navbar() {
             <span className="sr-only">Toggle theme</span>
           </Button>
 
-          <Button variant="ghost" size="icon" onClick={() => setIsOpen(!isOpen)} className="rounded-full">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isOpen}
+            aria-controls="mobile-navigation"
+            className="rounded-full"
+          >
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
@@ -118,6 +128,7 @@ export default function Navbar() {
 
       {/* Mobile Navigation Menu */}
       <div
+        id="mobile-navigation"
         className={cn(
           "md:hidden bg-background/95 backdrop-blur-lg border-b border-border/50 overflow-hidden transition-all duration-300 ease-in-out",
           isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
