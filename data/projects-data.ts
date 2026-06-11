@@ -470,13 +470,13 @@ ESP32 break-beam monitor for a pet door. V1 used PIR sensing, but false-triggere
 
 V2 switched to a beam across the opening, debounced events in firmware, and sent timestamped Telegram alerts. Within 2 days of deployment, it detected an intruder cat attempting to enter.
 `,
-    image: "/images/cat-door/v2-system.png",
+    image: "/images/cat-door/v2-system.jpg",
     designGallery: [
       "/images/cat-door/v1.jpg",
       "/images/cat-door/cad-design.jpg",
       "/images/cat-door/cad-slicing.jpg",
-      "/images/cat-door/3d-printed.png",
-      "/images/cat-door/v2-system.png",
+      "/images/cat-door/3d-printed.jpg",
+      "/images/cat-door/v2-system.jpg",
     ],
     notificationGallery: ["/images/cat-door/telegram-notifications.png"],
     videoGallery: [
@@ -614,7 +614,7 @@ An ESP32 DevKitC drives 5× NEMA 17 steppers (R, L, F, B, D faces) through TMC22
 The solver is the Kociemba two-phase algorithm — the same class of solver used in record-setting cube robots and the algorithmic basis for the proof that any cube state is solvable in 20 moves or fewer. A Python implementation runs on localhost, computes a near-optimal solution of roughly 20 moves in under 1 second, then streams the expanded physical move sequence to the firmware over Serial.
 
 V1 deliberately defers computer-vision colour detection and a 6th U-face motor in favour of an open-top, manual-input design that prioritises mechanical simplicity, cube accessibility, and reliable end-to-end solving.`,
-    image: "/images/rubiks/cube-front.png",
+    image: "/images/rubiks/cube-front.jpg",
     hardwareGallery: [
       "/images/rubiks/final-design.jpg",
       "/images/rubiks/motor-diagram.jpg",

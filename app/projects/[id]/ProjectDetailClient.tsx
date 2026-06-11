@@ -1780,12 +1780,12 @@ function ProjectDetailClient() {
                   },
                   {
                     title: "Printed frame",
-                    image: "/images/cat-door/3d-printed.png",
+                    image: "/images/cat-door/3d-printed.jpg",
                     alt: "3D printed cat door monitor housing",
                   },
                   {
                     title: "Bench validation",
-                    image: "/images/cat-door/v2-system.png",
+                    image: "/images/cat-door/v2-system.jpg",
                     alt: "ESP32 break beam bench test",
                   },
                 ].map((item) => (
@@ -2437,12 +2437,12 @@ function ProjectDetailClient() {
                     <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-[1.55fr_1fr] md:gap-12 lg:gap-16">
                       <button
                         type="button"
-                        onClick={() => openLightbox(["/images/watch/grand-seiko.png"], 0, project.title)}
+                        onClick={() => openLightbox(["/images/watch/grand-seiko.jpg"], 0, project.title)}
                         aria-label="Open finished build photo full screen"
                         className="group relative block w-full cursor-zoom-in overflow-hidden rounded-xl"
                       >
                         <Image
-                          src="/images/watch/grand-seiko.png"
+                          src="/images/watch/grand-seiko.jpg"
                           alt={project.title}
                           width={1400}
                           height={1280}

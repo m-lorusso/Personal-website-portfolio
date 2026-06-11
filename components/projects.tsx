@@ -36,7 +36,7 @@ const technicalProjects: ProjectCard[] = [
     description:
       "Solo-built rig where an ESP32 drives five stepper motors, fed by a Kociemba solver and a browser-based colour-input UI.",
     outcome: "Solves any scramble — ~20-move plan computed in under 1 second",
-    image: "/images/rubiks/cube-front.png",
+    image: "/images/rubiks/cube-front.jpg",
     youtubeUrl: "https://www.youtube.com/watch?v=OC9h20jK2XQ",
   },
   {
@@ -61,7 +61,7 @@ const technicalProjects: ProjectCard[] = [
     description:
       "ESP32 break-beam monitor for a pet door that debounces false triggers and sends timestamped Telegram alerts.",
     outcome: "Detected an intruder cat within 2 days of deployment",
-    image: "/images/cat-door/v2-system.png",
+    image: "/images/cat-door/v2-system.jpg",
   },
 ]
 
