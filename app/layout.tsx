@@ -21,23 +21,22 @@ const siteUrl =
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Michael Lo Russo - Portfolio",
-  description: "Engineering portfolio showcasing projects in mechanical engineering, robotics, and construction.",
-  generator: "v0.dev",
+  title: "Michael Lo Russo — Engineering Portfolio",
+  description: "Engineering portfolio of Michael Lo Russo — design, prototyping, embedded systems, and hands-on builds.",
   icons: {
     icon: "/Favicon - ML.png",
     shortcut: "/Favicon - ML.png",
     apple: "/Favicon - ML.png",
   },
   openGraph: {
-    title: "Michael Lo Russo - Portfolio",
-    description: "Engineering portfolio showcasing projects in mechanical engineering, robotics, and construction.",
+    title: "Michael Lo Russo — Engineering Portfolio",
+    description: "Engineering portfolio of Michael Lo Russo — design, prototyping, embedded systems, and hands-on builds.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Michael Lo Russo - Portfolio",
-    description: "Engineering portfolio showcasing projects in mechanical engineering, robotics, and construction.",
+    title: "Michael Lo Russo — Engineering Portfolio",
+    description: "Engineering portfolio of Michael Lo Russo — design, prototyping, embedded systems, and hands-on builds.",
   },
 }
 

@@ -1,8 +1,12 @@
 import ProjectDetailClient from "./ProjectDetailClient"
+import { projectsData } from "@/data/projects-data"
+
+// Only the ids returned here are valid routes — anything else (including
+// hidden projects) returns a 404.
+export const dynamicParams = false
 
 export async function generateStaticParams() {
-  // Return the list of project IDs that should be statically generated
-  return [{ id: "1" }, { id: "2" }, { id: "3" }, { id: "4" }, { id: "5" }, { id: "6" }, { id: "7" }, { id: "8" }]
+  return projectsData.filter((project) => !project.hidden).map((project) => ({ id: String(project.id) }))
 }
 
 export default function ProjectDetail() {

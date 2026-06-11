@@ -44,6 +44,8 @@ export interface Project {
   course?: string
   tagline?: string
   imagePosition?: string
+  /** Excluded from the sitemap and not statically generated (page 404s) until content is ready */
+  hidden?: boolean
 }
 
 export const projectsData: Project[] = [
@@ -695,6 +697,7 @@ The open-top, manual-input design has been a clear win for V1 — it keeps the m
   },
   {
     id: 8,
+    hidden: true,
     title: "PVT Calculator Tool",
     description:
       "Thesis project — a PVT calculator tool, built in collaboration with CoolSheet.",

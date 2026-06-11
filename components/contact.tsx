@@ -3,15 +3,20 @@
 import { useRef } from "react"
 import { useInView } from "framer-motion"
 import { motion } from "framer-motion"
-import { Mail, MapPin, Linkedin } from "lucide-react"
+import { Mail, MapPin, Linkedin, Github } from "lucide-react"
 
 export default function Contact() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
 
   return (
-    <section id="contact" className="py-16">
+    <section className="py-16">
       <div className="container mx-auto px-6">
+        <div className="text-center mb-10">
+          <h2 className="text-2xl md:text-3xl font-bold mb-3">Contact</h2>
+          <div className="w-16 h-1 bg-primary mx-auto"></div>
+        </div>
+
         <div ref={ref} className="max-w-md mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -19,7 +24,7 @@ export default function Contact() {
             transition={{ duration: 0.6 }}
             className="border rounded-xl p-8 bg-muted/20"
           >
-            <h2 className="text-xl font-bold mb-6">{"Let's connect"}</h2>
+            <h3 className="text-xl font-bold mb-6">{"Let's connect"}</h3>
 
             <div className="space-y-4">
               <a
@@ -43,6 +48,16 @@ export default function Contact() {
               >
                 <Linkedin className="w-4 h-4 shrink-0 text-primary" />
                 <span className="text-sm">LinkedIn</span>
+              </a>
+
+              <a
+                href="https://github.com/z5360700"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 text-foreground/70 hover:text-primary transition-colors"
+              >
+                <Github className="w-4 h-4 shrink-0 text-primary" />
+                <span className="text-sm">GitHub</span>
               </a>
             </div>
           </motion.div>

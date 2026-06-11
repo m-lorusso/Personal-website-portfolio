@@ -10,7 +10,7 @@ export default function Hero() {
   const resumeUrl = "/MichaelLoRusso_RESUME.pdf"
 
   return (
-    <section id="home" className="min-h-dvh flex items-center justify-center relative pt-20 pb-12 overflow-hidden">
+    <section className="min-h-dvh flex items-center justify-center relative pt-20 pb-12 overflow-hidden">
       <div className="container mx-auto px-6 flex flex-col lg:flex-row items-center justify-center gap-10 lg:gap-16 z-10">
         {/* Profile Image - Made smaller */}
         <motion.div

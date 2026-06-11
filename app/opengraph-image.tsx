@@ -57,7 +57,7 @@ export default function Image() {
               lineHeight: 1.3,
             }}
           >
-            Mechanical engineering, robotics, and construction projects.
+            Design, prototyping, embedded systems, and hands-on builds.
           </div>
         </div>
 
@@ -71,11 +71,11 @@ export default function Image() {
           }}
         >
           <div style={{ display: "flex", gap: 16 }}>
-            <span>Mechatronics</span>
+            <span>CAD</span>
             <span>·</span>
-            <span>Three.js</span>
+            <span>Embedded Systems</span>
             <span>·</span>
-            <span>3D Design</span>
+            <span>Fabrication</span>
           </div>
           <div
             style={{
