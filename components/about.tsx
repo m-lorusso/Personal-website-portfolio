@@ -182,21 +182,25 @@ export default function About() {
             </motion.div>
 
             {/* Mobile navigation dots */}
-            <div className="mt-6 flex justify-center gap-2 md:hidden">
+            <div className="mt-3 flex justify-center md:hidden">
               {images.map((image) => (
                 <button
                   key={image}
                   onClick={() => handleImageChange(image)}
-                  className={`w-2 h-2 rounded-full transition-colors duration-200 ${
-                    activeImage === image ? "bg-primary" : "bg-primary/30"
-                  }`}
+                  className="flex h-11 w-11 items-center justify-center"
                   aria-label={`View ${image} photo`}
-                />
+                >
+                  <span
+                    className={`h-2 w-2 rounded-full transition-colors duration-200 ${
+                      activeImage === image ? "bg-primary" : "bg-primary/30"
+                    }`}
+                  />
+                </button>
               ))}
             </div>
 
             {/* Instructions - responsive text */}
-            <p className="mt-4 md:mt-10 text-center text-foreground/60 text-sm">
+            <p className="mt-1 md:mt-10 text-center text-foreground/60 text-sm">
               <span className="hidden md:inline">Hover over photos to bring them forward</span>
               <span className="md:hidden">Swipe left or right to browse photos</span>
             </p>

@@ -46,6 +46,9 @@ export default function WavyLines() {
               .wavy-line-8 { animation: wavyDrawReverse 27s ease-in-out infinite; animation-delay: -5s; }
               .wavy-line-9 { animation: wavyDraw 23s ease-in-out infinite; animation-delay: -7s; }
               .wavy-line-10 { animation: wavyDrawReverse 21s ease-in-out infinite; animation-delay: -9s; }
+              @media (prefers-reduced-motion: reduce) {
+                .wavy-line { animation: none !important; stroke-dasharray: none; }
+              }
             `}
           </style>
         </defs>

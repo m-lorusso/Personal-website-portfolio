@@ -70,12 +70,12 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="flex flex-col sm:flex-row gap-3"
+            className="flex w-full max-w-xs flex-col gap-3 sm:w-auto sm:max-w-none sm:flex-row"
           >
-            <Button size="lg" className="px-6 py-5 text-base font-medium" asChild>
+            <Button size="lg" className="w-full px-6 py-5 text-base font-medium sm:w-auto" asChild>
               <a href="#projects">View My Work</a>
             </Button>
-            <Button size="lg" variant="outline" className="px-6 py-5 text-base font-medium" asChild>
+            <Button size="lg" variant="outline" className="w-full px-6 py-5 text-base font-medium sm:w-auto" asChild>
               <a href={resumeUrl} download="MichaelLoRusso_RESUME.pdf" className="flex items-center gap-2">
                 <Download className="w-4 h-4" />
                 Resume
