@@ -67,7 +67,13 @@ export default function About() {
       <div className="container mx-auto px-6">
         <div className="text-center mb-12">
           <h2 className="text-2xl md:text-3xl font-bold mb-3">About Me</h2>
-          <div className="w-16 h-1 bg-primary mx-auto"></div>
+          <motion.div
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="w-16 h-1 bg-primary mx-auto origin-center"
+          />
         </div>
 
         <div ref={ref} className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">

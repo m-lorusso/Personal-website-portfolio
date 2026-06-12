@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { ArrowDown, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -8,6 +9,15 @@ import WavyLines from "./wavy-lines"
 
 export default function Hero() {
   const resumeUrl = "/MichaelLoRusso_RESUME.pdf"
+  const [hasScrolled, setHasScrolled] = useState(false)
+
+  // Fade the scroll hint out once the visitor starts scrolling
+  useEffect(() => {
+    const onScroll = () => setHasScrolled(window.scrollY > 80)
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
 
   return (
     <section className="min-h-dvh flex items-center justify-center relative pt-20 pb-12 overflow-hidden">
@@ -85,7 +95,11 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+      <div
+        className={`absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce transition-opacity duration-500 ${
+          hasScrolled ? "opacity-0 pointer-events-none" : "opacity-100"
+        }`}
+      >
         <a href="#about" className="text-foreground/70 hover:text-foreground transition-colors">
           <ArrowDown size={24} />
         </a>
