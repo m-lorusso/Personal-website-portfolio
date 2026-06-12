@@ -588,6 +588,206 @@ function HorologyMarquee() {
   )
 }
 
+// ─── Project 6: exploded parts manifest ──────────────────────────────────
+const watchParts = [
+  { id: "crystal", num: "01", name: "Crystal", spec: "Sapphire, pressed into the case" },
+  { id: "hands", num: "02", name: "Hands", spec: "Hour, minute, seconds — set by hand" },
+  { id: "dial", num: "03", name: "Dial", spec: "Aligned on the NH35 dial feet" },
+  { id: "movement", num: "04", name: "Movement", spec: "Seiko NH35A — automatic, 24 jewels" },
+  { id: "crown", num: "05", name: "Crown & stem", spec: "Stem cut to length, fitment verified" },
+  { id: "case", num: "06", name: "Case", spec: "41.0 mm stainless steel" },
+  { id: "bracelet", num: "07", name: "Bracelet", spec: "Sized link by link to the wrist" },
+] as const
+
+type WatchPartId = (typeof watchParts)[number]["id"]
+
+function WatchPartsManifest() {
+  const [activePart, setActivePart] = useState<WatchPartId | null>(null)
+
+  const groupClass = (id: WatchPartId) =>
+    [
+      "transition-opacity duration-200",
+      activePart === id
+        ? "text-amber-600 opacity-100 dark:text-amber-300"
+        : activePart
+          ? "opacity-25"
+          : "opacity-80",
+    ].join(" ")
+
+  const leader = (x1: number, y: number, x2: number) => (
+    <line x1={x1} y1={y} x2={x2} y2={y} stroke="currentColor" strokeOpacity="0.3" strokeWidth="0.8" strokeDasharray="2 4" />
+  )
+
+  return (
+    <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-[0.95fr_1.05fr] md:gap-14">
+      {/* Exploded side view */}
+      <svg
+        viewBox="0 0 320 520"
+        className="mx-auto w-full max-w-[320px] text-stone-700 dark:text-white/75"
+        role="img"
+        aria-label="Exploded side view of the watch: crystal, hands, dial, movement, crown, case, and bracelet"
+      >
+        {/* assembly axis */}
+        <line x1="150" y1="20" x2="150" y2="500" stroke="currentColor" strokeOpacity="0.22" strokeWidth="1" strokeDasharray="2 7" />
+
+        <g className={groupClass("crystal")} onMouseEnter={() => setActivePart("crystal")} onMouseLeave={() => setActivePart(null)}>
+          <ellipse cx="150" cy="48" rx="62" ry="10" fill="none" stroke="currentColor" strokeWidth="1.3" />
+          <path d="M 88 48 v 6 a 62 10 0 0 0 124 0 v -6" fill="none" stroke="currentColor" strokeWidth="1.3" />
+          {leader(216, 50, 284)}
+          <text x="292" y="53" fontSize="10" fill="currentColor" fillOpacity="0.75" className="font-mono">01</text>
+        </g>
+
+        <g className={groupClass("hands")} onMouseEnter={() => setActivePart("hands")} onMouseLeave={() => setActivePart(null)}>
+          <line x1="100" y1="100" x2="200" y2="100" stroke="currentColor" strokeWidth="0.8" />
+          <line x1="105" y1="107" x2="195" y2="107" stroke="currentColor" strokeWidth="1.6" />
+          <line x1="118" y1="114" x2="182" y2="114" stroke="currentColor" strokeWidth="2.4" />
+          <line x1="150" y1="94" x2="150" y2="120" stroke="currentColor" strokeWidth="1.2" />
+          {leader(204, 107, 284)}
+          <text x="292" y="110" fontSize="10" fill="currentColor" fillOpacity="0.75" className="font-mono">02</text>
+        </g>
+
+        <g className={groupClass("dial")} onMouseEnter={() => setActivePart("dial")} onMouseLeave={() => setActivePart(null)}>
+          <ellipse cx="150" cy="168" rx="66" ry="11" fill="none" stroke="currentColor" strokeWidth="1.3" />
+          <line x1="120" y1="177" x2="120" y2="188" stroke="currentColor" strokeWidth="1.2" />
+          <line x1="180" y1="177" x2="180" y2="188" stroke="currentColor" strokeWidth="1.2" />
+          {leader(220, 168, 284)}
+          <text x="292" y="171" fontSize="10" fill="currentColor" fillOpacity="0.75" className="font-mono">03</text>
+        </g>
+
+        <g className={groupClass("movement")} onMouseEnter={() => setActivePart("movement")} onMouseLeave={() => setActivePart(null)}>
+          <ellipse cx="150" cy="248" rx="60" ry="18" fill="none" stroke="currentColor" strokeWidth="1.3" />
+          <path d="M 112 248 a 38 11 0 0 1 76 0" fill="none" stroke="currentColor" strokeWidth="1" strokeOpacity="0.7" />
+          <circle cx="178" cy="245" r="6" fill="none" stroke="currentColor" strokeWidth="1" />
+          <circle cx="178" cy="245" r="2" fill="currentColor" fillOpacity="0.7" />
+          <circle cx="126" cy="251" r="2" fill="currentColor" fillOpacity="0.7" />
+          <circle cx="150" cy="254" r="2" fill="currentColor" fillOpacity="0.7" />
+          {leader(214, 248, 284)}
+          <text x="292" y="251" fontSize="10" fill="currentColor" fillOpacity="0.75" className="font-mono">04</text>
+        </g>
+
+        <g className={groupClass("crown")} onMouseEnter={() => setActivePart("crown")} onMouseLeave={() => setActivePart(null)}>
+          <line x1="244" y1="361" x2="264" y2="361" stroke="currentColor" strokeWidth="1.6" />
+          <rect x="264" y="352" width="11" height="18" rx="2" fill="none" stroke="currentColor" strokeWidth="1.3" />
+          <line x1="267" y1="354" x2="267" y2="368" stroke="currentColor" strokeWidth="0.7" strokeOpacity="0.6" />
+          <line x1="270" y1="354" x2="270" y2="368" stroke="currentColor" strokeWidth="0.7" strokeOpacity="0.6" />
+          <line x1="273" y1="354" x2="273" y2="368" stroke="currentColor" strokeWidth="0.7" strokeOpacity="0.6" />
+          <text x="284" y="348" fontSize="10" fill="currentColor" fillOpacity="0.75" className="font-mono">05</text>
+        </g>
+
+        <g className={groupClass("case")} onMouseEnter={() => setActivePart("case")} onMouseLeave={() => setActivePart(null)}>
+          <rect x="60" y="340" width="180" height="42" rx="10" fill="none" stroke="currentColor" strokeWidth="1.4" />
+          <path d="M 70 340 L 56 324" stroke="currentColor" strokeWidth="1.3" fill="none" />
+          <path d="M 230 340 L 244 324" stroke="currentColor" strokeWidth="1.3" fill="none" />
+          <path d="M 70 382 L 56 398" stroke="currentColor" strokeWidth="1.3" fill="none" />
+          <path d="M 230 382 L 244 398" stroke="currentColor" strokeWidth="1.3" fill="none" />
+          {leader(20, 361, 50)}
+          <text x="6" y="364" fontSize="10" fill="currentColor" fillOpacity="0.75" className="font-mono">06</text>
+        </g>
+
+        <g className={groupClass("bracelet")} onMouseEnter={() => setActivePart("bracelet")} onMouseLeave={() => setActivePart(null)}>
+          <rect x="95" y="424" width="110" height="14" rx="7" fill="none" stroke="currentColor" strokeWidth="1.3" />
+          <rect x="103" y="445" width="94" height="14" rx="7" fill="none" stroke="currentColor" strokeWidth="1.3" />
+          <rect x="110" y="466" width="80" height="14" rx="7" fill="none" stroke="currentColor" strokeWidth="1.3" />
+          {leader(209, 452, 284)}
+          <text x="292" y="455" fontSize="10" fill="currentColor" fillOpacity="0.75" className="font-mono">07</text>
+        </g>
+      </svg>
+
+      {/* Manifest table */}
+      <div>
+        <div className="mb-6 flex items-center gap-3">
+          <span aria-hidden className="h-px w-10 bg-amber-700/55 dark:bg-amber-300/55" />
+          <span className="font-mono text-[10px] uppercase tracking-[0.34em] text-amber-700 dark:text-amber-200/85">
+            Seven sourced parts
+          </span>
+        </div>
+        <h2 className="font-serif text-[2rem] font-medium leading-[1.08] tracking-tight sm:text-[2.4rem]">
+          Nothing arrived
+          <br />
+          <span className="italic text-amber-700 dark:text-amber-100/95">assembled.</span>
+        </h2>
+        <ol className="mt-8 divide-y divide-foreground/10 border-y border-foreground/10">
+          {watchParts.map((part) => (
+            <li
+              key={part.id}
+              tabIndex={0}
+              onMouseEnter={() => setActivePart(part.id)}
+              onMouseLeave={() => setActivePart(null)}
+              onFocus={() => setActivePart(part.id)}
+              onBlur={() => setActivePart(null)}
+              className={`grid cursor-default grid-cols-[2.2rem_7.5rem_1fr] items-baseline gap-3 px-2 py-3 outline-none transition-colors focus-visible:bg-amber-500/[0.07] ${
+                activePart === part.id ? "bg-amber-500/[0.06]" : ""
+              }`}
+            >
+              <span className="font-mono text-[10px] text-amber-700/85 dark:text-amber-300/75">{part.num}</span>
+              <span className="font-serif text-[15px] text-foreground/90">{part.name}</span>
+              <span className="text-xs leading-relaxed text-foreground/55">{part.spec}</span>
+            </li>
+          ))}
+        </ol>
+        <p className="mt-5 text-xs leading-relaxed text-foreground/45">
+          Hover a part to place it in the stack. Compatibility was verified per part before anything shipped — stem
+          lengths, dial feet, hand hole sizes.
+        </p>
+      </div>
+    </div>
+  )
+}
+
+function WatchTimegrapher() {
+  return (
+    <div className="mt-4 grid grid-cols-1 overflow-hidden rounded-xl border border-border/60 bg-background/45 shadow-lg shadow-black/[0.03] md:grid-cols-[1.25fr_1fr]">
+      {/* Rate trace */}
+      <div className="relative border-b border-border/60 p-4 md:border-b-0 md:border-r">
+        <div className="mb-3 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.26em] text-foreground/45">
+          <span>Timegrapher</span>
+          <span>6 beats / s</span>
+        </div>
+        <svg viewBox="0 0 400 140" className="h-auto w-full text-amber-600 dark:text-amber-300" aria-hidden="true">
+          {[20, 50, 80, 110].map((y) => (
+            <line key={y} x1="0" y1={y} x2="400" y2={y} stroke="currentColor" strokeOpacity="0.12" strokeWidth="0.7" />
+          ))}
+          {Array.from({ length: 34 }).map((_, i) => {
+            const x = 12 + i * 11.2
+            const wobble = i % 2 === 0 ? -1.6 : 1.6
+            const y1 = 58 - i * 0.5 + wobble
+            const y2 = y1 + 30
+            return (
+              <g key={i} fill="currentColor" fillOpacity="0.8">
+                <circle cx={x} cy={y1} r="1.7" />
+                <circle cx={x} cy={y2} r="1.7" />
+              </g>
+            )
+          })}
+        </svg>
+      </div>
+      {/* Readout */}
+      <div className="flex flex-col justify-center p-5">
+        <dl className="divide-y divide-foreground/10 border-b border-foreground/10 text-[13px]">
+          {[
+            ["Caliber", "Seiko NH35A"],
+            ["Beat rate", "21,600 vph"],
+            ["Winding", "Automatic + manual"],
+          ].map(([k, v]) => (
+            <div key={k} className="grid grid-cols-[6.5rem_1fr] items-baseline gap-4 py-2.5">
+              <dt className="font-mono text-[10px] uppercase tracking-[0.24em] text-foreground/45">{k}</dt>
+              <dd className="font-serif text-foreground/85">{v}</dd>
+            </div>
+          ))}
+        </dl>
+        <div className="flex items-center justify-between gap-4 pt-4">
+          <p className="text-xs leading-relaxed text-foreground/55">
+            Runs inside Seiko&apos;s factory band of −20 to +40 seconds per day.
+          </p>
+          <span className="inline-block shrink-0 -rotate-3 rounded border border-emerald-600/50 px-2.5 py-1 font-mono text-[10px] tracking-[0.2em] text-emerald-600 dark:border-emerald-400/50 dark:text-emerald-400">
+            WITHIN SPEC
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ─── Prev/Next project navigation (all detail pages) ─────────────────────
 const visibleProjects = projectsData.filter((p) => !p.hidden)
 
@@ -654,6 +854,7 @@ function ProjectDetailClient() {
   const [rubiksDirection, setRubiksDirection] = useState<RubiksDirection>("cw")
   const [isRubiksSequencePlaying, setIsRubiksSequencePlaying] = useState(false)
   const [showRubiksVideo, setShowRubiksVideo] = useState(false)
+  const [watchVideoStarted, setWatchVideoStarted] = useState(false)
   const [coolingAirflowMode, setCoolingAirflowMode] = useState<"stock" | "ducted">("ducted")
 
   const activeRubiksObjective = rubiksObjectives[rubiksDirection]
@@ -684,6 +885,7 @@ function ProjectDetailClient() {
 
   useEffect(() => {
     setShowRubiksVideo(false)
+    setWatchVideoStarted(false)
   }, [projectId])
 
   useEffect(() => {
@@ -2383,27 +2585,6 @@ function ProjectDetailClient() {
                 />
                 <div aria-hidden className="absolute inset-0 bg-[radial-gradient(ellipse_at_54%_48%,rgba(217,119,6,0.07),transparent_48%)] dark:bg-[radial-gradient(ellipse_at_54%_48%,rgba(212,165,87,0.08),transparent_48%)]" />
 
-                {/* Watch ghosted on the right (also clickable to expand) */}
-                <button
-                  type="button"
-                  onClick={() => openLightbox([project.image || "/placeholder.svg"], 0, project.title)}
-                  aria-label="Open cover photo full screen"
-                  className="group absolute inset-y-0 right-0 w-full cursor-zoom-in md:w-[55%] lg:w-[50%]"
-                >
-                  <Image
-                    src={project.image || "/placeholder.svg"}
-                    alt=""
-                    fill
-                    className="object-cover object-top opacity-[0.40] saturate-[0.85] mix-blend-multiply dark:opacity-[0.16] dark:saturate-[1.05] dark:mix-blend-normal md:opacity-[0.55] md:dark:opacity-[0.36]"
-                    sizes="(min-width: 768px) 50vw, 100vw"
-                    priority
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-r from-stone-50 via-stone-50/72 to-stone-50/22 md:via-stone-50/55 md:to-transparent dark:from-[#050507] dark:via-[#050507]/72 dark:to-[#050507]/22 dark:md:via-[#050507]/55 dark:md:to-transparent" />
-                  <span aria-hidden className="pointer-events-none absolute bottom-4 right-4 inline-flex h-8 w-8 items-center justify-center rounded-full border border-stone-900/20 bg-stone-50/70 text-stone-700 opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100 dark:border-white/30 dark:bg-black/40 dark:text-white/85">
-                    <Maximize2 className="h-3.5 w-3.5" />
-                  </span>
-                </button>
-
                 {/* Animated subdial — top-right of hero */}
                 <div className="absolute right-6 top-6 z-10 hidden h-16 w-16 text-amber-700/85 sm:block md:right-10 md:top-10 md:h-20 md:w-20 dark:text-amber-200/75">
                   <WatchSubdial labelTop="21.6K" labelBottom="VPH" />
@@ -2421,7 +2602,7 @@ function ProjectDetailClient() {
                   </h1>
 
                   <p className="mt-7 max-w-md text-[14px] leading-[1.7] text-stone-600 sm:text-[15px] dark:text-white/65">
-                    Built by hand around a Seiko NH35.
+                    Seven parts, sourced separately. One Seiko NH35A at the heart.
                   </p>
                 </div>
               </section>
@@ -2493,7 +2674,7 @@ function ProjectDetailClient() {
                         <div className="mb-6 flex items-center gap-3 md:mb-7">
                           <span aria-hidden className="h-px w-10 bg-amber-700/55 dark:bg-amber-300/55" />
                           <span className="font-mono text-[10px] uppercase tracking-[0.34em] text-amber-700 dark:text-amber-200/85">
-                            Reference 001
+                            On the wrist
                           </span>
                         </div>
 
@@ -2523,19 +2704,30 @@ function ProjectDetailClient() {
               </section>
 
               {/* ============================================================ */}
-              {/* CHALLENGES & LEARNINGS                                        */}
+              {/* PARTS MANIFEST — exploded view                                */}
               {/* ============================================================ */}
-              <section className="mx-auto mt-16 max-w-6xl px-4 md:mt-20">
-                <div className="mb-8 flex flex-wrap items-center justify-center gap-x-7 gap-y-2 border-b border-foreground/15 pb-5 font-mono text-[10px] uppercase tracking-[0.32em] text-foreground/45 md:text-[11px] md:tracking-[0.34em]">
-                  <span>Sourcing</span>
-                  <span aria-hidden className="text-foreground/20">·</span>
-                  <span>Hand setting</span>
-                  <span aria-hidden className="text-foreground/20">·</span>
-                  <span>Sealed bench</span>
-                  <span aria-hidden className="text-foreground/20">·</span>
-                  <span>Steady hands</span>
-                </div>
+              <SectionRule numeral="I" label="Parts manifest" />
+              <section className="mx-auto max-w-6xl px-4">
+                <WatchPartsManifest />
+              </section>
 
+              {/* ============================================================ */}
+              {/* THE ASSEMBLY — four bench steps                               */}
+              {/* ============================================================ */}
+              <SectionRule numeral="II" label="The assembly" />
+              <section className="mx-auto max-w-4xl px-4">
+                <ol className="border-b border-foreground/15">
+                  {watchBuildSteps.map((step) => (
+                    <BuildRow key={step.title} step={step} />
+                  ))}
+                </ol>
+              </section>
+
+              {/* ============================================================ */}
+              {/* BENCH NOTES + TIMEGRAPHER                                     */}
+              {/* ============================================================ */}
+              <SectionRule numeral="III" label="Bench notes" />
+              <section className="mx-auto max-w-6xl px-4">
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                   {[
                     { icon: Layers, kicker: "Challenge", title: "Sourcing", body: "Most parts marketed for the NH35 aren't. Each one verified before it shipped." },
@@ -2554,20 +2746,16 @@ function ProjectDetailClient() {
                     </div>
                   ))}
                 </div>
-              </section>
 
-              {/* Quiet divider */}
-              <div className="mx-auto my-16 flex max-w-4xl items-center gap-4 px-4 md:my-20">
-                <span aria-hidden className="h-px flex-1 bg-foreground/15" />
-                <span aria-hidden className="block h-1 w-1 rounded-full bg-amber-500/60" />
-                <span aria-hidden className="h-px flex-1 bg-foreground/15" />
-              </div>
+                <WatchTimegrapher />
+              </section>
 
               {/* ============================================================ */}
               {/* VIDEO                                                         */}
               {/* ============================================================ */}
-              {project.videoGallery && project.videoGallery[0] && (
-                <section className="mx-auto max-w-5xl px-4">
+              <SectionRule numeral="IV" label="On film" />
+              {project.videoGallery?.slice(0, 1).map((video) => (
+                <section key={video.id} className="mx-auto max-w-5xl px-4">
                   <div className="mb-5 flex items-baseline justify-between gap-4 px-1 font-mono text-[10px] uppercase tracking-[0.30em] text-foreground/45">
                     <div className="flex items-center gap-2.5">
                       <span aria-hidden className="relative inline-block h-2 w-2">
@@ -2576,29 +2764,82 @@ function ProjectDetailClient() {
                       </span>
                       Rec
                     </div>
-                    <div className="text-foreground/35">2:14 · build</div>
+                    <div className="text-foreground/35">Full build session</div>
                   </div>
                   <div className="relative aspect-video overflow-hidden rounded-xl border border-white/10 bg-black shadow-2xl shadow-black/35">
-                    <iframe
-                      src={`https://www.youtube.com/embed/${project.videoGallery[0].id}`}
-                      title={project.videoGallery[0].title}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      className="h-full w-full"
-                    />
-                    <span aria-hidden className="absolute left-3 top-3 h-3 w-3 border-l border-t border-amber-200/45" />
-                    <span aria-hidden className="absolute right-3 top-3 h-3 w-3 border-r border-t border-amber-200/45" />
-                    <span aria-hidden className="absolute left-3 bottom-3 h-3 w-3 border-l border-b border-amber-200/45" />
-                    <span aria-hidden className="absolute right-3 bottom-3 h-3 w-3 border-r border-b border-amber-200/45" />
+                    {watchVideoStarted ? (
+                      <iframe
+                        src={`https://www.youtube.com/embed/${video.id}?autoplay=1`}
+                        title={video.title}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="h-full w-full"
+                      />
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setWatchVideoStarted(true)}
+                        aria-label={`Play video: ${video.title}`}
+                        className="group absolute inset-0 h-full w-full cursor-pointer"
+                      >
+                        <img
+                          src={`https://i.ytimg.com/vi/${video.id}/maxresdefault.jpg`}
+                          onError={(e) => {
+                            e.currentTarget.onerror = null
+                            e.currentTarget.src = `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`
+                          }}
+                          alt=""
+                          loading="lazy"
+                          className="h-full w-full object-cover opacity-80 transition-[opacity,transform] [transition-duration:600ms] group-hover:scale-[1.015] group-hover:opacity-95"
+                        />
+                        <span aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-black/20" />
+                        <span className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-amber-200/55 bg-black/55 text-amber-50 backdrop-blur-sm transition-transform group-hover:scale-105">
+                          <Play className="h-6 w-6 translate-x-0.5" />
+                        </span>
+                        <span className="absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-[10px] uppercase tracking-[0.26em] text-white/75">
+                          Play the build
+                        </span>
+                      </button>
+                    )}
+                    <span aria-hidden className="pointer-events-none absolute left-3 top-3 h-3 w-3 border-l border-t border-amber-200/45" />
+                    <span aria-hidden className="pointer-events-none absolute right-3 top-3 h-3 w-3 border-r border-t border-amber-200/45" />
+                    <span aria-hidden className="pointer-events-none absolute left-3 bottom-3 h-3 w-3 border-l border-b border-amber-200/45" />
+                    <span aria-hidden className="pointer-events-none absolute right-3 bottom-3 h-3 w-3 border-r border-b border-amber-200/45" />
                   </div>
                 </section>
-              )}
+              ))}
 
-              {/* End mark */}
-              <div className="mx-auto mt-16 flex max-w-xs items-center gap-3 px-4 md:mt-20">
-                <span aria-hidden className="h-px flex-1 bg-foreground/20" />
-                <span className="font-mono text-[10px] uppercase tracking-[0.4em] text-amber-600/70">Fin</span>
-                <span aria-hidden className="h-px flex-1 bg-foreground/20" />
+              {/* Caseback sign-off */}
+              <div className="mx-auto mt-16 flex justify-center md:mt-20">
+                <div className="h-28 w-28 text-foreground/55">
+                  <svg viewBox="0 0 120 120" className="h-full w-full" role="img" aria-label="Engraved caseback: Seiko NH35A, assembled by hand, Sydney">
+                    <defs>
+                      <path id="watch-caseback-arc" d="M 60 13 a 47 47 0 1 1 -0.01 0" fill="none" />
+                    </defs>
+                    <circle cx="60" cy="60" r="57" fill="none" stroke="currentColor" strokeOpacity="0.5" strokeWidth="1" />
+                    <circle cx="60" cy="60" r="39" fill="none" stroke="currentColor" strokeOpacity="0.35" strokeWidth="0.8" />
+                    <circle cx="60" cy="60" r="14" fill="none" stroke="currentColor" strokeOpacity="0.4" strokeWidth="0.8" />
+                    {[30, 90, 150, 210, 270, 330].map((angle) => (
+                      <line
+                        key={angle}
+                        x1="60"
+                        y1="5"
+                        x2="60"
+                        y2="10"
+                        stroke="currentColor"
+                        strokeOpacity="0.45"
+                        strokeWidth="1.4"
+                        transform={`rotate(${angle} 60 60)`}
+                      />
+                    ))}
+                    <text fontSize="6.6" letterSpacing="1.8" fill="currentColor" fillOpacity="0.7" className="font-mono uppercase">
+                      <textPath href="#watch-caseback-arc">Seiko NH35A · Assembled by hand · Sydney ·</textPath>
+                    </text>
+                    <text x="60" y="64" textAnchor="middle" fontSize="11" fontStyle="italic" fill="currentColor" fillOpacity="0.75" className="font-serif">
+                      ML
+                    </text>
+                  </svg>
+                </div>
               </div>
             </div>
           </div>
