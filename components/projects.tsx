@@ -20,7 +20,32 @@ type ProjectCard = {
   imagePosition?: string
 }
 
-const technicalProjects: ProjectCard[] = [
+// Flagship pair: one machine built end-to-end, one real-world build delivered —
+// together they cover the breadth recruiters scan for.
+const featuredProjects: ProjectCard[] = [
+  {
+    id: 7,
+    title: "5-Motor Robotic Rubik's Cube Solver",
+    description:
+      "Solo-built rig where an ESP32 drives five stepper motors, fed by a Kociemba solver and a browser-based colour-input UI.",
+    outcome: "Solves any scramble — ~20-move plan computed in under 1 second",
+    image: "/images/rubiks/cube-front.jpg",
+    youtubeUrl: "https://www.youtube.com/watch?v=OC9h20jK2XQ",
+  },
+  {
+    id: 1,
+    title: "Residential Construction & Renovation",
+    description:
+      "Full residential build completed alongside my degree — framing, roofing, plumbing, and electrical from foundation to finish.",
+    outcome: "Complete house delivered while studying full-time",
+    image: "/images/construction/after.jpg",
+  },
+]
+
+// Thesis Work — when content is ready, define thesisProjects here and render
+// a third grid with ProjectCardItem, mirroring the sections below.
+
+const moreProjects: ProjectCard[] = [
   {
     id: 2,
     title: "Micromouse Maze Navigation Robot",
@@ -31,13 +56,13 @@ const technicalProjects: ProjectCard[] = [
     githubUrl: "https://github.com/z5360700/micromouse-from2024",
   },
   {
-    id: 7,
-    title: "5-Motor Robotic Rubik's Cube Solver",
+    id: 6,
+    title: "Custom Watch Build",
     description:
-      "Solo-built rig where an ESP32 drives five stepper motors, fed by a Kociemba solver and a browser-based colour-input UI.",
-    outcome: "Solves any scramble — ~20-move plan computed in under 1 second",
-    image: "/images/rubiks/cube-front.jpg",
-    youtubeUrl: "https://www.youtube.com/watch?v=OC9h20jK2XQ",
+      "Mechanical watch hand-assembled from individually sourced components around a Seiko NH35 movement.",
+    outcome: "Runs within NH35 spec — clean, dust-free build",
+    image: "/images/watch/cover.png",
+    imagePosition: "top",
   },
   {
     id: 3,
@@ -65,57 +90,41 @@ const technicalProjects: ProjectCard[] = [
   },
 ]
 
-// Thesis Work — when content is ready, define thesisProjects here and render
-// a third grid with ProjectCardItem, mirroring the sections below.
-
-const handsOnProjects: ProjectCard[] = [
-  {
-    id: 1,
-    title: "Residential Construction & Renovation",
-    description:
-      "Full residential build completed alongside my degree — framing, roofing, plumbing, and electrical from foundation to finish.",
-    outcome: "Complete house delivered while studying full-time",
-    image: "/images/construction/after.jpg",
-  },
-  {
-    id: 6,
-    title: "Custom Watch Build",
-    description:
-      "Mechanical watch hand-assembled from individually sourced components around a Seiko NH35 movement.",
-    outcome: "Runs within NH35 spec — clean, dust-free build",
-    image: "/images/watch/cover.png",
-    imagePosition: "top",
-  },
-]
-
 function ProjectCardItem({
   project,
   index,
   isInView,
+  featured = false,
 }: {
   project: ProjectCard
   index: number
   isInView: boolean
+  featured?: boolean
 }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
+      className="h-full"
     >
       <Card className="group relative overflow-hidden h-full flex flex-col hover-lift active:scale-[0.99] has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-ring">
-        <div className="relative h-64 md:h-72 w-full overflow-hidden bg-muted">
+        <div className={`relative w-full overflow-hidden bg-muted ${featured ? "h-72 md:h-96" : "h-64 md:h-72"}`}>
           <Image
             src={project.image || "/placeholder.svg"}
             alt={project.title}
             fill
             className="object-cover transition-transform group-hover:scale-105 duration-300"
             style={{ objectPosition: project.imagePosition || "center" }}
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            sizes={featured ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"}
           />
         </div>
-        <CardContent className="flex flex-col flex-grow p-4">
-          <h3 className="text-base font-semibold mb-2 group-hover:text-primary transition-colors duration-300">
+        <CardContent className={`flex flex-col flex-grow ${featured ? "p-5" : "p-4"}`}>
+          <h3
+            className={`font-semibold mb-2 group-hover:text-primary transition-colors duration-300 ${
+              featured ? "text-lg md:text-xl" : "text-base"
+            }`}
+          >
             {/* Stretched link: covers the whole card, keeps inner buttons clickable via z-10 */}
             <Link
               href={`/projects/${project.id}`}
@@ -182,21 +191,21 @@ export default function Projects() {
         </div>
 
         <div ref={ref} className="space-y-10">
-          {/* Technical Projects */}
+          {/* Featured — the two strongest projects, larger treatment */}
           <div>
-            <h3 className="text-base font-semibold text-foreground/50 uppercase tracking-widest mb-4">Technical Projects</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {technicalProjects.map((project, index) => (
-                <ProjectCardItem key={project.id} project={project} index={index} isInView={isInView} />
+            <h3 className="text-base font-semibold text-foreground/50 uppercase tracking-widest mb-4">Featured</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {featuredProjects.map((project, index) => (
+                <ProjectCardItem key={project.id} project={project} index={index} isInView={isInView} featured />
               ))}
             </div>
           </div>
 
-          {/* Hands-On Builds */}
+          {/* More Projects */}
           <div>
-            <h3 className="text-base font-semibold text-foreground/50 uppercase tracking-widest mb-4">Hands-On Builds</h3>
+            <h3 className="text-base font-semibold text-foreground/50 uppercase tracking-widest mb-4">More Projects</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {handsOnProjects.map((project, index) => (
+              {moreProjects.map((project, index) => (
                 <ProjectCardItem key={project.id} project={project} index={index} isInView={isInView} />
               ))}
             </div>
