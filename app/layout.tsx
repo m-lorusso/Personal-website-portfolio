@@ -19,6 +19,18 @@ const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ||
   (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000")
 
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Michael Lo Russo",
+  url: siteUrl,
+  jobTitle: "Mechatronics Engineering Student",
+  affiliation: { "@type": "CollegeOrUniversity", name: "UNSW Sydney" },
+  address: { "@type": "PostalAddress", addressLocality: "Sydney", addressCountry: "AU" },
+  email: "mailto:lorussom28@gmail.com",
+  sameAs: ["https://www.linkedin.com/in/michael-lo-russo/", "https://github.com/m-lorusso"],
+}
+
 // Tints the mobile browser chrome (address bar) to match the active theme
 export const viewport: Viewport = {
   themeColor: [
@@ -59,6 +71,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="//vercel.live" />
       </head>
       <body className={inter.className}>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }} />
         <Suspense fallback={null}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             <NavigationHandler />

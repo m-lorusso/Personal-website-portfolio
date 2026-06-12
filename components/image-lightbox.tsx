@@ -24,6 +24,9 @@ export default function ImageLightbox({
   onPrevious,
   altPrefix = "Project photo",
 }: ImageLightboxProps) {
+  const prevIndex = (currentIndex - 1 + images.length) % images.length
+  const nextIndex = (currentIndex + 1) % images.length
+
   useEffect(() => {
     if (!isOpen) return
 
@@ -70,6 +73,15 @@ export default function ImageLightbox({
               priority
               sizes="94vw"
             />
+
+            {/* Preload neighbours with the same optimized variants so arrow
+                navigation swaps straight from cache */}
+            {images.length > 1 && (
+              <div aria-hidden className="pointer-events-none absolute h-px w-px overflow-hidden opacity-0">
+                <Image src={images[prevIndex] || "/placeholder.svg"} alt="" width={2400} height={1800} sizes="94vw" />
+                <Image src={images[nextIndex] || "/placeholder.svg"} alt="" width={2400} height={1800} sizes="94vw" />
+              </div>
+            )}
 
             {/* Close Button */}
             <Button

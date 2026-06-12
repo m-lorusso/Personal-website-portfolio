@@ -81,12 +81,13 @@ export default function ConstructionSlideshowModal({
             {currentIndex + 1} / {images.length}
           </div>
 
-          {/* Preload prev and next images so navigation feels instant */}
+          {/* Preload the neighbouring images using the same optimized variants
+              as the main view, so prev/next swaps come straight from cache */}
           {hasSiblings && (
-            <>
-              <link rel="preload" as="image" href={images[prevIndex]} />
-              <link rel="preload" as="image" href={images[nextIndex]} />
-            </>
+            <div aria-hidden className="pointer-events-none absolute h-px w-px overflow-hidden opacity-0">
+              <Image src={images[prevIndex] || "/placeholder.svg"} alt="" width={2400} height={1600} />
+              <Image src={images[nextIndex] || "/placeholder.svg"} alt="" width={2400} height={1600} />
+            </div>
           )}
 
           <motion.div
@@ -112,26 +113,30 @@ export default function ConstructionSlideshowModal({
               </div>
             )}
 
-            {/* Current image — large, fills available space */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentIndex}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.2 }}
-                className="relative flex-1 flex items-center justify-center min-w-0"
-              >
-                <Image
-                  src={images[currentIndex] || "/placeholder.svg"}
-                  alt={`${altPrefix} ${currentIndex + 1}`}
-                  width={2400}
-                  height={1600}
-                  className="object-contain max-h-[88vh] max-w-full w-auto h-auto mx-auto rounded-lg"
-                  priority
-                />
-              </motion.div>
-            </AnimatePresence>
+            {/* Current image — large, fills available space. Entering and exiting
+                slides overlap (no mode="wait"), so the old photo stays visible
+                until the new one has faded in — no black gap. */}
+            <div className="relative h-full min-w-0 flex-1">
+              <AnimatePresence initial={false}>
+                <motion.div
+                  key={currentIndex}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.22 }}
+                  className="absolute inset-0 flex items-center justify-center"
+                >
+                  <Image
+                    src={images[currentIndex] || "/placeholder.svg"}
+                    alt={`${altPrefix} ${currentIndex + 1}`}
+                    width={2400}
+                    height={1600}
+                    className="object-contain max-h-[88vh] max-w-full w-auto h-auto mx-auto rounded-lg"
+                    priority
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </div>
 
             {/* Next image — peek on the right */}
             {hasSiblings && (
