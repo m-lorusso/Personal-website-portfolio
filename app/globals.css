@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 220 6% 86%; /* Cool grey — slight blue tint to pair with primary */
+    --background: 210 20% 98%; /* Near-white with a cool tint — lets white cards sit on a clean canvas */
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%; /* Keep cards pure white for contrast */
     --card-foreground: 240 10% 3.9%;

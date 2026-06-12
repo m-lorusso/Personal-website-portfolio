@@ -103,7 +103,7 @@ function ProjectCardItem({
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
     >
-      <Card className="group relative overflow-hidden h-full flex flex-col hover-lift has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-ring">
+      <Card className="group relative overflow-hidden h-full flex flex-col hover-lift active:scale-[0.99] has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-ring">
         <div className="relative h-64 md:h-72 w-full overflow-hidden bg-muted">
           <Image
             src={project.image || "/placeholder.svg"}

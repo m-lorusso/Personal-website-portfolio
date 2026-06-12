@@ -603,7 +603,7 @@ function ProjectFooterNav({ currentId }: { currentId: number }) {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Link
           href={`/projects/${previous.id}`}
-          className="group flex items-center gap-4 rounded-lg border bg-muted/10 p-4 transition-colors hover:border-primary/40 hover:bg-muted/20"
+          className="group flex items-center gap-4 rounded-lg border bg-muted/10 p-4 transition-[colors,transform] active:scale-[0.99] hover:border-primary/40 hover:bg-muted/20"
         >
           <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded-md bg-muted">
             <Image src={previous.image} alt="" fill className="object-cover" sizes="80px" />
@@ -621,7 +621,7 @@ function ProjectFooterNav({ currentId }: { currentId: number }) {
 
         <Link
           href={`/projects/${next.id}`}
-          className="group flex items-center gap-4 rounded-lg border bg-muted/10 p-4 transition-colors hover:border-primary/40 hover:bg-muted/20 sm:flex-row-reverse sm:text-right"
+          className="group flex items-center gap-4 rounded-lg border bg-muted/10 p-4 transition-[colors,transform] active:scale-[0.99] hover:border-primary/40 hover:bg-muted/20 sm:flex-row-reverse sm:text-right"
         >
           <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded-md bg-muted">
             <Image src={next.image} alt="" fill className="object-cover" sizes="80px" />
