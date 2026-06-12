@@ -56,15 +56,6 @@ const moreProjects: ProjectCard[] = [
     githubUrl: "https://github.com/z5360700/micromouse-from2024",
   },
   {
-    id: 6,
-    title: "Custom Watch Build",
-    description:
-      "Mechanical watch hand-assembled from individually sourced components around a Seiko NH35 movement.",
-    outcome: "Runs within NH35 spec — clean, dust-free build",
-    image: "/images/watch/cover.png",
-    imagePosition: "top",
-  },
-  {
     id: 3,
     title: "Custom Cooling Funnels for PC Hardware",
     description:
@@ -88,6 +79,15 @@ const moreProjects: ProjectCard[] = [
     outcome: "Detected an intruder cat within 2 days of deployment",
     image: "/images/cat-door/v2-system.jpg",
   },
+  {
+    id: 6,
+    title: "Custom Watch Build",
+    description:
+      "Mechanical watch hand-assembled from individually sourced components around a Seiko NH35 movement.",
+    outcome: "Runs within NH35 spec — clean, dust-free build",
+    image: "/images/watch/cover.png",
+    imagePosition: "top",
+  },
 ]
 
 function ProjectCardItem({
@@ -109,7 +109,7 @@ function ProjectCardItem({
       className="h-full"
     >
       <Card className="group relative overflow-hidden h-full flex flex-col hover-lift active:scale-[0.99] has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-ring">
-        <div className={`relative w-full overflow-hidden bg-muted ${featured ? "h-72 md:h-96" : "h-64 md:h-72"}`}>
+        <div className={`relative w-full overflow-hidden bg-muted ${featured ? "h-72 md:h-96" : "h-52 md:h-60"}`}>
           <Image
             src={project.image || "/placeholder.svg"}
             alt={project.title}
