@@ -14,10 +14,10 @@ export default function Footer() {
           viewport={{ once: true }}
           className="text-center"
         >
-          <div className="flex justify-center space-x-5 mb-4">
+          <div className="flex justify-center space-x-1 mb-4">
             <a
               href="mailto:lorussom28@gmail.com"
-              className="text-foreground/50 hover:text-primary transition-colors"
+              className="p-3 text-foreground/50 hover:text-primary transition-colors"
               aria-label="Email"
             >
               <Mail className="w-5 h-5" />
@@ -26,16 +26,16 @@ export default function Footer() {
               href="https://www.linkedin.com/in/michael-lo-russo/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-foreground/50 hover:text-primary transition-colors"
+              className="p-3 text-foreground/50 hover:text-primary transition-colors"
               aria-label="LinkedIn"
             >
               <Linkedin className="w-5 h-5" />
             </a>
             <a
-              href="https://github.com/z5360700"
+              href="https://github.com/m-lorusso"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-foreground/50 hover:text-primary transition-colors"
+              className="p-3 text-foreground/50 hover:text-primary transition-colors"
               aria-label="GitHub"
             >
               <Github className="w-5 h-5" />

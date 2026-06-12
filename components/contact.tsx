@@ -51,7 +51,7 @@ export default function Contact() {
               </a>
 
               <a
-                href="https://github.com/z5360700"
+                href="https://github.com/m-lorusso"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 text-foreground/70 hover:text-primary transition-colors"

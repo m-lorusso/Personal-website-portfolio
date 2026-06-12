@@ -4,17 +4,26 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { Moon, Sun, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { useTheme } from "next-themes"
 
+const navLinks = [
+  { name: "Home", id: "home" },
+  { name: "About", id: "about" },
+  { name: "Projects", id: "projects" },
+  { name: "Contact", id: "contact" },
+]
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [activeSection, setActiveSection] = useState<string | null>(null)
   const { resolvedTheme, setTheme } = useTheme()
   const router = useRouter()
+  const pathname = usePathname()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,18 +38,35 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+  // Scroll-spy: highlight the section currently in view (homepage only)
+  useEffect(() => {
+    if (pathname !== "/") {
+      setActiveSection(null)
+      return
+    }
+
+    const sections = navLinks
+      .map((link) => document.getElementById(link.id))
+      .filter((el): el is HTMLElement => el !== null)
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) setActiveSection(entry.target.id)
+        }
+      },
+      { rootMargin: "-45% 0px -50% 0px" },
+    )
+
+    sections.forEach((section) => observer.observe(section))
+    return () => observer.disconnect()
+  }, [pathname])
+
   const handleNavClick = (sectionId: string, e: React.MouseEvent) => {
     e.preventDefault()
     setIsOpen(false)
     router.push(`/#${sectionId}`)
   }
-
-  const navLinks = [
-    { name: "Home", id: "home" },
-    { name: "About", id: "about" },
-    { name: "Projects", id: "projects" },
-    { name: "Contact", id: "contact" },
-  ]
 
   const resumeUrl = "/MichaelLoRusso_RESUME.pdf"
 
@@ -68,7 +94,13 @@ export default function Navbar() {
             <button
               key={link.name}
               onClick={(e) => handleNavClick(link.id, e)}
-              className="text-foreground/70 hover:text-foreground px-4 py-2 rounded-full hover:bg-primary/10 transition-all duration-300 cursor-pointer font-medium"
+              aria-current={activeSection === link.id ? "true" : undefined}
+              className={cn(
+                "px-4 py-2 rounded-full hover:bg-primary/10 transition-all duration-300 cursor-pointer font-medium",
+                activeSection === link.id
+                  ? "text-primary bg-primary/10"
+                  : "text-foreground/70 hover:text-foreground",
+              )}
             >
               {link.name}
             </button>
@@ -137,8 +169,12 @@ export default function Navbar() {
             <button
               key={link.name}
               onClick={(e) => handleNavClick(link.id, e)}
+              aria-current={activeSection === link.id ? "true" : undefined}
               className={cn(
-                "text-foreground/80 hover:text-foreground py-3 px-4 rounded-lg hover:bg-primary/10 transition-all duration-200 transform text-left font-medium",
+                "py-3 px-4 rounded-lg hover:bg-primary/10 transition-all duration-200 transform text-left font-medium",
+                activeSection === link.id
+                  ? "text-primary bg-primary/10"
+                  : "text-foreground/80 hover:text-foreground",
                 isOpen ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0",
               )}
               style={{ transitionDelay: `${index * 50}ms` }}
