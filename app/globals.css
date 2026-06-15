@@ -68,6 +68,17 @@
        handled via data-scroll-behavior="smooth" on the <html> element */
     scroll-behavior: auto !important;
   }
+
+  /* Slight global zoom-out on tablet/desktop. Nearly all sizing in this project
+     is rem-based (Tailwind), so dialing the root font size below the 16px
+     default scales text, spacing, image heights and container widths down
+     together — fitting more on screen without touching any component. Mobile
+     stays at 100% to preserve readability and tap-target sizes. */
+  @media (min-width: 768px) {
+    html {
+      font-size: 90%;
+    }
+  }
 }
 
 /* Decorative backgrounds (used selectively, e.g. project 7) */
