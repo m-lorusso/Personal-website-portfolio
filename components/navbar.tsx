@@ -122,7 +122,7 @@ export default function Navbar() {
               className="rounded-full bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"
               asChild
             >
-              <a href={resumeUrl} download="MichaelLoRusso_RESUME.pdf">
+              <a href={resumeUrl} target="_blank" rel="noopener noreferrer">
                 Resume
               </a>
             </Button>
@@ -190,7 +190,7 @@ export default function Navbar() {
             style={{ transitionDelay: "200ms" }}
             asChild
           >
-            <a href={resumeUrl} download="MichaelLoRusso_RESUME.pdf">
+            <a href={resumeUrl} target="_blank" rel="noopener noreferrer">
               Resume
             </a>
           </Button>

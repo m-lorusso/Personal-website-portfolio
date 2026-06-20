@@ -1,13 +1,26 @@
 "use client"
 
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import { useInView } from "framer-motion"
 import { motion } from "framer-motion"
-import { Mail, MapPin, Linkedin, Github } from "lucide-react"
+import { Mail, MapPin, Linkedin, Github, Copy, Check } from "lucide-react"
+
+const EMAIL = "lorussom28@gmail.com"
 
 export default function Contact() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const [copied, setCopied] = useState(false)
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(EMAIL)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      // Clipboard unavailable — the mailto link still works
+    }
+  }
 
   return (
     <section className="py-16">
@@ -33,13 +46,33 @@ export default function Contact() {
             <h3 className="text-xl font-bold mb-6">{"Let's connect"}</h3>
 
             <div className="space-y-4">
-              <a
-                href="mailto:lorussom28@gmail.com"
-                className="flex items-center gap-3 text-foreground/70 hover:text-primary transition-colors"
-              >
+              <div className="flex items-center gap-3 text-foreground/70">
                 <Mail className="w-4 h-4 shrink-0 text-primary" />
-                <span className="text-sm">lorussom28@gmail.com</span>
-              </a>
+                <a
+                  href={`mailto:${EMAIL}?subject=Portfolio%20enquiry`}
+                  className="text-sm hover:text-primary transition-colors"
+                >
+                  {EMAIL}
+                </a>
+                <button
+                  type="button"
+                  onClick={copyEmail}
+                  aria-label={copied ? "Email address copied" : "Copy email address"}
+                  className="ml-auto inline-flex items-center gap-1 text-xs text-foreground/50 hover:text-primary transition-colors"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="w-3.5 h-3.5" />
+                      Copied
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5" />
+                      Copy
+                    </>
+                  )}
+                </button>
+              </div>
 
               <div className="flex items-center gap-3 text-foreground/60">
                 <MapPin className="w-4 h-4 shrink-0 text-primary" />

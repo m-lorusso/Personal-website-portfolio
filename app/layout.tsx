@@ -52,6 +52,8 @@ export const metadata: Metadata = {
     title: "Michael Lo Russo — Engineering Portfolio",
     description: "Engineering portfolio of Michael Lo Russo — design, prototyping, embedded systems, and hands-on builds.",
     type: "website",
+    url: siteUrl,
+    siteName: "Michael Lo Russo",
   },
   twitter: {
     card: "summary_large_image",

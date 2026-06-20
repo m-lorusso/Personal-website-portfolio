@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { ArrowDown, Download } from "lucide-react"
+import { ArrowDown, FileText, GraduationCap } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import WavyLines from "./wavy-lines"
@@ -68,12 +68,24 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="max-w-xl mb-6"
+            className="max-w-xl mb-4"
           >
             <p className="text-foreground/70 text-base md:text-lg leading-relaxed">
               Final year Mechatronics Engineering student at UNSW.<br />
               I like to build things.
             </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.35 }}
+            className="mb-6"
+          >
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-foreground/70">
+              <GraduationCap className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+              UNSW Sydney
+            </span>
           </motion.div>
 
           <motion.div
@@ -86,8 +98,8 @@ export default function Hero() {
               <a href="#projects">View My Work</a>
             </Button>
             <Button size="lg" variant="outline" className="w-full px-6 py-5 text-base font-medium sm:w-auto" asChild>
-              <a href={resumeUrl} download="MichaelLoRusso_RESUME.pdf" className="flex items-center gap-2">
-                <Download className="w-4 h-4" />
+              <a href={resumeUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                <FileText className="w-4 h-4" />
                 Resume
               </a>
             </Button>
