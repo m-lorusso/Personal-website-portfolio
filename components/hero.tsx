@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { ArrowDown, FileText, GraduationCap } from "lucide-react"
+import { ArrowDown, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import WavyLines from "./wavy-lines"
@@ -82,9 +82,23 @@ export default function Hero() {
             transition={{ duration: 0.5, delay: 0.35 }}
             className="mb-6"
           >
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-foreground/70">
-              <GraduationCap className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
-              UNSW Sydney
+            {/* UNSW lockup rebuilt from two crops so it works in both themes:
+                colour crest (same in both) + wordmark that reverses to white in dark. */}
+            <span className="inline-flex items-center gap-2.5">
+              <img
+                src="/images/logos/unsw-badge.webp"
+                alt=""
+                width={32}
+                height={48}
+                className="h-12 w-auto object-contain"
+              />
+              <img
+                src="/images/logos/unsw-wordmark.webp"
+                alt="UNSW Sydney"
+                width={80}
+                height={32}
+                className="h-8 w-auto object-contain dark:[filter:brightness(0)_invert(1)]"
+              />
             </span>
           </motion.div>
 
