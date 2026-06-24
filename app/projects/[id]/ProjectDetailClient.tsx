@@ -41,6 +41,7 @@ import { projectsData, type Project } from "@/data/projects-data"
 import { ProjectHeader } from "@/components/project-detail/project-header"
 import { ImageGallery } from "@/components/project-detail/image-gallery"
 import { VideoGallery } from "@/components/project-detail/video-gallery"
+import WatchMovement from "@/components/project-detail/watch-movement"
 import ConstructionSlideshowModal from "@/components/construction-slideshow-modal"
 import GithubIcon from "@/components/icons/github"
 
@@ -481,10 +482,13 @@ function WatchSubdial({
           const isMajor = i % 5 === 0
           const inner = isMajor ? 38 : 42
           const outer = 46
-          const x1 = 50 + Math.cos(angle) * inner
-          const y1 = 50 + Math.sin(angle) * inner
-          const x2 = 50 + Math.cos(angle) * outer
-          const y2 = 50 + Math.sin(angle) * outer
+          // Round so server and client serialise identically (Math.sin/cos can
+          // differ by 1 ULP across engines → hydration mismatch).
+          const round = (n: number) => Math.round(n * 100) / 100
+          const x1 = round(50 + Math.cos(angle) * inner)
+          const y1 = round(50 + Math.sin(angle) * inner)
+          const x2 = round(50 + Math.cos(angle) * outer)
+          const y2 = round(50 + Math.sin(angle) * outer)
           return (
             <line
               key={i}
@@ -2712,9 +2716,17 @@ function ProjectDetailClient() {
               </section>
 
               {/* ============================================================ */}
+              {/* INSIDE THE MOVEMENT — interactive cutaway                     */}
+              {/* ============================================================ */}
+              <SectionRule numeral="II" label="Inside the movement" />
+              <section className="mx-auto max-w-6xl px-4">
+                <WatchMovement />
+              </section>
+
+              {/* ============================================================ */}
               {/* THE ASSEMBLY — four bench steps                               */}
               {/* ============================================================ */}
-              <SectionRule numeral="II" label="The assembly" />
+              <SectionRule numeral="III" label="The assembly" />
               <section className="mx-auto max-w-4xl px-4">
                 <ol className="border-b border-foreground/15">
                   {watchBuildSteps.map((step) => (
@@ -2726,7 +2738,7 @@ function ProjectDetailClient() {
               {/* ============================================================ */}
               {/* BENCH NOTES + TIMEGRAPHER                                     */}
               {/* ============================================================ */}
-              <SectionRule numeral="III" label="Bench notes" />
+              <SectionRule numeral="IV" label="Bench notes" />
               <section className="mx-auto max-w-6xl px-4">
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                   {[
@@ -2753,7 +2765,7 @@ function ProjectDetailClient() {
               {/* ============================================================ */}
               {/* VIDEO                                                         */}
               {/* ============================================================ */}
-              <SectionRule numeral="IV" label="On film" />
+              <SectionRule numeral="V" label="On film" />
               {project.videoGallery?.slice(0, 1).map((video) => (
                 <section key={video.id} className="mx-auto max-w-5xl px-4">
                   <div className="mb-5 flex items-baseline justify-between gap-4 px-1 font-mono text-[10px] uppercase tracking-[0.30em] text-foreground/45">
