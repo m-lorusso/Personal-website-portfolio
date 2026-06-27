@@ -2,6 +2,23 @@
 
 import type React from "react"
 import { useEffect, useRef, useState } from "react"
+import dynamic from "next/dynamic"
+
+// Real interactive 3D watch (three / r3f / drei). Client-only — the Canvas can't
+// server-render — with a light placeholder that matches the viewer card.
+const ProjectSixWatchViewer = dynamic(() => import("@/components/watch/ProjectSixWatchViewer"), {
+  ssr: false,
+  loading: () => (
+    <div
+      style={{
+        height: "clamp(360px, 56vh, 560px)",
+        borderRadius: 14,
+        border: "1px solid rgba(0,0,0,0.1)",
+        background: "linear-gradient(180deg,#f4f6f8,#e7eaed)",
+      }}
+    />
+  ),
+})
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Custom Watch Build — project 6.
@@ -692,7 +709,18 @@ export default function WatchBuild() {
 
       <section className="sec" style={{ paddingTop: 30 }}>
         <div className="wrap">
-          <div className="divlbl"><span className="secno">II</span><div className="rule" /><span className="secno">Nothing arrived assembled</span></div>
+          <div className="divlbl"><span className="secno">II</span><div className="rule" /><span className="secno">In three dimensions</span></div>
+          <h2 className="h2">Take it apart,<br />layer by layer.</h2>
+          <p className="lead" style={{ marginTop: 18 }}>A real-time 3D render of the build — not a video. Orbit around it, zoom in, and drag the slider to separate the case, dial, hands, movement, gears and rotor. Hover a label to pick out a part.</p>
+          <div style={{ marginTop: 30 }}>
+            <ProjectSixWatchViewer />
+          </div>
+        </div>
+      </section>
+
+      <section className="sec" style={{ paddingTop: 30 }}>
+        <div className="wrap">
+          <div className="divlbl"><span className="secno">III</span><div className="rule" /><span className="secno">Nothing arrived assembled</span></div>
           <div className="partsgrid">
             <div>
               <h2 className="h2">Seven parts,<br />sourced separately.</h2>
@@ -709,7 +737,7 @@ export default function WatchBuild() {
 
       <section className="sec" style={{ paddingTop: 30 }}>
         <div className="wrap">
-          <div className="divlbl"><span className="secno">III</span><div className="rule" /><span className="secno">On film</span></div>
+          <div className="divlbl"><span className="secno">IV</span><div className="rule" /><span className="secno">On film</span></div>
           <h2 className="h2">The full build,<br />start to finish.</h2>
           <p className="lead" style={{ marginTop: 18 }}>The complete assembly session, from sourcing and seating to pressing and verifying, in one sitting.</p>
           <div className="film">
