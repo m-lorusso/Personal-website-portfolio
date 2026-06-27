@@ -63,6 +63,10 @@ export default function Navbar() {
     return () => observer.disconnect()
   }, [pathname])
 
+  // The Custom Watch Build page (project 6) is a full-page dark design with its
+  // own in-page topbar, so the global navbar is hidden there.
+  if (pathname === "/projects/6") return null
+
   const handleNavClick = (sectionId: string, e: React.MouseEvent) => {
     e.preventDefault()
     setIsOpen(false)
