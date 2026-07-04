@@ -14,11 +14,8 @@ export interface Project {
   finishedProductGallery?: string[]
   miscellaneousGallery?: string[]
   hardwareGallery?: string[]
+  /** Not yet rendered — micromouse code shots and Rubik's UI screenshots */
   softwareGallery?: string[]
-  designGallery?: string[]
-  printingGallery?: string[]
-  installationGallery?: string[]
-  notificationGallery?: string[]
   gallery?: string[]
   videoGallery?: Array<{
     id: string
@@ -33,10 +30,6 @@ export interface Project {
     highlight?: string
     aspectRatio?: string
   }>
-  collapsibleSections?: Array<{
-    title: string
-    content: string
-  }>
   tags: string[]
   liveUrl: string | null
   githubUrl: string | null
@@ -46,7 +39,6 @@ export interface Project {
   results?: string
   learnings?: string[]
   course?: string
-  tagline?: string
   imagePosition?: string
   /** Excluded from the sitemap and not statically generated (page 404s) until content is ready */
   hidden?: boolean
@@ -274,28 +266,6 @@ The solution identified that airflow in PC cases isn't optimized - intake air di
 Custom ducting directs cool air from front intake fans straight to the GPU, allowing it to maintain higher boost clocks for longer periods under demanding tasks.
 `,
     image: "/images/cooling/installed.jpg",
-    designGallery: [
-      "/images/cooling/airflow-problem.jpg",
-      "/images/cooling/case-model.png",
-      "/images/cooling/case-with-gpu.png",
-      "/images/cooling/duct-design.png",
-      "/images/cooling/duct-component.png",
-    ],
-    printingGallery: ["/images/cooling/slicing.png", "/images/cooling/printed-parts.jpg"],
-    installationGallery: ["/images/cooling/without-ducting.jpg", "/images/cooling/installed.jpg"],
-    gallery: [
-      "/images/cooling/airflow-problem.jpg",
-      "/images/cooling/case-model.png",
-      "/images/cooling/case-with-gpu.png",
-      "/images/cooling/duct-design.png",
-      "/images/cooling/duct-component.png",
-      "/images/cooling/slicing.png",
-      "/images/cooling/printed-parts.jpg",
-      "/images/cooling/without-ducting.jpg",
-      "/images/cooling/installed.jpg",
-      "/images/cooling/gpu-test-without.png",
-      "/images/cooling/gpu-test-with.png",
-    ],
     storySteps: [
       {
         title: "The Problem",
@@ -490,14 +460,6 @@ ESP32 break-beam monitor for a pet door. V1 used PIR sensing, but false-triggere
 V2 switched to a beam across the opening, debounced events in firmware, and sent timestamped Telegram alerts. Within 2 days of deployment, it detected an intruder cat attempting to enter.
 `,
     image: "/images/cat-door/v2-system.jpg",
-    designGallery: [
-      "/images/cat-door/v1.jpg",
-      "/images/cat-door/cad-design.jpg",
-      "/images/cat-door/cad-slicing.jpg",
-      "/images/cat-door/3d-printed.jpg",
-      "/images/cat-door/v2-system.jpg",
-    ],
-    notificationGallery: ["/images/cat-door/telegram-notifications.png"],
     videoGallery: [
       {
         id: "4Ufpr4eA3jw",
