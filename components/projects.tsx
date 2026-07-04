@@ -8,87 +8,32 @@ import { motion } from "framer-motion"
 import { Github, ArrowRight, Youtube, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { projectsData, type Project } from "@/data/projects-data"
 
-type ProjectCard = {
-  id: number
-  title: string
-  description: string
-  outcome: string
-  image: string
-  githubUrl?: string
-  youtubeUrl?: string
-  imagePosition?: string
-}
+// Card content (title, cardDescription, outcome, image, githubUrl) lives in
+// data/projects-data.ts. Only the presentation decisions stay here: which
+// projects are featured, their order, and which card links a demo video.
 
 // Flagship pair: one machine built end-to-end, one real-world build delivered —
 // together they cover the breadth recruiters scan for.
-const featuredProjects: ProjectCard[] = [
-  {
-    id: 7,
-    title: "5-Motor Robotic Rubik's Cube Solver",
-    description:
-      "Solo-built rig where an ESP32 drives five stepper motors, fed by a Kociemba solver and a browser-based colour-input UI.",
-    outcome: "Solves any scramble — ~20-move plan computed in under 1 second",
-    image: "/images/rubiks/cube-front.jpg",
-    youtubeUrl: "https://www.youtube.com/watch?v=OC9h20jK2XQ",
-  },
-  {
-    id: 1,
-    title: "Residential Construction & Renovation",
-    description:
-      "Full residential build completed alongside my degree — framing, roofing, plumbing, and electrical from foundation to finish.",
-    outcome: "Complete house delivered while studying full-time",
-    image: "/images/construction/after.jpg",
-  },
-]
+const featuredIds = [7, 1]
+const moreIds = [2, 3, 4, 5, 6]
 
-// Thesis Work — when content is ready, define thesisProjects here and render
+// Cards that link straight to a demo video (only the Rubik's solver today).
+const cardYoutubeUrls: Record<number, string> = {
+  7: "https://www.youtube.com/watch?v=OC9h20jK2XQ",
+}
+
+// Thesis Work — when content is ready, add a thesisIds list here and render
 // a third grid with ProjectCardItem, mirroring the sections below.
 
-const moreProjects: ProjectCard[] = [
-  {
-    id: 2,
-    title: "Micromouse Maze Navigation Robot",
-    description:
-      "Autonomous maze-solving robot combining LiDAR, IMU, and wheel encoders with BFS path planning and PID control.",
-    outcome: "Top-3 finish — solved the maze in under 90 seconds",
-    image: "/images/micromouse/robot.jpg",
-    githubUrl: "https://github.com/z5360700/micromouse-from2024",
-  },
-  {
-    id: 3,
-    title: "Custom Cooling Funnels for PC Hardware",
-    description:
-      "Ducted airflow funnels designed in Fusion 360 and 3D-printed across three iterations to feed intake air straight to the GPU.",
-    outcome: "7°C cooler under full load",
-    image: "/images/cooling/installed.jpg",
-  },
-  {
-    id: 4,
-    title: "UR5e Robotic Writing System",
-    description:
-      "MATLAB program commanding a UR5e industrial arm over RTDE to write digits and solve long-form math on paper.",
-    outcome: "Smooth, legible writing with repeatable positioning",
-    image: "/images/ur5e/main-setup.jpg",
-  },
-  {
-    id: 5,
-    title: "Cat Door Monitoring System",
-    description:
-      "ESP32 break-beam monitor for a pet door that debounces false triggers and sends timestamped Telegram alerts.",
-    outcome: "Detected an intruder cat within 2 days of deployment",
-    image: "/images/cat-door/v2-system.jpg",
-  },
-  {
-    id: 6,
-    title: "Custom Watch Build",
-    description:
-      "Mechanical watch hand-assembled from individually sourced components around a Seiko NH35 movement.",
-    outcome: "Runs within NH35 spec — clean, dust-free build",
-    image: "/images/watch/cover.png",
-    imagePosition: "top",
-  },
-]
+const cardsFor = (ids: number[]): Project[] =>
+  ids
+    .map((id) => projectsData.find((p) => p.id === id))
+    .filter((p): p is Project => p !== undefined)
+
+const featuredProjects = cardsFor(featuredIds)
+const moreProjects = cardsFor(moreIds)
 
 function ProjectCardItem({
   project,
@@ -96,11 +41,13 @@ function ProjectCardItem({
   isInView,
   featured = false,
 }: {
-  project: ProjectCard
+  project: Project
   index: number
   isInView: boolean
   featured?: boolean
 }) {
+  const youtubeUrl = cardYoutubeUrls[project.id]
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -133,11 +80,15 @@ function ProjectCardItem({
               {project.title}
             </Link>
           </h3>
-          <p className="text-foreground/60 text-sm leading-relaxed flex-grow">{project.description}</p>
-          <p className="mt-3 flex items-start gap-1.5 text-sm font-medium text-primary">
-            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-            {project.outcome}
+          <p className="text-foreground/60 text-sm leading-relaxed flex-grow">
+            {project.cardDescription ?? project.description}
           </p>
+          {project.outcome && (
+            <p className="mt-3 flex items-start gap-1.5 text-sm font-medium text-primary">
+              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+              {project.outcome}
+            </p>
+          )}
           <div className="flex items-center gap-2 pt-4">
             {project.githubUrl && (
               <Button asChild variant="outline" size="sm" className="relative z-10">
@@ -147,9 +98,9 @@ function ProjectCardItem({
                 </a>
               </Button>
             )}
-            {project.youtubeUrl && (
+            {youtubeUrl && (
               <Button asChild variant="outline" size="sm" className="relative z-10">
-                <a href={project.youtubeUrl} target="_blank" rel="noopener noreferrer">
+                <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
                   <Youtube />
                   Watch
                 </a>

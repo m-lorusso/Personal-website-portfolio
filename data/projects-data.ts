@@ -2,6 +2,10 @@ export interface Project {
   id: number
   title: string
   description: string
+  /** Short copy for the homepage project card (falls back to description) */
+  cardDescription?: string
+  /** One-line outcome shown on the homepage card */
+  outcome?: string
   longDescription: string
   image: string
   beforeImage?: string
@@ -54,6 +58,9 @@ export const projectsData: Project[] = [
     title: "Residential Construction & Renovation",
     description:
       "Full residential build completed alongside engineering degree. Structural framing, roofing, plumbing, and electrical from foundation to finish. Managing real deadlines, tradespeople, and physical work while keeping up with coursework built resilience no classroom could.",
+    cardDescription:
+      "Full residential build completed alongside my degree — framing, roofing, plumbing, and electrical from foundation to finish.",
+    outcome: "Complete house delivered while studying full-time",
     longDescription: `
 Full residential build completed alongside engineering degree. Structural framing, roofing, plumbing, electrical from foundation to finish.
 
@@ -158,6 +165,9 @@ Every step was completed with attention to building codes and quality standards.
     title: "Micromouse Maze Navigation Robot",
     description:
       "Autonomous maze-solving robot built from scratch. Integrated LiDAR, IMU, and wheel encoders with path planning algorithm for real-time decision making. Top-3 competition finish.",
+    cardDescription:
+      "Autonomous maze-solving robot combining LiDAR, IMU, and wheel encoders with BFS path planning and PID control.",
+    outcome: "Top-3 finish — solved the maze in under 90 seconds",
     longDescription: `
 Autonomous maze-solving robot built from scratch. Integrated LiDAR, IMU, and wheel encoders with path planning algorithm for real-time decision making.
 
@@ -254,6 +264,9 @@ Sensor fusion combined data from multiple sources to maintain accurate position 
     title: "Custom Cooling Funnels for PC Hardware",
     description:
       "Designed and 3D-printed ducted airflow funnels for GPU cooling, inspired by automotive cooling systems. Achieved 7°C reduction in GPU temperatures under load.",
+    cardDescription:
+      "Ducted airflow funnels designed in Fusion 360 and 3D-printed across three iterations to feed intake air straight to the GPU.",
+    outcome: "7°C cooler under full load",
     longDescription: `Designed and 3D-printed ducted airflow funnels for GPU cooling, inspired by automotive cooling systems. Achieved measurable 7°C reduction in GPU temperatures under load.
 
 The solution identified that airflow in PC cases isn't optimized - intake air disperses inside rather than reaching the GPU directly.
@@ -407,6 +420,9 @@ Custom ducting directs cool air from front intake fans straight to the GPU, allo
     id: 4,
     title: "UR5e Robotic Writing System",
     description: "MATLAB program using RTDE interface to command UR5e industrial robot arm to trace digits and execute mathematical operations. Implemented coordinate frame transformations with consistent positional accuracy.",
+    cardDescription:
+      "MATLAB program commanding a UR5e industrial arm over RTDE to write digits and solve long-form math on paper.",
+    outcome: "Smooth, legible writing with repeatable positioning",
     longDescription: `MATLAB program using RTDE interface to command UR5e industrial robot arm to trace digits and execute mathematical operations.
 
 The robot writes individual numbers, moves them around the page, and solves addition, subtraction, and multiplication problems in traditional long-form style.
@@ -465,6 +481,9 @@ Getting the spacing right was tricky too - the robot needed to know exactly wher
     title: "Cat Door Monitoring System",
     description:
       "ESP32 break-beam monitor for a pet door. Detects movement, filters false triggers, and sends timestamped Telegram alerts.",
+    cardDescription:
+      "ESP32 break-beam monitor for a pet door that debounces false triggers and sends timestamped Telegram alerts.",
+    outcome: "Detected an intruder cat within 2 days of deployment",
     longDescription: `
 ESP32 break-beam monitor for a pet door. V1 used PIR sensing, but false-triggered on insects and nearby door movement.
 
@@ -548,6 +567,9 @@ V2 switched to a beam across the opening, debounced events in firmware, and sent
     title: "Custom Watch Build",
     description:
       "Sourced and hand-assembled individual components around Seiko NH35 movement. Precision assembly requiring dust-free environment, component compatibility verification, and steady hands for hand-setting.",
+    cardDescription:
+      "Mechanical watch hand-assembled from individually sourced components around a Seiko NH35 movement.",
+    outcome: "Runs within NH35 spec — clean, dust-free build",
     longDescription: `Sourced individual watch components - case, dial, hands, crystal, crown, bracelet - and assembled them into a complete mechanical watch by hand, built around a Seiko NH35 movement.
 
 The challenge was not manufacturing, but precision assembly. Fitting a movement into a case, aligning the dial perfectly, pressing on hands without damaging them, seating the crystal, and keeping everything dust-free required patience and precision at a scale where any misalignment is immediately visible.
@@ -607,6 +629,9 @@ More importantly, this project reinforced the value of patience and careful plan
     title: "5-Motor Robotic Rubik's Cube Solver",
     description:
       "Solo-built electromechanical rig that solves any scrambled 3×3 end-to-end. ESP32 drives 5× NEMA 17 steppers through TMC2209 drivers, fed by a Kociemba two-phase solver and a browser-based colour-input UI.",
+    cardDescription:
+      "Solo-built rig where an ESP32 drives five stepper motors, fed by a Kociemba solver and a browser-based colour-input UI.",
+    outcome: "Solves any scramble — ~20-move plan computed in under 1 second",
     longDescription: `Solo-built electromechanical system that solves any valid scrambled 3×3 Rubik's cube end-to-end. Once the cube state is entered through the web UI, the full pipeline (solve computation, move translation, physical actuation) runs without human intervention.
 
 An ESP32 DevKitC drives 5× NEMA 17 steppers (R, L, F, B, D faces) through TMC2209 V2.0 drivers on a 12V 8A supply. The cube is loaded through slidable, removable L-brackets on the open top — no top-face motor, so U-face moves are reproduced in firmware via a 13-move equivalence using the surrounding faces. That trade trims mechanical complexity in exchange for a longer move list.
