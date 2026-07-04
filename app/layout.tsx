@@ -8,6 +8,7 @@ import { NavigationHandler } from "@/components/navigation-handler"
 import Navbar from "@/components/navbar"
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { EMAIL, GITHUB_URL, LINKEDIN_URL, SITE_NAME, getSiteUrl } from "@/lib/site"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -15,20 +16,18 @@ const inter = Inter({
   preload: true,
 })
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000")
+const siteUrl = getSiteUrl()
 
 const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
-  name: "Michael Lo Russo",
+  name: SITE_NAME,
   url: siteUrl,
   jobTitle: "Mechatronics Engineering Student",
   affiliation: { "@type": "CollegeOrUniversity", name: "UNSW Sydney" },
   address: { "@type": "PostalAddress", addressLocality: "Sydney", addressCountry: "AU" },
-  email: "mailto:lorussom28@gmail.com",
-  sameAs: ["https://www.linkedin.com/in/michael-lo-russo/", "https://github.com/m-lorusso"],
+  email: `mailto:${EMAIL}`,
+  sameAs: [LINKEDIN_URL, GITHUB_URL],
 }
 
 // Tints the mobile browser chrome (address bar) to match the active theme
@@ -44,9 +43,12 @@ export const metadata: Metadata = {
   title: "Michael Lo Russo — Engineering Portfolio",
   description: "Engineering portfolio of Michael Lo Russo — design, prototyping, embedded systems, and hands-on builds.",
   icons: {
-    icon: "/Favicon - ML.png",
-    shortcut: "/Favicon - ML.png",
-    apple: "/Favicon - ML.png",
+    icon: [
+      { url: "/icon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    shortcut: "/icon-32.png",
+    apple: "/apple-touch-icon.png",
   },
   openGraph: {
     title: "Michael Lo Russo — Engineering Portfolio",

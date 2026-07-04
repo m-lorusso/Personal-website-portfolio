@@ -24,9 +24,11 @@ Personal portfolio showcasing engineering projects — design, prototyping, embe
 
 ## Getting Started
 
+This project uses [pnpm](https://pnpm.io) (pinned via `packageManager` in package.json).
+
 1. Clone the repository
-2. Install dependencies: `npm install`
-3. Run the development server: `npm run dev`
+2. Install dependencies: `pnpm install`
+3. Run the development server: `pnpm dev`
 4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
 ## Project Structure

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { X, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useEffect } from "react"
+import { useScrollLock } from "@/lib/use-scroll-lock"
 
 interface ImageLightboxProps {
   images: string[]
@@ -26,6 +27,8 @@ export default function ImageLightbox({
 }: ImageLightboxProps) {
   const prevIndex = (currentIndex - 1 + images.length) % images.length
   const nextIndex = (currentIndex + 1) % images.length
+
+  useScrollLock(isOpen)
 
   useEffect(() => {
     if (!isOpen) return
@@ -54,6 +57,9 @@ export default function ImageLightbox({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${altPrefix} viewer`}
           className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
           onClick={onClose}
         >

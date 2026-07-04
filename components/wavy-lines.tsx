@@ -1,13 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useHydrated } from "@/lib/use-hydrated"
 
 export default function WavyLines() {
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  const mounted = useHydrated()
 
   if (!mounted) return null
 

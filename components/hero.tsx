@@ -6,9 +6,9 @@ import { ArrowDown, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import WavyLines from "./wavy-lines"
+import { RESUME_URL } from "@/lib/site"
 
 export default function Hero() {
-  const resumeUrl = "/MichaelLoRusso_RESUME.pdf"
   const [hasScrolled, setHasScrolled] = useState(false)
 
   // Fade the scroll hint out once the visitor starts scrolling
@@ -52,7 +52,7 @@ export default function Hero() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="mb-1"
           >
-            <span className="text-base md:text-lg font-medium text-foreground/60">Hi, I'm</span>
+            <span className="text-base md:text-lg font-medium text-foreground/60">Hi, I&apos;m</span>
           </motion.div>
 
           <motion.h1
@@ -112,7 +112,7 @@ export default function Hero() {
               <a href="#projects">View My Work</a>
             </Button>
             <Button size="lg" variant="outline" className="w-full px-6 py-5 text-base font-medium sm:w-auto" asChild>
-              <a href={resumeUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+              <a href={RESUME_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
                 <FileText className="w-4 h-4" />
                 Resume
               </a>

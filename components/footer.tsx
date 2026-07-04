@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import { Github, Linkedin, Mail } from "lucide-react"
+import { EMAIL, GITHUB_URL, LINKEDIN_URL, SITE_NAME } from "@/lib/site"
 
 export default function Footer() {
   return (
@@ -16,14 +17,14 @@ export default function Footer() {
         >
           <div className="flex justify-center space-x-1 mb-4">
             <a
-              href="mailto:lorussom28@gmail.com"
+              href={`mailto:${EMAIL}`}
               className="p-3 text-foreground/50 hover:text-primary transition-colors"
               aria-label="Email"
             >
               <Mail className="w-5 h-5" />
             </a>
             <a
-              href="https://www.linkedin.com/in/michael-lo-russo/"
+              href={LINKEDIN_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="p-3 text-foreground/50 hover:text-primary transition-colors"
@@ -32,7 +33,7 @@ export default function Footer() {
               <Linkedin className="w-5 h-5" />
             </a>
             <a
-              href="https://github.com/m-lorusso"
+              href={GITHUB_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="p-3 text-foreground/50 hover:text-primary transition-colors"
@@ -41,7 +42,7 @@ export default function Footer() {
               <Github className="w-5 h-5" />
             </a>
           </div>
-          <p className="text-foreground/40 text-xs">© 2026 Michael Lo Russo</p>
+          <p className="text-foreground/40 text-xs">© {new Date().getFullYear()} {SITE_NAME}</p>
         </motion.div>
       </div>
     </footer>

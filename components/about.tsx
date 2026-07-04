@@ -5,6 +5,8 @@ import Image from "next/image"
 import { useInView } from "framer-motion"
 import { motion } from "framer-motion"
 
+const images = ["personal", "samsung", "store"] as const
+
 export default function About() {
   const ref = useRef(null)
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -13,7 +15,6 @@ export default function About() {
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
 
-  const images = ["personal", "samsung", "store"] as const
   const currentIndex = images.indexOf(activeImage)
 
   // Detect mobile viewport

@@ -8,6 +8,7 @@ import { usePathname, useRouter } from "next/navigation"
 import { Moon, Sun, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { RESUME_URL } from "@/lib/site"
 import { useTheme } from "next-themes"
 
 const navLinks = [
@@ -41,10 +42,7 @@ export default function Navbar() {
 
   // Scroll-spy: highlight the section currently in view (homepage only)
   useEffect(() => {
-    if (pathname !== "/") {
-      setActiveSection(null)
-      return
-    }
+    if (pathname !== "/") return
 
     const sections = navLinks
       .map((link) => document.getElementById(link.id))
@@ -63,6 +61,9 @@ export default function Navbar() {
     return () => observer.disconnect()
   }, [pathname])
 
+  // Only meaningful on the homepage — off it, no section is highlighted.
+  const currentSection = pathname === "/" ? activeSection : null
+
   // The Custom Watch Build page (project 6) is a full-page dark design with its
   // own in-page topbar, so the global navbar is hidden there.
   if (pathname === "/projects/6") return null
@@ -72,8 +73,6 @@ export default function Navbar() {
     setIsOpen(false)
     router.push(`/#${sectionId}`)
   }
-
-  const resumeUrl = "/MichaelLoRusso_RESUME.pdf"
 
   return (
     <header
@@ -99,10 +98,10 @@ export default function Navbar() {
             <button
               key={link.name}
               onClick={(e) => handleNavClick(link.id, e)}
-              aria-current={activeSection === link.id ? "true" : undefined}
+              aria-current={currentSection === link.id ? "true" : undefined}
               className={cn(
                 "px-4 py-2 rounded-full hover:bg-primary/10 transition-all duration-300 cursor-pointer font-medium",
-                activeSection === link.id
+                currentSection === link.id
                   ? "text-primary bg-primary/10"
                   : "text-foreground/70 hover:text-foreground",
               )}
@@ -127,7 +126,7 @@ export default function Navbar() {
               className="rounded-full bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"
               asChild
             >
-              <a href={resumeUrl} target="_blank" rel="noopener noreferrer">
+              <a href={RESUME_URL} target="_blank" rel="noopener noreferrer">
                 Resume
               </a>
             </Button>
@@ -174,10 +173,10 @@ export default function Navbar() {
             <button
               key={link.name}
               onClick={(e) => handleNavClick(link.id, e)}
-              aria-current={activeSection === link.id ? "true" : undefined}
+              aria-current={currentSection === link.id ? "true" : undefined}
               className={cn(
                 "py-3 px-4 rounded-lg hover:bg-primary/10 transition-all duration-200 transform text-left font-medium",
-                activeSection === link.id
+                currentSection === link.id
                   ? "text-primary bg-primary/10"
                   : "text-foreground/80 hover:text-foreground",
                 isOpen ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0",
@@ -195,7 +194,7 @@ export default function Navbar() {
             style={{ transitionDelay: "200ms" }}
             asChild
           >
-            <a href={resumeUrl} target="_blank" rel="noopener noreferrer">
+            <a href={RESUME_URL} target="_blank" rel="noopener noreferrer">
               Resume
             </a>
           </Button>

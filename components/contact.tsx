@@ -4,8 +4,7 @@ import { useRef, useState } from "react"
 import { useInView } from "framer-motion"
 import { motion } from "framer-motion"
 import { Mail, MapPin, Linkedin, Github, Copy, Check } from "lucide-react"
-
-const EMAIL = "lorussom28@gmail.com"
+import { EMAIL, GITHUB_URL, LINKEDIN_URL } from "@/lib/site"
 
 export default function Contact() {
   const ref = useRef(null)
@@ -80,7 +79,7 @@ export default function Contact() {
               </div>
 
               <a
-                href="https://www.linkedin.com/in/michael-lo-russo/"
+                href={LINKEDIN_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 text-foreground/70 hover:text-primary transition-colors"
@@ -90,7 +89,7 @@ export default function Contact() {
               </a>
 
               <a
-                href="https://github.com/m-lorusso"
+                href={GITHUB_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 text-foreground/70 hover:text-primary transition-colors"

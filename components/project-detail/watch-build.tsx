@@ -3,6 +3,9 @@
 import type React from "react"
 import { useEffect, useRef, useState } from "react"
 import dynamic from "next/dynamic"
+import Link from "next/link"
+import { RESUME_URL, SITE_NAME } from "@/lib/site"
+import { useScrollLock } from "@/lib/use-scroll-lock"
 
 // Real interactive 3D watch (three / r3f / drei). Client-only — the Canvas can't
 // server-render — with a light placeholder that matches the viewer card.
@@ -324,6 +327,9 @@ function NH35Explorer({ onClose }: { onClose: () => void }) {
     return () => window.removeEventListener("keydown", onKey)
   }, [onClose])
 
+  // The explorer is mounted only while open, so lock page scroll for its lifetime.
+  useScrollLock(true)
+
   const pointerAngle = (e: React.PointerEvent) => {
     const el = stageRef.current
     if (!el) return 0
@@ -360,7 +366,7 @@ function NH35Explorer({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="ovl" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="ovlcard">
+      <div className="ovlcard" role="dialog" aria-modal="true" aria-label="Seiko NH35 movement explorer">
         <button className="ovlclose" onClick={onClose} aria-label="Close">✕</button>
         <div className="ovlhead">
           <div>
@@ -628,9 +634,9 @@ export default function WatchBuild() {
 
       <div className="topbar">
         <div className="wrap topin">
-          <a className="tlink" href="/#projects">← Projects</a>
+          <Link className="tlink" href="/#projects">← Projects</Link>
           <div className="tlink tlink-mid" style={{ color: "var(--gold)" }}>VI · Custom Watch Build</div>
-          <a className="tlink" href="/MichaelLoRusso_RESUME.pdf" target="_blank" rel="noopener noreferrer">Resume</a>
+          <a className="tlink" href={RESUME_URL} target="_blank" rel="noopener noreferrer">Resume</a>
         </div>
       </div>
 
@@ -724,8 +730,8 @@ export default function WatchBuild() {
           <div className="partsgrid">
             <div>
               <h2 className="h2">Seven parts,<br />sourced separately.</h2>
-              <p className="lead" style={{ marginTop: 20 }}>Most parts marketed for the NH35 actually aren't. Stem lengths, dial feet and hand-hole sizes all had to match before anything shipped. Each was checked against the movement, then assembled under a loupe in a sealed, dust-free room.</p>
-              <div className="specchip"><span className="dot" />Keeps good time, well within the factory's spec</div>
+              <p className="lead" style={{ marginTop: 20 }}>Most parts marketed for the NH35 actually aren&apos;t. Stem lengths, dial feet and hand-hole sizes all had to match before anything shipped. Each was checked against the movement, then assembled under a loupe in a sealed, dust-free room.</p>
+              <div className="specchip"><span className="dot" />Keeps good time, well within the factory&apos;s spec</div>
             </div>
             <div className="photo" style={{ aspectRatio: "4/5" }}>
               <img src="/images/watch/grand-seiko.jpg" alt="The finished custom watch build" />
@@ -744,6 +750,7 @@ export default function WatchBuild() {
             <iframe
               src="https://www.youtube-nocookie.com/embed/nR-1D8_llwg?rel=0&modestbranding=1"
               title="Custom watch build, full session"
+              loading="lazy"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
@@ -753,10 +760,10 @@ export default function WatchBuild() {
 
       <div className="wrap">
         <div className="foot">
-          <a href="/projects/5"><div className="fcol"><div className="fk">← Previous</div><div className="fn">Cat Door Monitoring System</div></div></a>
-          <a href="/projects/7"><div className="fcol r"><div className="fk">Next →</div><div className="fn">Robotic Rubik&apos;s Cube Solver</div></div></a>
+          <Link href="/projects/5"><div className="fcol"><div className="fk">← Previous</div><div className="fn">Cat Door Monitoring System</div></div></Link>
+          <Link href="/projects/7"><div className="fcol r"><div className="fk">Next →</div><div className="fn">Robotic Rubik&apos;s Cube Solver</div></div></Link>
         </div>
-        <div className="endbar"><span>Seiko NH35A · Assembled by hand · Sydney</span><span>© 2026 Michael Lo Russo</span></div>
+        <div className="endbar"><span>Seiko NH35A · Assembled by hand · Sydney</span><span>© {new Date().getFullYear()} {SITE_NAME}</span></div>
       </div>
 
       {explorerOpen && <NH35Explorer onClose={() => setExplorerOpen(false)} />}

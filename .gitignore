@@ -33,4 +33,8 @@ next-env.d.ts
 # Claude Code skill installations (machine-specific tooling)
 /.agents/
 /.claude/skills/
+/.claude/settings.local.json
 /skills-lock.json
+
+# npm lockfile (this project uses pnpm — see packageManager in package.json)
+package-lock.json

@@ -26,6 +26,7 @@ export function VideoGallery({
               <iframe
                 src={`https://www.youtube.com/embed/${video.id}`}
                 title={video.title}
+                loading="lazy"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
                 className="w-full h-full"

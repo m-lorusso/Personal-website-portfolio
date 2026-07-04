@@ -186,7 +186,7 @@ export default function Projects() {
             className="w-16 h-1 bg-primary mx-auto mb-4 origin-center"
           />
           <p className="max-w-lg mx-auto text-foreground/70 text-sm md:text-base">
-            A selection of engineering and hands-on projects I've built.
+            A selection of engineering and hands-on projects I&apos;ve built.
           </p>
         </div>
 

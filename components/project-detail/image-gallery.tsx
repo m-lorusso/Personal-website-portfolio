@@ -25,7 +25,6 @@ export function ImageGallery({
   images,
   selectedIndex = 0,
   onImageClick,
-  onNavigate,
   altPrefix,
   columns = "grid-cols-3 md:grid-cols-4 lg:grid-cols-6",
   imageHeight = "h-32",
@@ -52,7 +51,6 @@ export function ImageGallery({
           </>
         )}
       </div>
-      {/* </CHANGE> */}
       <div className={`grid ${columns} gap-3`}>
         {displayImages.map((image, index) => (
           <div

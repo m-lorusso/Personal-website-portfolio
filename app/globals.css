@@ -81,21 +81,8 @@
   }
 }
 
-/* Decorative backgrounds (used selectively, e.g. project 7) */
+/* Decorative backgrounds and scene accents (project detail pages) */
 @layer utilities {
-  .bg-dot-pattern {
-    background-image: radial-gradient(circle, hsl(var(--foreground) / 0.07) 1px, transparent 1px);
-    background-size: 22px 22px;
-  }
-  .bg-grid-pattern {
-    background-image:
-      linear-gradient(to right, hsl(var(--border) / 0.5) 1px, transparent 1px),
-      linear-gradient(to bottom, hsl(var(--border) / 0.5) 1px, transparent 1px);
-    background-size: 56px 56px;
-  }
-  .bg-glow-primary {
-    background: radial-gradient(ellipse 70% 60% at 50% 0%, hsl(var(--primary) / 0.10), transparent 60%);
-  }
   .rubiks-blueprint-bg {
     background:
       linear-gradient(to right, hsl(var(--foreground) / 0.065) 1px, transparent 1px),
@@ -131,19 +118,6 @@
       linear-gradient(120deg, transparent 0 18%, hsl(199 89% 58% / 0.16) 18% 19%, transparent 19% 36%, hsl(168 76% 42% / 0.12) 36% 37%, transparent 37% 100%);
     mask-image: linear-gradient(90deg, transparent, black 18%, black 82%, transparent);
   }
-  .cooling-flow-pulse {
-    stroke-dasharray: 48 26;
-    animation: cooling-flow-move 1.35s linear infinite;
-  }
-  .cooling-flow-pulse-late {
-    animation-delay: -0.55s;
-  }
-  .cooling-gpu-heat {
-    animation: cooling-gpu-heat 1.9s ease-in-out infinite;
-  }
-  .cooling-gpu-cool {
-    animation: cooling-gpu-cool 2.4s ease-in-out infinite;
-  }
   .cat-door-beam {
     box-shadow: 0 0 18px hsl(187 92% 69% / 0.9);
     animation: cat-door-beam-scan 1.55s ease-in-out infinite;
@@ -160,22 +134,9 @@
     stroke-dasharray: 18 14;
     animation: micromouse-route-flow 1.4s linear infinite;
   }
-  .watch-wave-drift-slow {
-    animation: watch-wave-drift 60s linear infinite;
-    will-change: transform;
-  }
-  .watch-wave-drift-fast {
-    animation: watch-wave-drift 32s linear infinite;
-    will-change: transform;
-  }
   .rubiks-panel {
     background: linear-gradient(180deg, hsl(var(--background) / 0.9), hsl(var(--background) / 0.72));
     backdrop-filter: blur(14px);
-  }
-  .rubiks-video-scan {
-    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.2), transparent);
-    transform: translateX(-120%);
-    animation: rubiks-scan 5.5s ease-in-out infinite;
   }
   .rubiks-three-cube {
     position: relative;
@@ -316,39 +277,6 @@
       transform: scale(1) rotate(0deg);
     }
   }
-  @keyframes rubiks-scan {
-    0%,
-    42% {
-      transform: translateX(-120%);
-    }
-    70%,
-    100% {
-      transform: translateX(360%);
-    }
-  }
-  @keyframes cooling-flow-move {
-    to {
-      stroke-dashoffset: -74;
-    }
-  }
-  @keyframes cooling-gpu-heat {
-    0%,
-    100% {
-      opacity: 0.74;
-    }
-    50% {
-      opacity: 1;
-    }
-  }
-  @keyframes cooling-gpu-cool {
-    0%,
-    100% {
-      opacity: 0.66;
-    }
-    50% {
-      opacity: 0.9;
-    }
-  }
   @keyframes cat-door-beam-scan {
     0%,
     100% {
@@ -365,104 +293,23 @@
       stroke-dashoffset: -32;
     }
   }
-  @keyframes watch-wave-drift {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-50%);
-    }
-  }
-  /* Ticking second hand on the hero subdial */
-  .watch-subdial-hand {
-    animation: watch-subdial-sweep 60s linear infinite;
-    transform-origin: 50px 50px;
-  }
-  @keyframes watch-subdial-sweep {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  /* Horizontal marquee ticker (currently unused, kept for future tweaks) */
-  .watch-marquee-track {
-    animation: watch-marquee 38s linear infinite;
-    will-change: transform;
-  }
-  @keyframes watch-marquee {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-50%);
-    }
-  }
-  /* "Rec" pulse on the video header */
-  .watch-pulse {
-    animation: watch-pulse 1.4s ease-out infinite;
-  }
-  @keyframes watch-pulse {
-    0% {
-      transform: scale(1);
-      opacity: 0.85;
-    }
-    100% {
-      transform: scale(2.4);
-      opacity: 0;
-    }
-  }
   @media (prefers-reduced-motion: reduce) {
-    .rubiks-video-scan {
-      animation: none;
-      display: none;
-    }
-    .watch-wave-drift-slow,
-    .watch-wave-drift-fast {
-      animation: none;
-    }
     .rubiks-goal-complete,
-    .rubiks-goal-complete-icon {
+    .rubiks-goal-complete-icon,
+    .cat-door-beam,
+    .micromouse-route-dash {
       animation: none;
     }
-    .watch-subdial-hand,
-    .watch-marquee-track,
-    .watch-pulse {
-      animation: none;
-    }
-  }
-  .mask-fade-edges {
-    -webkit-mask-image: radial-gradient(ellipse at center, black 55%, transparent 100%);
-            mask-image: radial-gradient(ellipse at center, black 55%, transparent 100%);
   }
 }
 
-/* GPU-accelerated transitions for smoother animations */
 @layer utilities {
-  .gpu-accelerated {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    will-change: transform;
-  }
-  
-  .transition-gpu {
-    transition-property: transform, opacity;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 300ms;
-  }
-  
   .hover-lift {
     transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .hover-lift:hover {
     transform: translateY(-4px);
     box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  }
-  
-  .hover-scale {
-    transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .hover-scale:hover {
-    transform: scale(1.05);
   }
 }

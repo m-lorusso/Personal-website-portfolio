@@ -6,6 +6,8 @@ import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { X, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useHydrated } from "@/lib/use-hydrated"
+import { useScrollLock } from "@/lib/use-scroll-lock"
 
 interface ConstructionSlideshowModalProps {
   images: string[]
@@ -23,17 +25,19 @@ export default function ConstructionSlideshowModal({
   altPrefix = "Image",
 }: ConstructionSlideshowModalProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex)
-  const [mounted, setMounted] = useState(false)
+  const mounted = useHydrated()
 
-  useEffect(() => {
-    setMounted(true)
-    return () => setMounted(false)
-  }, [])
-
-  // Sync when opened to a new image
-  useEffect(() => {
+  // Reset to the clicked image whenever the modal is (re)opened. Adjusting
+  // state during render (guarded by a change check) instead of in an effect
+  // avoids a wasted render of the previous image.
+  const [prevOpenKey, setPrevOpenKey] = useState(`${initialIndex}:${isOpen}`)
+  const openKey = `${initialIndex}:${isOpen}`
+  if (prevOpenKey !== openKey) {
+    setPrevOpenKey(openKey)
     setCurrentIndex(initialIndex)
-  }, [initialIndex, isOpen])
+  }
+
+  useScrollLock(isOpen)
 
   const prevIndex = (currentIndex - 1 + images.length) % images.length
   const nextIndex = (currentIndex + 1) % images.length
@@ -62,6 +66,9 @@ export default function ConstructionSlideshowModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${altPrefix} slideshow`}
           className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center"
           onClick={onClose}
         >

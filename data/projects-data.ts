@@ -337,7 +337,7 @@ Custom ducting directs cool air from front intake fans straight to the GPU, allo
       {
         title: "Slicing for Printing",
         description:
-          "Using Bambu Studio, I prepared the 3D models for printing, setting up supports and optimizing print settings for ABS material.",
+          "Using Bambu Studio, I prepared the 3D models for printing, setting up supports and optimizing print settings for PLA material.",
         image: "/images/cooling/slicing.png",
         highlight: "The green areas show support structures needed for successful printing of complex geometries.",
         aspectRatio: "aspect-[4/3]",
@@ -346,7 +346,7 @@ Custom ducting directs cool air from front intake fans straight to the GPU, allo
         title: "Printed Components",
         description: "After several hours of printing, the cooling duct components were ready for installation.",
         image: "/images/cooling/printed-parts.jpg",
-        highlight: "ABS material was chosen for its heat resistance and durability in the warm PC environment.",
+        highlight: "PLA material was chosen for its ease of printing and durability, well suited to the duct's low-stress location in the case.",
         aspectRatio: "aspect-video",
       },
     ],
