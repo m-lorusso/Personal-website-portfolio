@@ -18,6 +18,7 @@ import {
   Wrench,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ResultsSection } from "@/components/project-detail/results-section"
 import type { ProjectLayoutProps } from "./types"
 
 // 5-Motor Robotic Rubik's Cube Solver (project 7). Owns the interactive
@@ -896,6 +897,12 @@ export default function RubiksLayout({ project, openLightbox }: ProjectLayoutPro
             ))}
           </div>
         </section>
+
+        <ResultsSection
+          results={project.results}
+          heading="How V1 landed"
+          className="rubiks-panel rounded-xl border border-border/70 p-6 md:p-8"
+        />
 
         <section id="rubiks-stack" className="scroll-mt-32 rubiks-panel rounded-xl border border-border/70 p-6 md:p-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

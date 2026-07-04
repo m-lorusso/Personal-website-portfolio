@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { ArrowRight, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ResultsSection } from "@/components/project-detail/results-section"
 import type { ProjectLayoutProps } from "./types"
 
 // Cat Door Monitoring System (project 5)
@@ -183,6 +184,12 @@ export default function CatDoorLayout({ project, openLightbox }: ProjectLayoutPr
           ))}
         </div>
       </section>
+
+      <ResultsSection
+        results={project.results}
+        heading="What the system delivered"
+        className="rounded-xl border bg-muted/10 p-5 md:p-6"
+      />
     </div>
   )
 }

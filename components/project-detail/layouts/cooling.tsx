@@ -5,6 +5,7 @@ import dynamic from "next/dynamic"
 import Image from "next/image"
 import { AlertTriangle, ArrowRight, TrendingDown, Wrench } from "lucide-react"
 import EnhancedBeforeAfterSlider from "@/components/enhanced-before-after-slider"
+import { ResultsSection } from "@/components/project-detail/results-section"
 import type { ProjectLayoutProps } from "./types"
 
 const PCCoolingScene = dynamic(() => import("@/components/project-detail/pc-cooling-scene"), {
@@ -340,6 +341,7 @@ export default function CoolingLayout({ project, openLightbox }: ProjectLayoutPr
         </div>
       </section>
 
+      <ResultsSection results={project.results} heading="Beyond the temperature drop" />
     </div>
   )
 }
