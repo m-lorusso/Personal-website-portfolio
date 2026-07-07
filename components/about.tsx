@@ -243,13 +243,12 @@ export default function About() {
               {/* MATLAB Logo */}
               <div className="flex w-20 flex-col items-center gap-1.5">
                 <div className="bg-background rounded-lg p-2 shadow-sm flex items-center justify-center w-16 h-16 hover-lift">
-                  <img
+                  <Image
                     src="/images/logos/matlab.png"
                     alt=""
                     width={40}
                     height={40}
                     className="object-contain"
-                    loading="lazy"
                     style={{ maxWidth: '40px', maxHeight: '40px', width: 'auto', height: 'auto' }}
                   />
                 </div>
@@ -259,13 +258,12 @@ export default function About() {
               {/* SolidWorks Logo */}
               <div className="flex w-20 flex-col items-center gap-1.5">
                 <div className="bg-background rounded-lg p-2 shadow-sm flex items-center justify-center w-16 h-16 hover-lift">
-                  <img
+                  <Image
                     src="/images/logos/solidworks.png"
                     alt=""
                     width={40}
                     height={40}
                     className="object-contain"
-                    loading="lazy"
                     style={{ maxWidth: '40px', maxHeight: '40px', width: 'auto', height: 'auto' }}
                   />
                 </div>
@@ -275,13 +273,12 @@ export default function About() {
               {/* Fusion 360 Logo */}
               <div className="flex w-20 flex-col items-center gap-1.5">
                 <div className="bg-background rounded-lg p-2 shadow-sm flex items-center justify-center w-16 h-16 hover-lift">
-                  <img
+                  <Image
                     src="/images/logos/fusion360.png"
                     alt=""
                     width={40}
                     height={40}
                     className="object-contain"
-                    loading="lazy"
                     style={{ maxWidth: '40px', maxHeight: '40px', width: 'auto', height: 'auto' }}
                   />
                 </div>
@@ -291,13 +288,12 @@ export default function About() {
               {/* Bambu Lab Logo */}
               <div className="flex w-20 flex-col items-center gap-1.5">
                 <div className="bg-background rounded-lg p-2 shadow-sm flex items-center justify-center w-16 h-16 hover-lift">
-                  <img
+                  <Image
                     src="/images/logos/bambu-lab.png"
                     alt=""
                     width={40}
                     height={40}
                     className="object-contain"
-                    loading="lazy"
                     style={{ maxWidth: '40px', maxHeight: '40px', width: 'auto', height: 'auto' }}
                   />
                 </div>

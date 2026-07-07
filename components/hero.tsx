@@ -126,8 +126,13 @@ export default function Hero() {
           hasScrolled ? "opacity-0 pointer-events-none" : "opacity-100"
         }`}
       >
-        <a href="#about" className="text-foreground/70 hover:text-foreground transition-colors">
-          <ArrowDown size={24} />
+        {/* p-3 -m-3 grows the tap target to ~48px without shifting layout */}
+        <a
+          href="#about"
+          aria-label="Scroll to About section"
+          className="inline-block p-3 -m-3 text-foreground/70 hover:text-foreground transition-colors"
+        >
+          <ArrowDown size={24} aria-hidden="true" />
         </a>
       </div>
 
