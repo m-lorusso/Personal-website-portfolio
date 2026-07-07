@@ -42,6 +42,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "Michael Lo Russo — Engineering Portfolio",
   description: "Engineering portfolio of Michael Lo Russo — design, prototyping, embedded systems, and hands-on builds.",
+  // Pages that define their own metadata (e.g. project pages) must also set
+  // their own canonical — alternates is replaced, not merged, per segment.
+  alternates: {
+    canonical: "/",
+  },
   icons: {
     icon: [
       { url: "/icon-32.png", sizes: "32x32", type: "image/png" },
