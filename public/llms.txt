@@ -1,4 +1,4 @@
-# Michael Lo Russo — Engineering Portfolio
+# Michael Lo Russo | Engineering Portfolio
 
 > Personal engineering portfolio of Michael Lo Russo, a Mechatronics Engineering student at UNSW Sydney, Australia. The site showcases hands-on hardware and software projects spanning robotics, embedded systems, CAD/3D printing, and construction.
 
@@ -6,13 +6,13 @@ This is a static portfolio site. All content is publicly available and may be re
 
 ## Projects
 
-- [Residential Construction & Renovation](https://www.mlorusso.com/projects/1): Full residential build completed alongside an engineering degree — structural framing, roofing, plumbing, and electrical from foundation to finish.
+- [Residential Construction & Renovation](https://www.mlorusso.com/projects/1): Full residential build completed alongside an engineering degree: structural framing, roofing, plumbing, and electrical from foundation to finish.
 - [Micromouse Maze Navigation Robot](https://www.mlorusso.com/projects/2): Autonomous maze-solving robot built from scratch with LiDAR, IMU, and wheel encoders; top-3 competition finish.
 - [Custom Cooling Funnels for PC Hardware](https://www.mlorusso.com/projects/3): Designed and 3D-printed ducted airflow funnels for GPU cooling; 7°C reduction under load.
 - [UR5e Robotic Writing System](https://www.mlorusso.com/projects/4): MATLAB program using the RTDE interface to command a UR5e robot arm to trace digits and execute mathematical operations.
 - [Cat Door Monitoring System](https://www.mlorusso.com/projects/5): ESP32 break-beam monitor for a pet door with false-trigger filtering and timestamped Telegram alerts.
 - [Custom Watch Build](https://www.mlorusso.com/projects/6): Hand-assembled watch around a Seiko NH35 movement.
-- [5-Motor Robotic Rubik's Cube Solver](https://www.mlorusso.com/projects/7): Solo-built electromechanical rig that solves any scrambled 3×3 — ESP32, 5× NEMA 17 steppers, TMC2209 drivers, Kociemba two-phase solver.
+- [5-Motor Robotic Rubik's Cube Solver](https://www.mlorusso.com/projects/7): Solo-built electromechanical rig that solves any scrambled 3×3: ESP32, 5× NEMA 17 steppers, TMC2209 drivers, Kociemba two-phase solver.
 
 ## Links
 

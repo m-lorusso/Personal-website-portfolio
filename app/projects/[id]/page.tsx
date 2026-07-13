@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const project = projectsData.find((p) => p.id === Number.parseInt(id, 10))
   if (!project) return {}
 
-  const title = `${project.title} — Michael Lo Russo`
+  const title = `${project.title} | Michael Lo Russo`
   const description = project.description.length > 160 ? `${project.description.slice(0, 157)}...` : project.description
 
   return {

@@ -575,7 +575,7 @@ function NH35Explorer({ onClose }: { onClose: () => void }) {
           {side === "move" ? (
             <>
               <b>Drag to spin the watch.</b> The oscillating weight stays pointing down under
-              gravity — exactly how it harvests motion to wind the mainspring. Let go and watch it settle.
+              gravity, exactly how it harvests motion to wind the mainspring. Let go and watch it settle.
             </>
           ) : (
             <>The dial side, keeping live time. Flip back to <b>Movement</b> to play with the rotor.</>
@@ -666,7 +666,7 @@ export default function WatchBuild() {
           <h1 className="h1" style={{ marginTop: 22 }}>A mechanical watch,<br />assembled by hand.</h1>
           <p className="lead" style={{ marginTop: 24 }}>Seven parts, sourced separately and checked one at a time, then built up around a single Seiko NH35A movement. Hover a part to highlight it, and scroll to take the watch from fully assembled to exploded.</p>
           <button className="explorebtn" onClick={() => setExplorerOpen(true)}>
-            <span className="pulse" />Select the movement — see it run
+            <span className="pulse" />Select the movement, see it run
           </button>
 
           <div className="scrollscene" ref={sceneRef}>
@@ -717,7 +717,7 @@ export default function WatchBuild() {
         <div className="wrap">
           <div className="divlbl"><span className="secno">II</span><div className="rule" /><span className="secno">In three dimensions</span></div>
           <h2 className="h2">Take it apart,<br />layer by layer.</h2>
-          <p className="lead" style={{ marginTop: 18 }}>A real-time 3D render of the build — not a video. Orbit around it, zoom in, and drag the slider to separate the case, dial, hands, movement, gears and rotor. Hover a label to pick out a part.</p>
+          <p className="lead" style={{ marginTop: 18 }}>A real-time 3D render of the build, not a video. Orbit around it, zoom in, and drag the slider to separate the case, dial, hands, movement, gears and rotor. Hover a label to pick out a part.</p>
           <div style={{ marginTop: 30 }}>
             <ProjectSixWatchViewer />
           </div>

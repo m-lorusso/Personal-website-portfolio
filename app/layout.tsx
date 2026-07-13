@@ -40,8 +40,8 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Michael Lo Russo — Engineering Portfolio",
-  description: "Engineering portfolio of Michael Lo Russo — design, prototyping, embedded systems, and hands-on builds.",
+  title: "Michael Lo Russo | Engineering Portfolio",
+  description: "Engineering portfolio of Michael Lo Russo: design, prototyping, embedded systems, and hands-on builds.",
   // Pages that define their own metadata (e.g. project pages) must also set
   // their own canonical — alternates is replaced, not merged, per segment.
   alternates: {
@@ -56,16 +56,16 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   openGraph: {
-    title: "Michael Lo Russo — Engineering Portfolio",
-    description: "Engineering portfolio of Michael Lo Russo — design, prototyping, embedded systems, and hands-on builds.",
+    title: "Michael Lo Russo | Engineering Portfolio",
+    description: "Engineering portfolio of Michael Lo Russo: design, prototyping, embedded systems, and hands-on builds.",
     type: "website",
     url: siteUrl,
     siteName: "Michael Lo Russo",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Michael Lo Russo — Engineering Portfolio",
-    description: "Engineering portfolio of Michael Lo Russo — design, prototyping, embedded systems, and hands-on builds.",
+    title: "Michael Lo Russo | Engineering Portfolio",
+    description: "Engineering portfolio of Michael Lo Russo: design, prototyping, embedded systems, and hands-on builds.",
   },
 }
 

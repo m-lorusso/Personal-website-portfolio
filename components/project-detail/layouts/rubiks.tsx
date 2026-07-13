@@ -301,7 +301,7 @@ const rubiksObjectives = {
   ccw: {
     symbol: "U'",
     label: "U' move",
-    detail: "Counter-clockwise top turn — the same 13-move equivalence run in reverse.",
+    detail: "Counter-clockwise top turn, the same 13-move equivalence run in reverse.",
     trace: rubiksMoveTraceUPrime,
   },
 } as const

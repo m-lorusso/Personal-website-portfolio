@@ -51,7 +51,7 @@ export const projectsData: Project[] = [
     description:
       "Full residential build completed alongside engineering degree. Structural framing, roofing, plumbing, and electrical from foundation to finish. Managing real deadlines, tradespeople, and physical work while keeping up with coursework built resilience no classroom could.",
     cardDescription:
-      "Full residential build completed alongside my degree — framing, roofing, plumbing, and electrical from foundation to finish.",
+      "Full residential build completed alongside my degree: framing, roofing, plumbing, and electrical from foundation to finish.",
     outcome: "Complete house delivered while studying full-time",
     longDescription: `
 Full residential build completed alongside engineering degree. Structural framing, roofing, plumbing, electrical from foundation to finish.
@@ -159,7 +159,7 @@ Every step was completed with attention to building codes and quality standards.
       "Autonomous maze-solving robot built from scratch. Integrated LiDAR, IMU, and wheel encoders with path planning algorithm for real-time decision making. Top-3 competition finish.",
     cardDescription:
       "Autonomous maze-solving robot combining LiDAR, IMU, and wheel encoders with BFS path planning and PID control.",
-    outcome: "Top-3 finish — solved the maze in under 90 seconds",
+    outcome: "Top-3 finish: solved the maze in under 90 seconds",
     longDescription: `
 Autonomous maze-solving robot built from scratch. Integrated LiDAR, IMU, and wheel encoders with path planning algorithm for real-time decision making.
 
@@ -531,7 +531,7 @@ V2 switched to a beam across the opening, debounced events in firmware, and sent
       "Sourced and hand-assembled individual components around Seiko NH35 movement. Precision assembly requiring dust-free environment, component compatibility verification, and steady hands for hand-setting.",
     cardDescription:
       "Mechanical watch hand-assembled from individually sourced components around a Seiko NH35 movement.",
-    outcome: "Runs within NH35 spec — clean, dust-free build",
+    outcome: "Runs within NH35 spec: clean, dust-free build",
     longDescription: `Sourced individual watch components - case, dial, hands, crystal, crown, bracelet - and assembled them into a complete mechanical watch by hand, built around a Seiko NH35 movement.
 
 The challenge was not manufacturing, but precision assembly. Fitting a movement into a case, aligning the dial perfectly, pressing on hands without damaging them, seating the crystal, and keeping everything dust-free required patience and precision at a scale where any misalignment is immediately visible.
@@ -593,12 +593,12 @@ More importantly, this project reinforced the value of patience and careful plan
       "Solo-built electromechanical rig that solves any scrambled 3×3 end-to-end. ESP32 drives 5× NEMA 17 steppers through TMC2209 drivers, fed by a Kociemba two-phase solver and a browser-based colour-input UI.",
     cardDescription:
       "Solo-built rig where an ESP32 drives five stepper motors, fed by a Kociemba solver and a browser-based colour-input UI.",
-    outcome: "Solves any scramble — ~20-move plan computed in under 1 second",
+    outcome: "Solves any scramble: ~20-move plan computed in under 1 second",
     longDescription: `Solo-built electromechanical system that solves any valid scrambled 3×3 Rubik's cube end-to-end. Once the cube state is entered through the web UI, the full pipeline (solve computation, move translation, physical actuation) runs without human intervention.
 
-An ESP32 DevKitC drives 5× NEMA 17 steppers (R, L, F, B, D faces) through TMC2209 V2.0 drivers on a 12V 8A supply. The cube is loaded through slidable, removable L-brackets on the open top — no top-face motor, so U-face moves are reproduced in firmware via a 13-move equivalence using the surrounding faces. That trade trims mechanical complexity in exchange for a longer move list.
+An ESP32 DevKitC drives 5× NEMA 17 steppers (R, L, F, B, D faces) through TMC2209 V2.0 drivers on a 12V 8A supply. The cube is loaded through slidable, removable L-brackets on the open top. With no top-face motor, U-face moves are reproduced in firmware via a 13-move equivalence using the surrounding faces. That trade trims mechanical complexity in exchange for a longer move list.
 
-The solver is the Kociemba two-phase algorithm — the same class of solver used in record-setting cube robots and the algorithmic basis for the proof that any cube state is solvable in 20 moves or fewer. A Python implementation runs on localhost, computes a near-optimal solution of roughly 20 moves in under 1 second, then streams the expanded physical move sequence to the firmware over Serial.
+The solver is the Kociemba two-phase algorithm, the same class of solver used in record-setting cube robots and the algorithmic basis for the proof that any cube state is solvable in 20 moves or fewer. A Python implementation runs on localhost, computes a near-optimal solution of roughly 20 moves in under 1 second, then streams the expanded physical move sequence to the firmware over Serial.
 
 V1 deliberately defers computer-vision colour detection and a 6th U-face motor in favour of an open-top, manual-input design that prioritises mechanical simplicity, cube accessibility, and reliable end-to-end solving.`,
     image: "/images/rubiks/cube-front.jpg",
@@ -629,11 +629,11 @@ V1 deliberately defers computer-vision colour detection and a 6th U-face motor i
     liveUrl: null,
     githubUrl: null,
     features: [
-      "5-motor open-top architecture (R, L, F, B, D) — slidable L-brackets allow cube swap without disassembly",
+      "5-motor open-top architecture (R, L, F, B, D): slidable L-brackets allow cube swap without disassembly",
       "U-face moves synthesised in firmware via a 13-move equivalence (U = R L F2 B2 R' L' D L' R' B2 F2 L R)",
       "Kociemba two-phase solver running locally in Python: ~20-move near-optimal solves in under 1 second",
       "Browser-based colour-palette input with real-time state validation and solve timing",
-      "Move map handles both Kociemba numeric (B1, B3, R2) and prime notation — no moves silently dropped",
+      "Move map handles both Kociemba numeric (B1, B3, R2) and prime notation: no moves silently dropped",
       "TMC2209 V2.0 drivers on a 12V 8A supply for quiet, micro-stepped face rotations",
       "Custom 3D printed chassis, motor mounts, baseplate, and cube couplers (Fusion 360 / Bambu Studio / PLA+)",
       "Arduino/AccelStepper firmware accepting space-separated move sequences from any host",
@@ -666,16 +666,16 @@ V1 deliberately defers computer-vision colour detection and a 6th U-face motor i
         "12V 8A bench supply",
       ],
     },
-    challenges: `The U-face is the hardest part of any Rubik's cube robot — there is nothing for a motor to grip on the top. Adding a 6th motor and arm would have meant a closed-top chassis and a cube that has to be loaded through a side hatch. Instead, V1 leaves the top open and synthesises U with a 13-move sequence on the surrounding faces. The solve is longer, but the rig stays mechanically simple and the cube can be inserted or swapped in seconds through removable L-brackets.
+    challenges: `The U-face is the hardest part of any Rubik's cube robot: there is nothing for a motor to grip on the top. Adding a 6th motor and arm would have meant a closed-top chassis and a cube that has to be loaded through a side hatch. Instead, V1 leaves the top open and synthesises U with a 13-move sequence on the surrounding faces. The solve is longer, but the rig stays mechanically simple and the cube can be inserted or swapped in seconds through removable L-brackets.
 
 Sourcing compatible parts and getting consistent torque without skipped steps required tuning the TMC2209 current limits and AccelStepper acceleration curves carefully. A face that under-rotates by a few degrees throws off every subsequent move, so calibration of the per-motor zero positions and step-per-quarter-turn ratios was iterative.
 
-The colour-input UI also had to be defensive — Kociemba rejects any invalid cube state outright, so the frontend validates colour counts and centre-piece consistency before sending the state, otherwise a user could spend a minute typing in a state that the solver will refuse a second later.`,
+The colour-input UI also had to be defensive: Kociemba rejects any invalid cube state outright, so the frontend validates colour counts and centre-piece consistency before sending the state, otherwise a user could spend a minute typing in a state that the solver will refuse a second later.`,
     results: `End-to-end pipeline works on arbitrary valid scrambles: state is typed into the browser, solved locally in Python, and pushed to the ESP32 over Serial. Kociemba computes a near-optimal solution of roughly 20 moves in under 1 second, then the 5-axis configuration expands it to roughly 55 physical motor commands.
 
-The open-top, manual-input design has been a clear win for V1 — it keeps the mechanical envelope small, makes cube changes trivial, and lets the focus stay on solver correctness and motor control rather than on a vision pipeline. Computer-vision colour detection and a 6th U-face motor are the obvious next steps for V2.`,
+The open-top, manual-input design has been a clear win for V1: it keeps the mechanical envelope small, makes cube changes trivial, and lets the focus stay on solver correctness and motor control rather than on a vision pipeline. Computer-vision colour detection and a 6th U-face motor are the obvious next steps for V2.`,
     learnings: [
-      "Mechanical scope discipline — choosing a 5-motor open-top design and synthesising U in firmware",
+      "Mechanical scope discipline: choosing a 5-motor open-top design and synthesising U in firmware",
       "Embedded motor control with TMC2209 drivers and AccelStepper",
       "Integrating a Python solver with embedded firmware over Serial",
       "Building a defensive web UI for state input where downstream tools are strict",
@@ -687,7 +687,7 @@ The open-top, manual-input design has been a clear win for V1 — it keeps the m
     hidden: true,
     title: "PVT Calculator Tool",
     description:
-      "Thesis project — a PVT calculator tool, built in collaboration with CoolSheet.",
+      "Thesis project: a PVT calculator tool, built in collaboration with CoolSheet.",
     longDescription: `Thesis project, built in collaboration with CoolSheet. A browser-based PVT calculator tool.`,
     image: "/placeholder.svg",
     tags: [],
