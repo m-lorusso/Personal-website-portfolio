@@ -1,3 +1,5 @@
+import YouTubeEmbed from "@/components/youtube-embed"
+
 interface Video {
   id: string
   title: string
@@ -23,14 +25,7 @@ export function VideoGallery({
         {videos.map((video, index) => (
           <div key={index} className="space-y-3">
             <div className="relative w-full aspect-video rounded-lg overflow-hidden">
-              <iframe
-                src={`https://www.youtube.com/embed/${video.id}`}
-                title={video.title}
-                loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full"
-              />
+              <YouTubeEmbed id={video.id} title={video.title} />
             </div>
             <div className="text-center">
               <h3 className="font-bold text-sm mb-1">{video.title}</h3>

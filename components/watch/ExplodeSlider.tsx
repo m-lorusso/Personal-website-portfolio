@@ -45,7 +45,7 @@ export default function ExplodeSlider({
           border: "1px solid rgba(0,0,0,0.16)",
           background: "#ffffff",
           color: "#26282c",
-          fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+          fontFamily: "var(--wb-mono), ui-monospace, monospace",
           fontSize: 11,
           letterSpacing: "0.08em",
           textTransform: "uppercase",
@@ -78,7 +78,7 @@ export default function ExplodeSlider({
 }
 
 const labelStyle: React.CSSProperties = {
-  fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+  fontFamily: "var(--wb-mono), ui-monospace, monospace",
   fontSize: 10.5,
   letterSpacing: "0.14em",
   textTransform: "uppercase",

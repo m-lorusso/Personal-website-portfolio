@@ -67,7 +67,7 @@ export default function ProjectSixWatchViewer() {
             position: "absolute",
             left: 16,
             top: 14,
-            fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+            fontFamily: "var(--wb-mono), ui-monospace, monospace",
             fontSize: 10.5,
             letterSpacing: "0.18em",
             textTransform: "uppercase",
@@ -84,7 +84,7 @@ export default function ProjectSixWatchViewer() {
         <p
           style={{
             margin: "12px 2px 0",
-            fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+            fontFamily: "var(--wb-mono), ui-monospace, monospace",
             fontSize: 11,
             letterSpacing: "0.04em",
             color: "#6b7079",

@@ -9,6 +9,7 @@ import { Moon, Sun, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { RESUME_URL } from "@/lib/site"
+import { projectsData } from "@/data/projects-data"
 import { useTheme } from "next-themes"
 
 const navLinks = [
@@ -19,11 +20,31 @@ const navLinks = [
   { name: "Contact", id: "contact" },
 ]
 
+// Full-page project designs (e.g. the Custom Watch Build) carry their own
+// in-page topbar, so the global navbar hides itself on those routes.
+const fullPagePaths = new Set(projectsData.filter((p) => p.fullPage).map((p) => `/projects/${p.id}`))
+
+function ThemeToggleButton({ className }: { className?: string }) {
+  const { resolvedTheme, setTheme } = useTheme()
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+      className={cn("rounded-full", className)}
+    >
+      <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+      <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+      <span className="sr-only">Toggle theme</span>
+    </Button>
+  )
+}
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState<string | null>(null)
-  const { resolvedTheme, setTheme } = useTheme()
   const router = useRouter()
   const pathname = usePathname()
 
@@ -64,9 +85,7 @@ export default function Navbar() {
   // Only meaningful on the homepage — off it, no section is highlighted.
   const currentSection = pathname === "/" ? activeSection : null
 
-  // The Custom Watch Build page (project 6) is a full-page dark design with its
-  // own in-page topbar, so the global navbar is hidden there.
-  if (pathname === "/projects/6") return null
+  if (fullPagePaths.has(pathname)) return null
 
   const handleNavClick = (sectionId: string, e: React.MouseEvent) => {
     e.preventDefault()
@@ -111,16 +130,7 @@ export default function Navbar() {
           ))}
 
           <div className="flex items-center gap-2 ml-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-              className="rounded-full hover:bg-primary/10 transition-all duration-300"
-            >
-              <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              <span className="sr-only">Toggle theme</span>
-            </Button>
+            <ThemeToggleButton className="hover:bg-primary/10 transition-all duration-300" />
 
             <Button
               className="rounded-full bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"
@@ -135,16 +145,7 @@ export default function Navbar() {
 
         {/* Mobile Navigation Toggle */}
         <div className="md:hidden flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-            className="rounded-full"
-          >
-            <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-            <span className="sr-only">Toggle theme</span>
-          </Button>
+          <ThemeToggleButton />
 
           <Button
             variant="ghost"

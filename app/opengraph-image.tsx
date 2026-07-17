@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og"
 
-export const runtime = "edge"
+// Node runtime (the default) so this renders statically at build time —
+// the edge runtime forces it to be generated on every request.
 export const alt = "Michael Lo Russo | Engineering Portfolio"
 export const size = { width: 1200, height: 630 }
 export const contentType = "image/png"

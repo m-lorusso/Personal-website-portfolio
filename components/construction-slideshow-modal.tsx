@@ -103,8 +103,10 @@ export default function ConstructionSlideshowModal({
           >
             {/* Previous image — peek on the left */}
             {hasSiblings && (
-              <div
-                className="hidden md:flex items-center justify-center w-24 lg:w-32 xl:w-40 flex-shrink-0 cursor-pointer"
+              <button
+                type="button"
+                aria-label="Show previous image"
+                className="hidden md:flex items-center justify-center w-24 lg:w-32 xl:w-40 flex-shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg"
                 onClick={goPrev}
               >
                 <div className="relative w-full h-32 lg:h-44 xl:h-52 rounded-lg overflow-hidden opacity-40 hover:opacity-80 transition-opacity">
@@ -117,7 +119,7 @@ export default function ConstructionSlideshowModal({
                     sizes="224px"
                   />
                 </div>
-              </div>
+              </button>
             )}
 
             {/* Current image — large, fills available space. Entering and exiting
@@ -147,8 +149,10 @@ export default function ConstructionSlideshowModal({
 
             {/* Next image — peek on the right */}
             {hasSiblings && (
-              <div
-                className="hidden md:flex items-center justify-center w-24 lg:w-32 xl:w-40 flex-shrink-0 cursor-pointer"
+              <button
+                type="button"
+                aria-label="Show next image"
+                className="hidden md:flex items-center justify-center w-24 lg:w-32 xl:w-40 flex-shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-lg"
                 onClick={goNext}
               >
                 <div className="relative w-full h-32 lg:h-44 xl:h-52 rounded-lg overflow-hidden opacity-40 hover:opacity-80 transition-opacity">
@@ -161,7 +165,7 @@ export default function ConstructionSlideshowModal({
                     sizes="224px"
                   />
                 </div>
-              </div>
+              </button>
             )}
           </motion.div>
 

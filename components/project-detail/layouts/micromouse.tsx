@@ -4,6 +4,7 @@ import Image from "next/image"
 import { Cpu, Gauge, Monitor, Play, Zap } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import GithubIcon from "@/components/icons/github"
+import YouTubeEmbed from "@/components/youtube-embed"
 import type { ProjectLayoutProps } from "./types"
 
 // Micromouse Maze Navigation Robot (project 2)
@@ -244,15 +245,8 @@ export default function MicromouseLayout({ project, openLightbox }: ProjectLayou
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
             {project.videoGallery.map((video) => (
               <div key={video.id} className="overflow-hidden rounded-lg border border-border/70 bg-background/70">
-                <div className="aspect-video">
-                  <iframe
-                    src={`https://www.youtube.com/embed/${video.id}`}
-                    title={video.title}
-                    loading="lazy"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="h-full w-full"
-                  />
+                <div className="relative aspect-video">
+                  <YouTubeEmbed id={video.id} title={video.title} />
                 </div>
                 <div className="p-3">
                   <h3 className="text-sm font-bold leading-snug">{video.title}</h3>

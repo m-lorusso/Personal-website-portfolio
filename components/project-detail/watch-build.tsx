@@ -3,9 +3,26 @@
 import type React from "react"
 import { useEffect, useRef, useState } from "react"
 import dynamic from "next/dynamic"
+import Image from "next/image"
 import Link from "next/link"
+import { Cormorant_Garamond, JetBrains_Mono } from "next/font/google"
 import { RESUME_URL, SITE_NAME } from "@/lib/site"
 import { useScrollLock } from "@/lib/use-scroll-lock"
+
+// Self-hosted via next/font (no render-blocking Google Fonts @import). Exposed
+// as CSS variables consumed throughout the scoped `.wb` styles below.
+const wbSerif = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  display: "swap",
+  variable: "--wb-serif",
+})
+const wbMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  display: "swap",
+  variable: "--wb-mono",
+})
 
 // Real interactive 3D watch (three / r3f / drei). Client-only — the Canvas can't
 // server-render — with a light placeholder that matches the viewer card.
@@ -83,22 +100,21 @@ const MIN_TICKS = Array.from({ length: 60 }, (_, i) => i)
 const HOUR_IDX = Array.from({ length: 12 }, (_, i) => i)
 
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 .wb{margin:0;background:#0b0b0d;color:#e9e6df;font-family:'Helvetica Neue',Arial,sans-serif;min-height:100vh;--ink:#0b0b0d;--panel:#141417;--line:rgba(255,255,255,.09);--line2:rgba(255,255,255,.16);--tx:#e9e6df;--mut:#8c887f;--gold:#c4a368;--gold2:#e6cd95;--steel:#b3b6bd;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 .wb *{box-sizing:border-box}
-.wb .serif{font-family:'Cormorant Garamond',Georgia,serif}
-.wb .mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+.wb .serif{font-family:var(--wb-serif),Georgia,serif}
+.wb .mono{font-family:var(--wb-mono),ui-monospace,monospace}
 .wb .mut{color:var(--mut)}.wb .gold{color:var(--gold)}
 .wb .wrap{max-width:1180px;margin:0 auto;padding:0 36px}
-.wb .ey{font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
-.wb .h1{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(44px,7.4vw,92px);line-height:.96;letter-spacing:-.012em;margin:0}
-.wb .h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(30px,4.4vw,50px);line-height:1.02;letter-spacing:-.01em;margin:0}
+.wb .ey{font-family:var(--wb-mono),monospace;font-size:11.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+.wb .h1{font-family:var(--wb-serif),Georgia,serif;font-weight:600;font-size:clamp(44px,7.4vw,92px);line-height:.96;letter-spacing:-.012em;margin:0}
+.wb .h2{font-family:var(--wb-serif),Georgia,serif;font-weight:600;font-size:clamp(30px,4.4vw,50px);line-height:1.02;letter-spacing:-.01em;margin:0}
 .wb .lead{font-size:17px;line-height:1.7;color:#c9c5bc;max-width:560px}
 .wb .topbar{position:sticky;top:0;z-index:40;backdrop-filter:blur(14px);background:rgba(11,11,13,.72);border-bottom:1px solid var(--line)}
 .wb .topin{height:62px;display:flex;align-items:center;justify-content:space-between}
-.wb .tlink{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;color:var(--mut);text-decoration:none;text-transform:uppercase}
+.wb .tlink{font-family:var(--wb-mono),monospace;font-size:12px;letter-spacing:.12em;color:var(--mut);text-decoration:none;text-transform:uppercase}
 .wb .tlink:hover{color:var(--tx)}
-.wb .secno{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase}
+.wb .secno{font-family:var(--wb-mono),monospace;font-size:12px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase}
 .wb .rule{height:1px;background:var(--line);width:100%}
 .wb .divlbl{display:flex;align-items:center;gap:18px;padding:0 0 30px}
 .wb .divlbl .rule{flex:1}
@@ -106,7 +122,7 @@ const CSS = `
 .wb .stageglow{position:absolute;left:50%;top:50%;width:540px;height:540px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(196,163,104,.22),rgba(196,163,104,0) 60%);pointer-events:none;filter:blur(10px)}
 .wb .scrollscene{position:relative;height:113vh;margin:42px auto 0}
 .wb .stagepin{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:9vh}
-.wb .scrollcue{position:absolute;bottom:6vh;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--mut);transition:opacity .3s}
+.wb .scrollcue{position:absolute;bottom:6vh;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;font-family:var(--wb-mono),monospace;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--mut);transition:opacity .3s}
 .wb .cuearrow{font-size:14px;animation:wbcuebob 1.8s ease-in-out infinite}
 @keyframes wbcuebob{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(5px);opacity:1}}
 .wb .lug{position:absolute;width:38px;height:36px;background:linear-gradient(180deg,#e9ecf1,#9a9ea6 52%,#3a3c42);border-radius:11px;box-shadow:0 3px 8px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.45)}
@@ -136,7 +152,7 @@ const CSS = `
 .wb .s-crys{width:276px;height:276px;background:linear-gradient(180deg,rgba(205,225,255,.22),rgba(130,160,210,.1) 60%,rgba(70,100,150,.06) 100%);transform:translate(-50%,-50%) translateZ(-8px)}
 .wb .d-back{width:252px;height:252px;background:radial-gradient(circle at 38% 30%,#d3d7de,#8d9098 52%,#46484e 100%);box-shadow:inset 0 0 0 5px rgba(255,255,255,.12),inset 0 0 26px rgba(0,0,0,.5)}
 .wb .d-back .ring{position:absolute;inset:0;border-radius:50%;background:repeating-radial-gradient(circle,rgba(0,0,0,.06) 0 1px,transparent 1px 7px);mask:radial-gradient(circle,transparent 30%,#000 31%);-webkit-mask:radial-gradient(circle,transparent 30%,#000 31%)}
-.wb .d-back .eng{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.18em;color:rgba(30,30,34,.5)}
+.wb .d-back .eng{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--wb-mono),monospace;font-size:8px;letter-spacing:.18em;color:rgba(30,30,34,.5)}
 .wb .d-case{width:300px;height:300px;background:conic-gradient(from -48deg,#a9adb5,#f5f7fa 11%,#83878f 26%,#d0d4db 40%,#6b6f77 54%,#f0f2f6 72%,#90949d 86%,#dadee4);box-shadow:inset 0 0 0 2px rgba(255,255,255,.45),inset 0 0 30px rgba(0,0,0,.22),0 20px 48px rgba(0,0,0,.62)}
 .wb .d-case .bezel{position:absolute;inset:14px;border-radius:50%;background:conic-gradient(from -48deg,#c2c6cd,#f8fafc 11%,#8d9199 30%,#e8ebf0 50%,#797d85 68%,#f1f3f7 86%,#b4b8c0);mask:radial-gradient(circle,transparent 0 79%,#000 81%);-webkit-mask:radial-gradient(circle,transparent 0 79%,#000 81%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.4)}
 .wb .d-case .bore{position:absolute;inset:30px;border-radius:50%;background:radial-gradient(circle at 50% 42%,#10182e,#070b18);box-shadow:inset 0 0 28px rgba(0,0,0,.85),inset 0 0 0 2px rgba(0,0,0,.55)}
@@ -153,10 +169,10 @@ const CSS = `
 .wb .d-dial .mintrack{position:absolute;inset:0;border-radius:50%;background:repeating-conic-gradient(from -.5deg,rgba(220,228,240,.85) 0 1deg,transparent 1deg 6deg);mask:radial-gradient(circle,transparent 0 88%,#000 89% 95%,transparent 96%);-webkit-mask:radial-gradient(circle,transparent 0 88%,#000 89% 95%,transparent 96%)}
 .wb .indices{position:absolute;inset:0;border-radius:50%;background:repeating-conic-gradient(from -2.6deg,#f1f5fc 0 5.2deg,transparent 5.2deg 30deg);mask:radial-gradient(circle,transparent 70%,#000 71% 86%,transparent 87%);-webkit-mask:radial-gradient(circle,transparent 70%,#000 71% 86%,transparent 87%);filter:drop-shadow(0 1px 1px rgba(0,0,0,.6))}
 .wb .dlogo{position:absolute;left:50%;top:20%;transform:translateX(-50%);text-align:center;line-height:1.15}
-.wb .dlogo b{display:block;font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:700;letter-spacing:.04em;background:linear-gradient(180deg,#f0d49a,#b6883f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.wb .dlogo b{display:block;font-family:var(--wb-serif),serif;font-size:13px;font-weight:700;letter-spacing:.04em;background:linear-gradient(180deg,#f0d49a,#b6883f);-webkit-background-clip:text;background-clip:text;color:transparent}
 .wb .dlogo small{display:block;font-size:5px;letter-spacing:.22em;color:#d8b66a;margin-top:1.5px;font-weight:600}
-.wb .dauto{position:absolute;left:50%;top:70%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:4.6px;letter-spacing:.1em;color:#cdb589;text-align:center;line-height:1.5}
-.wb .date{position:absolute;right:11%;top:50%;transform:translateY(-50%);min-width:16px;height:14px;padding:0 2px;border-radius:1px;background:linear-gradient(180deg,#fbfcfe,#dfe3e9);color:#16203a;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:500;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.15)}
+.wb .dauto{position:absolute;left:50%;top:70%;transform:translateX(-50%);font-family:var(--wb-mono),monospace;font-size:4.6px;letter-spacing:.1em;color:#cdb589;text-align:center;line-height:1.5}
+.wb .date{position:absolute;right:11%;top:50%;transform:translateY(-50%);min-width:16px;height:14px;padding:0 2px;border-radius:1px;background:linear-gradient(180deg,#fbfcfe,#dfe3e9);color:#16203a;font-family:var(--wb-mono),monospace;font-size:8px;font-weight:500;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.15)}
 .wb .d-hands{width:236px;height:236px}
 .wb .hub{position:absolute;left:50%;top:50%;width:11px;height:11px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 40% 35%,#fafdff,#aeb6c4);z-index:6;box-shadow:0 0 4px rgba(0,0,0,.5)}
 .wb .hand{position:absolute;left:50%;bottom:50%;transform-origin:50% 100%}
@@ -171,7 +187,7 @@ const CSS = `
 .wb .legend{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border-top:1px solid var(--line);margin-top:20px}
 .wb .lrow{display:flex;gap:16px;align-items:flex-start;padding:18px 22px;border-bottom:1px solid var(--line);cursor:default;transition:background .2s}
 .wb .lrow:hover{background:rgba(196,163,104,.05)}
-.wb .lrow .ln{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gold);padding-top:2px}
+.wb .lrow .ln{font-family:var(--wb-mono),monospace;font-size:12px;color:var(--gold);padding-top:2px}
 .wb .lrow .lname{font-size:15px;font-weight:600;letter-spacing:.01em}
 .wb .lrow .ldesc{font-size:13px;color:var(--mut);line-height:1.5;margin-top:3px}
 .wb .sec{padding:96px 0}
@@ -179,13 +195,13 @@ const CSS = `
 .wb .benchgrid{grid-template-columns:.9fr 1.1fr;align-items:center}
 .wb .photo{position:relative;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:#111}
 .wb .photo img{display:block;width:100%;height:100%;object-fit:cover}
-.wb .photocap{position:absolute;left:16px;bottom:14px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.86);background:rgba(0,0,0,.4);backdrop-filter:blur(4px);padding:6px 11px;border-radius:4px}
+.wb .photocap{position:absolute;left:16px;bottom:14px;font-family:var(--wb-mono),monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.86);background:rgba(0,0,0,.4);backdrop-filter:blur(4px);padding:6px 11px;border-radius:4px}
 .wb .notes{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:42px}
 .wb .note{border:1px solid var(--line);border-radius:6px;padding:28px;background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,0))}
-.wb .note .nk{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
-.wb .note .nh{font-family:'Cormorant Garamond',serif;font-size:25px;font-weight:600;margin:14px 0 10px}
+.wb .note .nk{font-family:var(--wb-mono),monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.wb .note .nh{font-family:var(--wb-serif),serif;font-size:25px;font-weight:600;margin:14px 0 10px}
 .wb .note .np{font-size:14px;line-height:1.65;color:var(--mut)}
-.wb .specchip{display:inline-flex;align-items:center;gap:12px;border:1px solid var(--line2);border-radius:999px;padding:11px 20px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;color:var(--tx);margin-top:38px}
+.wb .specchip{display:inline-flex;align-items:center;gap:12px;border:1px solid var(--line2);border-radius:999px;padding:11px 20px;font-family:var(--wb-mono),monospace;font-size:12px;letter-spacing:.12em;color:var(--tx);margin-top:38px}
 .wb .specchip .dot{width:7px;height:7px;border-radius:50%;background:#5fbf8a;box-shadow:0 0 8px rgba(95,191,138,.7)}
 .wb .film{position:relative;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:#000;aspect-ratio:16/9;margin-top:42px}
 .wb .film iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
@@ -193,18 +209,18 @@ const CSS = `
 .wb .fcol{padding:46px 36px}
 .wb .fcol.r{text-align:right;border-left:1px solid var(--line)}
 .wb .fcol a{text-decoration:none;color:inherit;display:block}
-.wb .fk{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--mut)}
-.wb .fn{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;margin-top:10px;color:var(--tx)}
+.wb .fk{font-family:var(--wb-mono),monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--mut)}
+.wb .fn{font-family:var(--wb-serif),serif;font-size:26px;font-weight:600;margin-top:10px;color:var(--tx)}
 .wb .fcol a:hover .fn{color:var(--gold)}
-.wb .endbar{padding:30px 0 50px;display:flex;justify-content:space-between;align-items:center;color:var(--mut);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.wb .endbar{padding:30px 0 50px;display:flex;justify-content:space-between;align-items:center;color:var(--mut);font-family:var(--wb-mono),monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
 @keyframes wbspin{to{transform:translate(-50%,-50%) rotate(360deg)}}
 @keyframes wbsweep{to{transform:rotate(360deg)}}
 @keyframes wbhover{0%,100%{transform:translateZ(-7px)}50%{transform:translateZ(12px)}}
 /* ── Movement explorer (gravity rotor) ── */
 .wb .L-move .puck,.wb .lrow.clickable{cursor:pointer}
 .wb .lrow.clickable:hover{background:rgba(196,163,104,.08)}
-.wb .ltag{display:inline-block;margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
-.wb .explorebtn{display:inline-flex;align-items:center;gap:10px;margin-top:30px;padding:13px 22px;border-radius:999px;border:1px solid var(--line2);background:linear-gradient(180deg,rgba(196,163,104,.16),rgba(196,163,104,.04));color:var(--gold2);font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:border-color .2s,transform .2s}
+.wb .ltag{display:inline-block;margin-top:6px;font-family:var(--wb-mono),monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.wb .explorebtn{display:inline-flex;align-items:center;gap:10px;margin-top:30px;padding:13px 22px;border-radius:999px;border:1px solid var(--line2);background:linear-gradient(180deg,rgba(196,163,104,.16),rgba(196,163,104,.04));color:var(--gold2);font-family:var(--wb-mono),monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:border-color .2s,transform .2s}
 .wb .explorebtn:hover{border-color:var(--gold);transform:translateY(-1px)}
 .wb .explorebtn .pulse{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 0 rgba(196,163,104,.6);animation:wbpulse 2s infinite}
 @keyframes wbpulse{0%{box-shadow:0 0 0 0 rgba(196,163,104,.55)}70%{box-shadow:0 0 0 9px rgba(196,163,104,0)}100%{box-shadow:0 0 0 0 rgba(196,163,104,0)}}
@@ -212,8 +228,8 @@ const CSS = `
 @keyframes wbfade{from{opacity:0}to{opacity:1}}
 .wb .ovlcard{position:relative;width:min(640px,100%);max-height:94vh;overflow:auto;border-radius:16px;border:1px solid var(--line2);background:radial-gradient(120% 80% at 50% -10%,rgba(196,163,104,.1),transparent 60%),linear-gradient(180deg,#161618,#0c0c0f);box-shadow:0 30px 90px rgba(0,0,0,.65);padding:24px 24px 20px}
 .wb .ovlhead{display:flex;align-items:baseline;justify-content:space-between;gap:14px}
-.wb .ovlk{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
-.wb .ovlt{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;margin:2px 0 0;line-height:1}
+.wb .ovlk{font-family:var(--wb-mono),monospace;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+.wb .ovlt{font-family:var(--wb-serif),serif;font-size:30px;font-weight:600;margin:2px 0 0;line-height:1}
 .wb .ovlclose{position:absolute;right:14px;top:13px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line2);background:rgba(255,255,255,.04);color:var(--mut);font-size:17px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:color .2s,border-color .2s}
 .wb .ovlclose:hover{color:var(--tx);border-color:var(--gold)}
 .wb .mvstage{position:relative;width:100%;max-width:430px;aspect-ratio:1/1;margin:14px auto 0;touch-action:none;cursor:grab;perspective:1100px}
@@ -224,7 +240,7 @@ const CSS = `
 .wb .mvface svg{width:100%;height:100%;display:block;overflow:visible}
 .wb .mvface.back{transform:rotateY(180deg)}
 .wb .mvctrls{display:flex;gap:10px;justify-content:center;margin-top:6px}
-.wb .mvbtn{padding:9px 16px;border-radius:999px;border:1px solid var(--line2);background:rgba(255,255,255,.03);color:var(--tx);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:border-color .2s,color .2s}
+.wb .mvbtn{padding:9px 16px;border-radius:999px;border:1px solid var(--line2);background:rgba(255,255,255,.03);color:var(--tx);font-family:var(--wb-mono),monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:border-color .2s,color .2s}
 .wb .mvbtn:hover{border-color:var(--gold)}
 .wb .mvbtn.on{border-color:var(--gold);color:var(--gold2);background:rgba(196,163,104,.08)}
 .wb .mvhint{text-align:center;color:var(--mut);font-size:12.5px;margin-top:14px;line-height:1.55;max-width:460px;margin-left:auto;margin-right:auto}
@@ -543,7 +559,8 @@ function NH35Explorer({ onClose }: { onClose: () => void }) {
                   )
                 })}
                 {/* Branding */}
-                <text x="200" y="120" textAnchor="middle" fontFamily="'Cormorant Garamond',serif" fontSize="18" fontWeight="600" letterSpacing="3" fill="#1c2230">SEIKO</text>
+                {/* style, not the fontFamily attribute — CSS vars don't resolve in SVG presentation attributes */}
+                <text x="200" y="120" textAnchor="middle" style={{ fontFamily: "var(--wb-serif),serif" }} fontSize="18" fontWeight="600" letterSpacing="3" fill="#1c2230">SEIKO</text>
                 <text x="200" y="286" textAnchor="middle" fontFamily="monospace" fontSize="8" letterSpacing="2" fill="#3a4150">NH35 · AUTOMATIC</text>
                 <text x="200" y="298" textAnchor="middle" fontFamily="monospace" fontSize="7" letterSpacing="2" fill="#5c616b">24 JEWELS</text>
                 {/* Date window at 3 o'clock */}
@@ -629,7 +646,7 @@ export default function WatchBuild() {
   }
 
   return (
-    <div className="wb">
+    <div className={`wb ${wbSerif.variable} ${wbMono.variable}`}>
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
 
       <div className="topbar">
@@ -645,7 +662,7 @@ export default function WatchBuild() {
           <div className="divlbl"><span className="secno">I</span><div className="rule" /><span className="secno">Bench notes</span></div>
           <div className="partsgrid benchgrid">
             <div className="photo" style={{ aspectRatio: "1/1" }}>
-              <img src="/images/watch/cover.png" alt="Custom watch, crystal, dial and hands" />
+              <Image src="/images/watch/cover.png" alt="Custom watch, crystal, dial and hands" fill sizes="(max-width: 860px) 100vw, 560px" />
               <div className="photocap">Crystal · dial · hands</div>
             </div>
             <div>
@@ -734,7 +751,7 @@ export default function WatchBuild() {
               <div className="specchip"><span className="dot" />Keeps good time, well within the factory&apos;s spec</div>
             </div>
             <div className="photo" style={{ aspectRatio: "4/5" }}>
-              <img src="/images/watch/grand-seiko.jpg" alt="The finished custom watch build" />
+              <Image src="/images/watch/grand-seiko.jpg" alt="The finished custom watch build" fill sizes="(max-width: 860px) 100vw, 560px" />
               <div className="photocap">The finished build · on the wrist</div>
             </div>
           </div>

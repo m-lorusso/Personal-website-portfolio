@@ -20,9 +20,8 @@ const featuredIds = [7, 1]
 const moreIds = [2, 3, 4, 5, 6]
 
 // Cards that link straight to a demo video (only the Rubik's solver today).
-const cardYoutubeUrls: Record<number, string> = {
-  7: "https://www.youtube.com/watch?v=OC9h20jK2XQ",
-}
+// The video itself comes from the project's videoGallery in projects-data.ts.
+const cardVideoIds = new Set([7])
 
 // Thesis Work — when content is ready, add a thesisIds list here and render
 // a third grid with ProjectCardItem, mirroring the sections below.
@@ -46,7 +45,8 @@ function ProjectCardItem({
   isInView: boolean
   featured?: boolean
 }) {
-  const youtubeUrl = cardYoutubeUrls[project.id]
+  const cardVideo = cardVideoIds.has(project.id) ? project.videoGallery?.[0] : undefined
+  const youtubeUrl = cardVideo ? `https://www.youtube.com/watch?v=${cardVideo.id}` : undefined
 
   return (
     <motion.div

@@ -188,8 +188,9 @@ export default function About() {
               </motion.div>
             </motion.div>
 
-            {/* Mobile navigation dots */}
-            <div className="mt-3 flex justify-center md:hidden">
+            {/* Navigation dots — the only pointer-free way to browse the deck,
+                so they show on desktop too (cards are hover-driven there) */}
+            <div className="mt-3 md:mt-10 flex justify-center">
               {images.map((image) => (
                 <button
                   key={image}
@@ -207,7 +208,7 @@ export default function About() {
             </div>
 
             {/* Instructions - responsive text */}
-            <p className="mt-1 md:mt-10 text-center text-foreground/60 text-sm">
+            <p className="mt-1 md:mt-2 text-center text-foreground/60 text-sm">
               <span className="hidden md:inline">Hover over photos to bring them forward</span>
               <span className="md:hidden">Swipe left or right to browse photos</span>
             </p>

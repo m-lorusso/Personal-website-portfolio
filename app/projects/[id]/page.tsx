@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { notFound } from "next/navigation"
 import ProjectDetailClient from "./ProjectDetailClient"
 import { projectsData } from "@/data/projects-data"
 import { SITE_NAME, getSiteUrl } from "@/lib/site"
@@ -44,10 +45,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 export default async function ProjectDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const project = projectsData.find((p) => p.id === Number.parseInt(id, 10))
+  if (!project) notFound() // unreachable in practice — dynamicParams=false already 404s unknown ids
+
   const siteUrl = getSiteUrl()
 
   // JSON-LD requires absolute URLs — metadataBase does not apply here.
-  const breadcrumbJsonLd = project && {
+  const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
@@ -58,10 +61,8 @@ export default async function ProjectDetail({ params }: { params: Promise<{ id: 
 
   return (
     <>
-      {breadcrumbJsonLd && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
-      )}
-      <ProjectDetailClient />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <ProjectDetailClient projectId={project.id} />
     </>
   )
 }

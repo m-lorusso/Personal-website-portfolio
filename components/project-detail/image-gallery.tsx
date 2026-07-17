@@ -53,9 +53,11 @@ export function ImageGallery({
       </div>
       <div className={`grid ${columns} gap-3`}>
         {displayImages.map((image, index) => (
-          <div
+          <button
             key={index}
-            className={`relative ${imageHeight} rounded-lg overflow-hidden cursor-pointer group ${
+            type="button"
+            aria-label={`View ${altPrefix.toLowerCase()} ${index + 1} of ${images.length}`}
+            className={`relative block w-full ${imageHeight} rounded-lg overflow-hidden cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
               index === selectedIndex && showNavigation ? "ring-4 ring-primary" : ""
             }`}
             onClick={() => onImageClick(images, index, altPrefix)}
@@ -69,7 +71,7 @@ export function ImageGallery({
               sizes="(max-width: 640px) 30vw, (max-width: 1024px) 20vw, 160px"
             />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
-          </div>
+          </button>
         ))}
       </div>
       {showViewAll && maxImages && images.length > maxImages && (

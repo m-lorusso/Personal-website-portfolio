@@ -10,7 +10,8 @@ export function NavigationHandler() {
     const handleHashChange = () => {
       const hash = window.location.hash
       if (hash) {
-        const element = document.querySelector(hash)
+        // getElementById rather than querySelector — a hash need not be a valid CSS selector
+        const element = document.getElementById(decodeURIComponent(hash.slice(1)))
         if (element) {
           element.scrollIntoView({ behavior: "smooth" })
         }

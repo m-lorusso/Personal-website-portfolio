@@ -49,12 +49,39 @@ export default function EnhancedBeforeAfterSlider({
     [isDragging, updatePosition],
   )
 
+  // Touch gestures: only claim a touch once it proves horizontal. Vertical
+  // swipes stay with the browser (touch-action: pan-y below) so the page can
+  // still scroll past this tall, full-width element on mobile.
+  const touchStart = useRef<{ x: number; y: number; claimed: boolean } | null>(null)
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY, claimed: false }
+  }, [])
+
   const handleTouchMove = useCallback(
     (e: React.TouchEvent) => {
-      updatePosition(e.touches[0].clientX)
+      const start = touchStart.current
+      if (!start) return
+      const touch = e.touches[0]
+      if (!start.claimed) {
+        const dx = Math.abs(touch.clientX - start.x)
+        const dy = Math.abs(touch.clientY - start.y)
+        if (dx < 6 && dy < 6) return
+        if (dy > dx) {
+          // Vertical intent — the browser scrolls; ignore the rest of this gesture.
+          touchStart.current = null
+          return
+        }
+        start.claimed = true
+      }
+      updatePosition(touch.clientX)
     },
     [updatePosition],
   )
+
+  const handleTouchEnd = useCallback(() => {
+    touchStart.current = null
+  }, [])
 
   const handleGlobalMouseMove = useCallback(
     (e: MouseEvent) => {
@@ -103,8 +130,11 @@ export default function EnhancedBeforeAfterSlider({
       ref={containerRef}
       className={`relative w-full h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden rounded-lg cursor-col-resize select-none ${className}`}
       onMouseMove={handleMouseMove}
+      onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
-      style={{ touchAction: "none" }}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchEnd}
+      style={{ touchAction: "pan-y" }}
     >
       {/* Before Image */}
       <div className="absolute inset-0">

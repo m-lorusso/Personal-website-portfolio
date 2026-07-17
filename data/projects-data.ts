@@ -42,6 +42,8 @@ export interface Project {
   imagePosition?: string
   /** Excluded from the sitemap and not statically generated (page 404s) until content is ready */
   hidden?: boolean
+  /** Renders as a self-contained full-page design — the global navbar hides itself on this project's route */
+  fullPage?: boolean
 }
 
 export const projectsData: Project[] = [
@@ -538,6 +540,7 @@ The challenge was not manufacturing, but precision assembly. Fitting a movement 
 
 Sourcing compatible parts was its own challenge - not all cases and hands marketed for the NH35 are compatible. Verifying dimensions and fitment required careful research before committing to assembly.`,
     image: "/images/watch/cover.png",
+    fullPage: true,
     videoGallery: [
       {
         id: "nR-1D8_llwg",

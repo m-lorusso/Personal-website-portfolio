@@ -2,7 +2,6 @@
 
 import type { ComponentType } from "react"
 import { useEffect, useState } from "react"
-import { useParams } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, ArrowRight } from "lucide-react"
@@ -21,8 +20,7 @@ import RubiksLayout from "@/components/project-detail/layouts/rubiks"
 import DefaultLayout from "@/components/project-detail/layouts/default-layout"
 
 // Each project has its own bespoke layout component; anything without one
-// falls back to DefaultLayout (data-driven template). Project 6 (Custom Watch
-// Build) is handled separately — it is a self-contained full-page design.
+// falls back to DefaultLayout (data-driven template).
 const projectLayouts: Record<number, ComponentType<ProjectLayoutProps>> = {
   1: ConstructionLayout,
   2: MicromouseLayout,
@@ -30,6 +28,12 @@ const projectLayouts: Record<number, ComponentType<ProjectLayoutProps>> = {
   4: Ur5eLayout,
   5: CatDoorLayout,
   7: RubiksLayout,
+}
+
+// Projects flagged `fullPage` in projects-data.ts render one of these
+// self-contained designs instead of the shared chrome below.
+const fullPageLayouts: Record<number, ComponentType> = {
+  6: WatchBuild,
 }
 
 // ─── Prev/Next project navigation (all detail pages) ─────────────────────
@@ -85,11 +89,9 @@ function ProjectFooterNav({ currentId }: { currentId: number }) {
   )
 }
 
-function ProjectDetailClient() {
-  const { id } = useParams()
-  const projectId = Number.parseInt(Array.isArray(id) ? id[0] : (id as string), 10)
-  // Resolved synchronously (not in an effect) so the prerendered HTML contains
-  // the full page content rather than a loading state.
+// The server page resolves and validates the id (invalid ids 404 via
+// dynamicParams=false), so this only ever receives a real project id.
+function ProjectDetailClient({ projectId }: { projectId: number }) {
   const project: Project | null = projectsData.find((p) => p.id === projectId) ?? null
 
   // Lightbox state — shared by all layouts via the openLightbox callback.
@@ -102,7 +104,8 @@ function ProjectDetailClient() {
     if (!project || !window.location.hash) return
 
     requestAnimationFrame(() => {
-      document.querySelector(window.location.hash)?.scrollIntoView()
+      // getElementById rather than querySelector — a hash need not be a valid CSS selector
+      document.getElementById(decodeURIComponent(window.location.hash.slice(1)))?.scrollIntoView()
     })
   }, [project])
 
@@ -125,22 +128,11 @@ function ProjectDetailClient() {
     setLightboxIndex((prev) => (prev - 1 + lightboxImages.length) % lightboxImages.length)
   }
 
-  if (!project) {
-    return (
-      <main className="min-h-dvh bg-background flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Project Not Found</h1>
-          <Button asChild>
-            <Link href="/">Back to Home</Link>
-          </Button>
-        </div>
-      </main>
-    )
-  }
+  if (!project) return null
 
-  // Project 6 (Custom Watch Build) is a self-contained, full-page dark design.
-  if (project.id === 6) {
-    return <WatchBuild />
+  const FullPageLayout = project.fullPage ? fullPageLayouts[project.id] : undefined
+  if (FullPageLayout) {
+    return <FullPageLayout />
   }
 
   const Layout = projectLayouts[project.id] ?? DefaultLayout

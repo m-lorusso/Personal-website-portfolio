@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeColorSync } from "@/components/theme-color-sync"
 import { Suspense } from "react"
 import { NavigationHandler } from "@/components/navigation-handler"
 import Navbar from "@/components/navbar"
@@ -30,7 +31,8 @@ const personJsonLd = {
   sameAs: [LINKEDIN_URL, GITHUB_URL],
 }
 
-// Tints the mobile browser chrome (address bar) to match the active theme
+// Tints the mobile browser chrome (address bar) to match the active theme.
+// Covers SSR/system theme; ThemeColorSync corrects it after a manual toggle.
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: dark)", color: "#09090b" },
@@ -83,6 +85,7 @@ export default function RootLayout({
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }} />
         <Suspense fallback={null}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+            <ThemeColorSync />
             <NavigationHandler />
             <Navbar />
             {children}

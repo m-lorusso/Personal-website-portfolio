@@ -147,73 +147,26 @@ const rubiksMoveTrace = [
   },
 ]
 
-const rubiksMoveTraceUPrime = [
-  {
-    move: "R'",
-    title: "Right face counter-clockwise",
-    detail: "The right motor turns its face 90 deg counter-clockwise, viewed from the right side.",
-  },
-  {
-    move: "L'",
-    title: "Left face counter-clockwise",
-    detail: "The left motor turns its face 90 deg counter-clockwise, viewed from the left side.",
-  },
-  {
-    move: "F2",
-    title: "Front face 180",
-    detail: "The front motor makes a half-turn, equal to two quarter turns.",
-  },
-  {
-    move: "B2",
-    title: "Back face 180",
-    detail: "The back motor makes the matching half-turn.",
-  },
-  {
-    move: "R",
-    title: "Right face clockwise",
-    detail: "The right motor reverses one quarter turn.",
-  },
-  {
-    move: "L",
-    title: "Left face clockwise",
-    detail: "The left motor reverses one quarter turn.",
-  },
-  {
-    move: "D'",
-    title: "Bottom face counter-clockwise",
-    detail: "The bottom motor makes the key turn that substitutes for the missing top motor (in reverse).",
-  },
-  {
-    move: "L",
-    title: "Left face clockwise",
-    detail: "The left face starts restoring the cube's orientation.",
-  },
-  {
-    move: "R",
-    title: "Right face clockwise",
-    detail: "The right face continues the restore step.",
-  },
-  {
-    move: "B2",
-    title: "Back face 180",
-    detail: "The back face returns with another half-turn.",
-  },
-  {
-    move: "F2",
-    title: "Front face 180",
-    detail: "The front face returns with another half-turn.",
-  },
-  {
-    move: "L'",
-    title: "Left face counter-clockwise",
-    detail: "The left face closes the restore sequence.",
-  },
-  {
-    move: "R'",
-    title: "Right face counter-clockwise",
-    detail: "The right face closes it. Net result: one top counter-turn, no top motor.",
-  },
-]
+// U' is the same 13-move equivalence with every move inverted in place
+// (half-turns are their own inverse), so its trace is derived from the U trace
+// rather than maintained as a second hand-written copy.
+const invertMove = (move: string) =>
+  move.endsWith("2") ? move : move.endsWith("'") ? move.slice(0, -1) : `${move}'`
+
+const swapTurnDirections = (text: string) =>
+  text.replace(/counter-clockwise|clockwise/g, (m) => (m === "clockwise" ? "counter-clockwise" : "clockwise"))
+
+const rubiksMoveTraceUPrime = rubiksMoveTrace.map((step, index) => {
+  let detail = swapTurnDirections(step.detail)
+  if (step.move === "D") detail = detail.replace(/\.$/, " (in reverse).")
+  if (index === rubiksMoveTrace.length - 1) detail = detail.replace("one top turn", "one top counter-turn")
+
+  return {
+    move: invertMove(step.move),
+    title: swapTurnDirections(step.title),
+    detail,
+  }
+})
 
 const rubiksBuildPhotos = [
   {
@@ -467,7 +420,7 @@ export default function RubiksLayout({ project, openLightbox }: ProjectLayoutPro
           <div className="relative aspect-video overflow-hidden rounded-xl border border-border/70 bg-black shadow-2xl shadow-primary/10">
             {showRubiksVideo && project.videoGallery && project.videoGallery[0] ? (
               <iframe
-                src={`https://www.youtube.com/embed/${project.videoGallery[0].id}?autoplay=1&rel=0`}
+                src={`https://www.youtube-nocookie.com/embed/${project.videoGallery[0].id}?autoplay=1&rel=0`}
                 title={project.videoGallery[0].title}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
